@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends AppBaseController
 {
@@ -103,6 +104,24 @@ class OrderController extends AppBaseController
 
         return redirect(route('orders.index'));
     }
+
+    public function getOrderData(Request $request)
+    {
+        $interval = $request->get('interval', 'days'); // Default to daily
+
+        $query = DB::table('orders')
+            ->select(
+                DB::raw('SUM(quantity_ordered) as total_quantity'),
+                DB::raw("DATE_FORMAT(order_date, CASE WHEN '$interval' = 'days' THEN '%Y-%m-%d' WHEN '$interval' = 'weeks' THEN '%Y-%u' WHEN '$interval' = 'months' THEN '%Y-%m' END) as date_group")
+            )
+            ->groupBy('date_group')
+            ->orderBy('date_group');
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
 
     /**
      * Remove the specified Order from storage.

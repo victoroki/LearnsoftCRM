@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
 
+use App\Models\Client;
+use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -24,8 +26,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $user_name = Auth::user()->name;
-        return view('home', ['user_name' => $user_name]); 
-        
+        $totalClients = Client::count();
+        $totalProducts = Product::count();
+        $totalOrders = Order::count();
+
+        return view('home', compact('totalClients', 'totalProducts', 'totalOrders'));
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,5 @@ Route::resource('interactions', App\Http\Controllers\InteractionController::clas
 Route::resource('leads', App\Http\Controllers\LeadController::class);
 Route::resource('orders', App\Http\Controllers\OrderController::class);
 Route::resource('transactions', App\Http\Controllers\TransactionController::class);
+
+Route::get('/get-order-data', [OrderController::class, 'getOrderData']);
