@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLeadRequest;
 use App\Http\Requests\UpdateLeadRequest;
+use App\Repositories\ClientRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\LeadRepository;
 use App\Models\Employee; 
 use Illuminate\Http\Request;
+use App\Models\Lead;
+use App\Models\Client;
 use Flash;
 
 class LeadController extends AppBaseController
@@ -15,22 +18,23 @@ class LeadController extends AppBaseController
     /** @var LeadRepository $leadRepository*/
     private $leadRepository;
 
-    public function __construct(LeadRepository $leadRepo)
+    private $clientRepository;
+
+    public function __construct(LeadRepository $leadRepo, ClientRepository $clientRepo)
     {
         $this->leadRepository = $leadRepo;
+        $this->clientRepository = $clientRepo; // Inject the ClientRepository
     }
-
     /**
      * Display a listing of the Lead.
      */
-    public function index(Request $request)
-    {
-        // Eager load the lead relationship to avoid issues with missing leads
-        $clients = $this->clientRepository->with('lead')->paginate(10); // 10 is the number of clients per page
-    
-        return view('clients.index')->with('clients', $clients);
-    }    
-    
+// In your controller
+// In your controller
+public function index()
+{
+    $leads = Lead::with('employee')->paginate(10);
+    return view('leads.index', compact('leads'));
+}
 
     /**
      * Show the form for creating a new Lead.

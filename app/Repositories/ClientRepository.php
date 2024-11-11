@@ -3,27 +3,38 @@
 namespace App\Repositories;
 
 use App\Models\Client;
-use App\Repositories\BaseRepository;
 
-class ClientRepository extends BaseRepository
+class ClientRepository
 {
-    protected $fieldSearchable = [
-        'first_name',
-        'last_name',
-        'company_name',
-        'email_address',
-        'phone_number',
-        'lead_id',
-        'location'
-    ];
-
-    public function getFieldsSearchable(): array
+    // Paginate clients with eager loading of the 'lead' relationship
+    public function paginate($perPage = 10)
     {
-        return $this->fieldSearchable;
+        return Client::with('lead')->paginate($perPage); // Eager load the 'lead' relationship
     }
 
-    public function model(): string
+    // Other repository methods like find, create, delete, etc.
+    public function find($id)
     {
-        return Client::class;
+        return Client::find($id);
+    }
+
+    public function create(array $data)
+    {
+        return Client::create($data);
+    }
+
+    public function update(array $data, $id)
+    {
+        $client = Client::find($id);
+        if ($client) {
+            $client->update($data);
+            return $client;
+        }
+        return null;
+    }
+
+    public function delete($id)
+    {
+        return Client::destroy($id);
     }
 }

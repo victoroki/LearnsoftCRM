@@ -41,4 +41,8 @@ class Interaction extends Model
     {
         return $this->belongsTo(\App\Models\Lead::class, 'lead_id');
     }
+    public function getInteractionsDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d');
+    }
 }

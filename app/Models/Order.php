@@ -49,4 +49,9 @@ class Order extends Model
     {
         return $this->hasMany(\App\Models\Transaction::class, 'order_id');
     }
+
+    public function getOrderDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d');
+    }
 }
