@@ -8,7 +8,7 @@
                 <th>Company Name</th>
                 <th>Email Address</th>
                 <th>Phone Number</th>
-                <th>Lead Id</th>
+                <th>Lead</th>
                 <th>Location</th>
                 <th colspan="3">Action</th>
             </tr>

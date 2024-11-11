@@ -7,7 +7,7 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Phone Number</th>
-                <th>Department Id</th>
+                <th>Department</th>
                 <th colspan="3">Action</th>
             </tr>
             </thead>

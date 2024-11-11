@@ -3,8 +3,8 @@
         <table class="table" id="interactions-table">
             <thead>
             <tr>
-                <th>Client Id</th>
-                <th>Lead Id</th>
+                <th>Client</th>
+                <th>Lead</th>
                 <th>Type</th>
                 <th>Description</th>
                 <th>Interactions Date</th>

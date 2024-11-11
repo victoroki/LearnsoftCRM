@@ -11,7 +11,7 @@ use Flash;
 
 class ClientController extends AppBaseController
 {
-    /** @var ClientRepository $clientRepository*/
+    /** @var ClientRepository $clientRepository */
     private $clientRepository;
 
     public function __construct(ClientRepository $clientRepo)
@@ -24,8 +24,10 @@ class ClientController extends AppBaseController
      */
     public function index(Request $request)
     {
+        // Eager load the lead relation
         $clients = $this->clientRepository->paginate(10);
 
+        // Pass clients to the view with their associated lead full name
         return view('clients.index')
             ->with('clients', $clients);
     }
@@ -35,7 +37,9 @@ class ClientController extends AppBaseController
      */
     public function create()
     {
-        return view('clients.create');
+        // Fetch all leads and pass them to the view
+        $leads = \App\Models\Lead::all();
+        return view('clients.create', compact('leads'));  
     }
 
     /**
@@ -44,7 +48,6 @@ class ClientController extends AppBaseController
     public function store(CreateClientRequest $request)
     {
         $input = $request->all();
-
         $client = $this->clientRepository->create($input);
 
         Flash::success('Client saved successfully.');
@@ -57,14 +60,15 @@ class ClientController extends AppBaseController
      */
     public function show($id)
     {
+        // Eager load the lead relationship
         $client = $this->clientRepository->find($id);
-
+        
         if (empty($client)) {
             Flash::error('Client not found');
-
             return redirect(route('clients.index'));
         }
 
+        // Pass the client and their lead relationship to the view
         return view('clients.show')->with('client', $client);
     }
 
@@ -77,7 +81,6 @@ class ClientController extends AppBaseController
 
         if (empty($client)) {
             Flash::error('Client not found');
-
             return redirect(route('clients.index'));
         }
 
@@ -93,7 +96,6 @@ class ClientController extends AppBaseController
 
         if (empty($client)) {
             Flash::error('Client not found');
-
             return redirect(route('clients.index'));
         }
 
@@ -115,7 +117,6 @@ class ClientController extends AppBaseController
 
         if (empty($client)) {
             Flash::error('Client not found');
-
             return redirect(route('clients.index'));
         }
 

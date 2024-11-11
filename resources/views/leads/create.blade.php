@@ -23,6 +23,17 @@
 
             <div class="card-body">
 
+                <div class="form-group">
+                    <label for="employee_id">Employee</label>
+                    <select name="employee_id" id="employee_id" class="form-control">
+                        <option value="">Select an Employee</option>
+                        @foreach($employees as $employee)
+                            <!-- Display first name and last name -->
+                            <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="row">
                     @include('leads.fields')
                 </div>

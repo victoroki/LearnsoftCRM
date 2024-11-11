@@ -5,9 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>
-                    Create Employees
-                    </h1>
+                    <h1>Create Employees</h1>
                 </div>
             </div>
         </div>
@@ -22,6 +20,16 @@
             {!! Form::open(['route' => 'employees.store']) !!}
 
             <div class="card-body">
+
+                <div class="form-group">
+                    <label for="department_id">Department</label>
+                    <select name="department_id" id="department_id" class="form-control">
+                        <option value="">Select a department</option>
+                        @foreach($departments as $department)
+                            <option value="{{ $department->id }}">{{ $department->dept_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div class="row">
                     @include('employees.fields')

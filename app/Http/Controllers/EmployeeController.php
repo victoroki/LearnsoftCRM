@@ -6,6 +6,7 @@ use App\Http\Requests\CreateEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\EmployeeRepository;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Flash;
 
@@ -35,7 +36,8 @@ class EmployeeController extends AppBaseController
      */
     public function create()
     {
-        return view('employees.create');
+        $departments = Department::all();
+        return view('employees.create', compact('departments'));
     }
 
     /**

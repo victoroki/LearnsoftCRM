@@ -3,13 +3,13 @@
         <table class="table" id="transactions-table">
             <thead>
             <tr>
-                <th>Order Id</th>
+                <th>Order</th>
                 <th>Amount Paid</th>
                 <th>Payment Date</th>
                 <th>Payment Method</th>
                 <th>Status</th>
                 <th>Transaction Reference</th>
-                <th>Client Id</th>
+                <th>Client</th>
                 <th colspan="3">Action</th>
             </tr>
             </thead>

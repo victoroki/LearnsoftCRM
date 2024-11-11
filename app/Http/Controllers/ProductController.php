@@ -35,8 +35,11 @@ class ProductController extends AppBaseController
      */
     public function create()
     {
-        return view('products.create');
+        // Fetch all leads and pass them to the view
+        $leads = \App\Models\Lead::all();
+        return view('products.create', compact('leads'));
     }
+    
 
     /**
      * Store a newly created Product in storage.

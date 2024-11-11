@@ -1,13 +1,13 @@
 <!-- Product Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('product_name', 'Product Name:') !!}
-    {!! Form::text('product_name', null, ['class' => 'form-control', 'required', 'maxlength' => 100, 'maxlength' => 100]) !!}
+    {!! Form::text('product_name', null, ['class' => 'form-control', 'required', 'maxlength' => 100]) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}
-    {!! Form::textarea('description', null, ['class' => 'form-control', 'maxlength' => 65535, 'maxlength' => 65535]) !!}
+    {!! Form::textarea('description', null, ['class' => 'form-control', 'maxlength' => 65535]) !!}
 </div>
 
 <!-- Price Field -->
@@ -22,8 +22,8 @@
     {!! Form::number('quantity_available', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Lead Id Field -->
+<!-- Lead Id Field: Dropdown with lead names -->
 <div class="form-group col-sm-6">
-    {!! Form::label('lead_id', 'Lead Id:') !!}
-    {!! Form::number('lead_id', null, ['class' => 'form-control']) !!}
+    {!! Form::label('lead_id', 'Lead:') !!}
+    {!! Form::select('lead_id', $leads->pluck('full_name', 'id')->toArray(), null, ['class' => 'form-control']) !!}
 </div>

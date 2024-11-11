@@ -6,6 +6,7 @@ use App\Http\Requests\CreateLeadRequest;
 use App\Http\Requests\UpdateLeadRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\LeadRepository;
+use App\Models\Employee; 
 use Illuminate\Http\Request;
 use Flash;
 
@@ -35,7 +36,9 @@ class LeadController extends AppBaseController
      */
     public function create()
     {
-        return view('leads.create');
+        $employees = Employee::all();  // Get all employees
+    
+        return view('leads.create', compact('employees'));  // Pass employees to the view
     }
 
     /**

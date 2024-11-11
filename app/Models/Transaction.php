@@ -34,7 +34,7 @@ class Transaction extends Model
         'payment_date' => 'nullable',
         'payment_method' => 'nullable|string|max:20',
         'status' => 'nullable|string|max:20',
-        'transaction_reference' => 'required|string|max:50',
+        'transaction_reference' => 'required|unique:transactions,transaction_reference|max:50',
         'client_id' => 'required'
     ];
 

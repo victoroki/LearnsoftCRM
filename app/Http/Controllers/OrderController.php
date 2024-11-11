@@ -36,8 +36,14 @@ class OrderController extends AppBaseController
      */
     public function create()
     {
-        return view('orders.create');
+        // Fetch all products and clients from the database
+        $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
+        $clients = \App\Models\Client::pluck('first_name', 'id')->toArray();
+    
+        // Pass the products and clients data to the view
+        return view('orders.create', compact('products', 'clients'));
     }
+    
 
     /**
      * Store a newly created Order in storage.

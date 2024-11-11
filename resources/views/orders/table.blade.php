@@ -3,13 +3,13 @@
         <table class="table" id="orders-table">
             <thead>
             <tr>
-                <th>Product Id</th>
+                <th>Product</th>
                 <th>Quantity Ordered</th>
                 <th>Unit Price</th>
                 <th>Total Price</th>
                 <th>Order Date</th>
                 <th>Status</th>
-                <th>Client Id</th>
+                <th>Client</th>
                 <th colspan="3">Action</th>
             </tr>
             </thead>

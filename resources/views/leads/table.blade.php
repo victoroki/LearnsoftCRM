@@ -8,7 +8,7 @@
                 <th>Phone Number</th>
                 <th>Source</th>
                 <th>Status</th>
-                <th>Employee Id</th>
+                <th>Employee</th>
                 <th>Notes</th>
                 <th colspan="3">Action</th>
             </tr>

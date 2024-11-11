@@ -7,11 +7,12 @@ use App\Http\Requests\UpdateInteractionRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\InteractionRepository;
 use Illuminate\Http\Request;
+use App\Models\Client;  // Correct import at the top
 use Flash;
 
 class InteractionController extends AppBaseController
 {
-    /** @var InteractionRepository $interactionRepository*/
+    /** @var InteractionRepository $interactionRepository */
     private $interactionRepository;
 
     public function __construct(InteractionRepository $interactionRepo)
@@ -35,7 +36,8 @@ class InteractionController extends AppBaseController
      */
     public function create()
     {
-        return view('interactions.create');
+        $clients = Client::pluck('first_name', 'id'); // Correct model usage
+        return view('interactions.create', compact('clients')); // Make sure the view name is correct
     }
 
     /**

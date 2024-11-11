@@ -7,7 +7,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Quantity Available</th>
-                <th>Lead Id</th>
+                <th>Lead</th>
                 <th colspan="3">Action</th>
             </tr>
             </thead>

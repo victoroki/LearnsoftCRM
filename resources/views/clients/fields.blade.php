@@ -1,41 +1,41 @@
 <!-- First Name Field -->
-<div class="form-group col-sm-6">
+<div class="col-sm-12">
     {!! Form::label('first_name', 'First Name:') !!}
-    {!! Form::text('first_name', null, ['class' => 'form-control', 'required', 'maxlength' => 100, 'maxlength' => 100]) !!}
+    <p>{{ $client->first_name ?? '' }}</p>
 </div>
 
 <!-- Last Name Field -->
-<div class="form-group col-sm-6">
+<div class="col-sm-12">
     {!! Form::label('last_name', 'Last Name:') !!}
-    {!! Form::text('last_name', null, ['class' => 'form-control', 'maxlength' => 100, 'maxlength' => 100]) !!}
+    <p>{{ $client->last_name ?? '' }}</p>
 </div>
 
 <!-- Company Name Field -->
-<div class="form-group col-sm-6">
+<div class="col-sm-12">
     {!! Form::label('company_name', 'Company Name:') !!}
-    {!! Form::text('company_name', null, ['class' => 'form-control', 'maxlength' => 100, 'maxlength' => 100]) !!}
+    <p>{{ $client->company_name ?? '' }}</p>
 </div>
 
 <!-- Email Address Field -->
-<div class="form-group col-sm-6">
+<div class="col-sm-12">
     {!! Form::label('email_address', 'Email Address:') !!}
-    {!! Form::text('email_address', null, ['class' => 'form-control', 'required', 'maxlength' => 100, 'maxlength' => 100]) !!}
+    <p>{{ $client->email_address ?? '' }}</p>
 </div>
 
 <!-- Phone Number Field -->
-<div class="form-group col-sm-6">
+<div class="col-sm-12">
     {!! Form::label('phone_number', 'Phone Number:') !!}
-    {!! Form::number('phone_number', null, ['class' => 'form-control']) !!}
+    <p>{{ $client->phone_number ?? '' }}</p>
 </div>
 
-<!-- Lead Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('lead_id', 'Lead Id:') !!}
-    {!! Form::number('lead_id', null, ['class' => 'form-control']) !!}
+<!-- Lead Full Name Field (instead of Lead Id) -->
+<div class="col-sm-12">
+    {!! Form::label('lead_id', 'Lead Full Name:') !!}
+    <p>{{ $client && $client->lead ? $client->lead->full_name : 'No lead assigned' }}</p>
 </div>
 
 <!-- Location Field -->
-<div class="form-group col-sm-6">
+<div class="col-sm-12">
     {!! Form::label('location', 'Location:') !!}
-    {!! Form::text('location', null, ['class' => 'form-control', 'maxlength' => 200, 'maxlength' => 200]) !!}
+    <p>{{ $client->location ?? '' }}</p>
 </div>

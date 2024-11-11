@@ -21,9 +21,3 @@
     {!! Form::label('phone_number', 'Phone Number:') !!}
     {!! Form::number('phone_number', null, ['class' => 'form-control']) !!}
 </div>
-
-<!-- Department Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('department_id', 'Department Id:') !!}
-    {!! Form::number('department_id', null, ['class' => 'form-control']) !!}
-</div>

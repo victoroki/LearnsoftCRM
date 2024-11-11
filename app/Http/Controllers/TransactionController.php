@@ -35,22 +35,40 @@ class TransactionController extends AppBaseController
      */
     public function create()
     {
-        return view('transactions.create');
+        $clients = \App\Models\Client::all(); 
+        $orders = \App\Models\Order::all();  
+    
+        return view('transactions.create', compact('clients', 'orders'));
     }
+    
+    
 
     /**
      * Store a newly created Transaction in storage.
      */
     public function store(CreateTransactionRequest $request)
     {
+        // Retrieve validated data
         $input = $request->all();
-
+    
+        // Check if the order and client exist (additional safety check)
+        $order = \App\Models\Order::find($input['order_id']);
+        $client = \App\Models\Client::find($input['client_id']);
+    
+        if (!$order || !$client) {
+            Flash::error('Order or Client not found.');
+            return redirect(route('transactions.create'));
+        }
+    
+        // Create the transaction
         $transaction = $this->transactionRepository->create($input);
-
+    
+        // Flash a success message
         Flash::success('Transaction saved successfully.');
-
+    
         return redirect(route('transactions.index'));
     }
+    
 
     /**
      * Display the specified Transaction.
