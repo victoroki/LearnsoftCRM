@@ -18,7 +18,7 @@
                     <td>{{ $employee->last_name }}</td>
                     <td>{{ $employee->email }}</td>
                     <td>{{ $employee->phone_number }}</td>
-                    <td>{{ $employee->department_id }}</td>
+                    <td>{{ $employee->department->dept_name ?? 'No Department' }}</td>
                     <td  style="width: 120px">
                         {!! Form::open(['route' => ['employees.destroy', $employee->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

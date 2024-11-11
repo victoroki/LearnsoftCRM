@@ -6,6 +6,7 @@ use App\Http\Requests\CreateOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\OrderRepository;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;
@@ -25,11 +26,14 @@ class OrderController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $orders = $this->orderRepository->paginate(10);
-
-        return view('orders.index')
-            ->with('orders', $orders);
+        // Eager load product and client relationships directly
+        $orders = Order::with(['product', 'client'])->paginate(10);
+        
+        return view('orders.index')->with('orders', $orders);
     }
+    
+    
+    
 
     /**
      * Show the form for creating a new Order.

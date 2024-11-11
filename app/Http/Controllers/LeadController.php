@@ -25,11 +25,12 @@ class LeadController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $leads = $this->leadRepository->paginate(10);
-
-        return view('leads.index')
-            ->with('leads', $leads);
-    }
+        // Eager load the lead relationship to avoid issues with missing leads
+        $clients = $this->clientRepository->with('lead')->paginate(10); // 10 is the number of clients per page
+    
+        return view('clients.index')->with('clients', $clients);
+    }    
+    
 
     /**
      * Show the form for creating a new Lead.

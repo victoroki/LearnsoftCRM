@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateInteractionRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\InteractionRepository;
 use Illuminate\Http\Request;
+use App\Models\Interaction;
 use App\Models\Client;  // Correct import at the top
 use Flash;
 
@@ -25,11 +26,11 @@ class InteractionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $interactions = $this->interactionRepository->paginate(10);
-
+        $interactions = Interaction::with(['client', 'lead'])->paginate(10);
+    
         return view('interactions.index')
             ->with('interactions', $interactions);
-    }
+    }    
 
     /**
      * Show the form for creating a new Interaction.

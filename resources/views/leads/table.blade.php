@@ -21,7 +21,7 @@
                     <td>{{ $lead->phone_number }}</td>
                     <td>{{ $lead->source }}</td>
                     <td>{{ $lead->status }}</td>
-                    <td>{{ $lead->employee_id }}</td>
+                    <td>{{ $client->lead->full_name ?? 'No Lead' }}</td>
                     <td>{{ $lead->notes }}</td>
                     <td  style="width: 120px">
                         {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete']) !!}

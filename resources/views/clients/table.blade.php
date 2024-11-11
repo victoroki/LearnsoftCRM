@@ -21,7 +21,7 @@
                     <td>{{ $client->company_name }}</td>
                     <td>{{ $client->email_address }}</td>
                     <td>{{ $client->phone_number }}</td>
-                    <td>{{ $client->lead_id }}</td>
+                    <td>{{ $client->lead->name ?? 'No Lead' }}</td>
                     <td>{{ $client->location }}</td>
                     <td  style="width: 120px">
                         {!! Form::open(['route' => ['clients.destroy', $client->id], 'method' => 'delete']) !!}

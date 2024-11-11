@@ -29,7 +29,7 @@
                         <option value="">Select an Employee</option>
                         @foreach($employees as $employee)
                             <!-- Display first name and last name -->
-                            <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                            <<td>{{ $lead->employee->first_name }} {{ $lead->employee->last_name }}</td>
                         @endforeach
                     </select>
                 </div>

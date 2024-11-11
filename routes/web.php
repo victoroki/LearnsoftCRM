@@ -30,5 +30,6 @@ Route::resource('interactions', App\Http\Controllers\InteractionController::clas
 Route::resource('leads', App\Http\Controllers\LeadController::class);
 Route::resource('orders', App\Http\Controllers\OrderController::class);
 Route::resource('transactions', App\Http\Controllers\TransactionController::class);
+Route::get('/clients/{id}', [ClientController::class, 'show'])->name('clients.show');
 
 Route::get('/get-order-data', [OrderController::class, 'getOrderData']);

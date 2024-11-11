@@ -24,7 +24,45 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            @include('products.table')
+            <!-- Products Table -->
+            <div class="table-responsive">
+                <table class="table table-striped" id="products-table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Quantity Available</th>
+                            <th>Lead</th> <!-- Display Lead's Full Name -->
+                            <th colspan="3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                        <tr>
+                            <td>{{ $product->product_name }}</td>
+                            <td>{{ $product->description }}</td>
+                            <td>{{ $product->price }}</td>
+                            <td>{{ $product->quantity_available }}</td>
+                            <td>{{ $product->lead->full_name }}</td> <!-- Display Lead's Full Name -->
+                            <td>
+                                <div class='btn-group'>
+                                    <a href="{{ route('products.show', [$product->id]) }}" class='btn btn-default'>
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('products.edit', [$product->id]) }}" class='btn btn-primary'>
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    {!! Form::open(['route' => ['products.destroy', $product->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                    {!! Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'onclick' => 'return confirm("Are you sure?")']) !!}
+                                    {!! Form::close() !!}
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

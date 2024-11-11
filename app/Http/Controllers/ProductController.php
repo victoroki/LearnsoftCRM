@@ -24,11 +24,15 @@ class ProductController extends AppBaseController
      */
     public function index(Request $request)
     {
+        // Eager load the lead relationship
         $products = $this->productRepository->paginate(10);
-
+        $products->load('lead'); // Eager load the lead
+    
         return view('products.index')
             ->with('products', $products);
     }
+    
+    
 
     /**
      * Show the form for creating a new Product.

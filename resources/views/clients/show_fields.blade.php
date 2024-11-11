@@ -39,4 +39,3 @@
     {!! Form::label('location', 'Location:') !!}
     <p>{{ $client->location }}</p>
 </div>
-

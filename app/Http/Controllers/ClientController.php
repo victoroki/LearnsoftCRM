@@ -22,15 +22,21 @@ class ClientController extends AppBaseController
     /**
      * Display a listing of the Client.
      */
-    public function index(Request $request)
-    {
-        // Eager load the lead relation
-        $clients = $this->clientRepository->paginate(10);
+/**
+ * Display a listing of the Client.
+ */
+/**
+ * Display a listing of the Client.
+ */
+public function index(Request $request)
+{
+    // Get paginated clients (you can adjust the number per page)
+    $clients = $this->clientRepository->paginate(10); // 10 is the number of clients per page
 
-        // Pass clients to the view with their associated lead full name
-        return view('clients.index')
-            ->with('clients', $clients);
-    }
+    return view('clients.index')
+        ->with('clients', $clients);
+}
+ 
 
     /**
      * Show the form for creating a new Client.
@@ -60,17 +66,20 @@ class ClientController extends AppBaseController
      */
     public function show($id)
     {
-        // Eager load the lead relationship
+        // Ensure that $id is being passed properly
         $client = $this->clientRepository->find($id);
-        
+    
         if (empty($client)) {
             Flash::error('Client not found');
             return redirect(route('clients.index'));
         }
-
-        // Pass the client and their lead relationship to the view
+    
+        // Eager load the 'lead' relationship after finding the client
+        $client->load('lead'); 
+    
         return view('clients.show')->with('client', $client);
     }
+    
 
     /**
      * Show the form for editing the specified Client.

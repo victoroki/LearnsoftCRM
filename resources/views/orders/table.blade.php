@@ -16,14 +16,14 @@
             <tbody>
             @foreach($orders as $order)
                 <tr>
-                    <td>{{ $order->product_id }}</td>
+                    <td>{{ $order->product->product_name }}</td> <!-- Display product name -->
                     <td>{{ $order->quantity_ordered }}</td>
                     <td>{{ $order->unit_price }}</td>
                     <td>{{ $order->total_price }}</td>
                     <td>{{ $order->order_date }}</td>
                     <td>{{ $order->status }}</td>
-                    <td>{{ $order->client_id }}</td>
-                    <td  style="width: 120px">
+                    <td>{{ $order->client->first_name }} {{ $order->client->last_name }}</td> <!-- Display client full name -->
+                    <td style="width: 120px">
                         {!! Form::open(['route' => ['orders.destroy', $order->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>
                             <a href="{{ route('orders.show', [$order->id]) }}"

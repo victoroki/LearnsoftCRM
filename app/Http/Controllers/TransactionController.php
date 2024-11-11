@@ -25,10 +25,13 @@ class TransactionController extends AppBaseController
     public function index(Request $request)
     {
         $transactions = $this->transactionRepository->paginate(10);
-
+        // Eager load 'order' and 'client' relationships
+        $transactions->load('order.client'); 
+    
         return view('transactions.index')
             ->with('transactions', $transactions);
     }
+    
 
     /**
      * Show the form for creating a new Transaction.
