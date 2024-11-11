@@ -133,4 +133,44 @@ public function index()
 
         return redirect(route('leads.index'));
     }
+    public function convertToClient($leadId)
+    {
+        $lead = Lead::find($leadId);
+    
+        if (!$lead) {
+            Flash::error('Lead not found');
+            return redirect(route('leads.index'));
+        }
+    
+        // Check if this lead is already a client
+        if (Client::where('lead_id', $lead->id)->exists()) {
+            Flash::warning('This lead has already been converted to a client.');
+            return redirect(route('leads.index'));
+        }
+    
+        // Assuming certain status indicates conversion
+        if ($lead->status !== 'converted') {
+            $lead->status = 'converted'; // Set status to converted
+            $lead->save();
+        }
+    
+        // Split full name into first and last names if needed
+        $nameParts = explode(' ', $lead->full_name);
+        $firstName = $nameParts[0];
+        $lastName = isset($nameParts[1]) ? $nameParts[1] : null;
+    
+        // Create a client from the lead data
+        $client = Client::create([
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email_address' => $lead->email,
+            'phone_number' => $lead->phone_number,
+            'lead_id' => $lead->id,
+            'location' => 'Unknown', // Adjust based on your application's needs
+        ]);
+    
+        Flash::success('Lead successfully converted to client.');
+        return redirect(route('leads.index'));
+    }
+    
 }

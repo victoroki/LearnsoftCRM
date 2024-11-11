@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 
 /*
@@ -31,5 +32,7 @@ Route::resource('leads', App\Http\Controllers\LeadController::class);
 Route::resource('orders', App\Http\Controllers\OrderController::class);
 Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 Route::get('/clients/{id}', [ClientController::class, 'show'])->name('clients.show');
+Route::get('leads/{id}/convert', [LeadController::class, 'convertToClient'])->name('leads.convertToClient');
+Route::get('leads/{id}/convert-to-client', [LeadController::class, 'convertToClient'])->name('leads.convertToClient');
 
 Route::get('/get-order-data', [OrderController::class, 'getOrderData']);

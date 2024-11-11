@@ -5,7 +5,7 @@
             <tr>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Company Name</th>
+                <!-- <th>Company Name</th> -->
                 <th>Email Address</th>
                 <th>Phone Number</th>
                 <th>Lead</th>
@@ -18,7 +18,7 @@
                 <tr>
                     <td>{{ $client->first_name }}</td>
                     <td>{{ $client->last_name }}</td>
-                    <td>{{ $client->company_name }}</td>
+                    <!-- <td>{{ $client->company_name }}</td> -->
                     <td>{{ $client->email_address }}</td>
                     <td>{{ $client->phone_number }}</td>
                     <td>{{ $client->lead->name ?? 'No Lead' }}</td>
