@@ -28,8 +28,8 @@
     {!! Form::text('status', null, ['class' => 'form-control', 'maxlength' => 30, 'maxlength' => 30]) !!}
 </div>
 
-<!-- Notes Field -->
+<!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
-    {!! Form::label('notes', 'Notes:') !!}
-    {!! Form::textarea('notes', null, ['class' => 'form-control', 'maxlength' => 65535, 'maxlength' => 65535]) !!}
+    {!! Form::label('description', 'Description:') !!}
+    {!! Form::textarea('description', null, ['class' => 'form-control', 'maxlength' => 65535, 'maxlength' => 65535]) !!}
 </div>

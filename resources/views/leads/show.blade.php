@@ -44,8 +44,8 @@
                     </div>
 
                     <div class="col-sm-12">
-                        {!! Form::label('notes', 'Notes:') !!}
-                        <p>{{ $lead->notes }}</p>
+                        {!! Form::label('description', 'Description:') !!}
+                        <p>{{ $lead->description }}</p>
                     </div>
                 </div>
             </div>

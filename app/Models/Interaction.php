@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class Interaction extends Model
 {
     public $table = 'interactions';
@@ -43,6 +43,6 @@ class Interaction extends Model
     }
     public function getInteractionsDateAttribute($value)
     {
-        return \Carbon\Carbon::parse($value)->format('Y-m-d');
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

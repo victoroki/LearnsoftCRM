@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+
 <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <div class="container-fluid">
     <h1 class="text-black">Welcome {{ Auth::user()->name }}</h1>
     <p>{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
-
+    
     <div class="container my-4">
         <div class="row text-center">
             <div class="col-md-4">

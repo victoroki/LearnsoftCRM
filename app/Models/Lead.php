@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models;
-
+use Carbon\Carbon;
+use App\Models\Interaction;
 use Illuminate\Database\Eloquent\Model;
 
 class Lead extends Model
@@ -17,7 +18,7 @@ class Lead extends Model
         'source',
         'status',
         'employee_id',
-        'notes'
+        'description'
     ];
 
     // Cast attributes to specific types
@@ -26,7 +27,7 @@ class Lead extends Model
         'email' => 'string',
         'source' => 'string',
         'status' => 'string',
-        'notes' => 'string'
+        'description' => 'string'
     ];
 
     // Validation rules
@@ -37,7 +38,7 @@ class Lead extends Model
         'source' => 'nullable|string|max:30',
         'status' => 'nullable|string|max:30',
         'employee_id' => 'nullable',
-        'notes' => 'nullable|string|max:65535',
+        'description' => 'nullable|string|max:65535',
         'created_at' => 'nullable'
     ];
 
@@ -63,5 +64,20 @@ class Lead extends Model
     public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\Product::class, 'lead_id');
+    }
+    protected static function booted()
+    {
+        parent::boot();
+
+        static::created(function ($lead) {
+            // Automatically create an interaction after a lead is created
+            Interaction::create([
+                'lead_id' => $lead->id,
+                'client_id' => null,  // As you mentioned, the client is blank
+                'type' => 'Lead',  // As the type should be 'Lead'
+                'description' => $lead->description,  // Description comes from the lead
+                'interactions_date' => Carbon::now()->toDateString()  // Sync with the current laptop date
+            ]);
+        });
     }
 }

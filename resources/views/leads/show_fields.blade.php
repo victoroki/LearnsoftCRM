@@ -34,9 +34,9 @@
     <p>{{ $lead->employee_id }}</p>
 </div>
 
-<!-- Notes Field -->
+<!-- Description Field -->
 <div class="col-sm-12">
-    {!! Form::label('notes', 'Notes:') !!}
-    <p>{{ $lead->notes }}</p>
+    {!! Form::label('description', 'Description:') !!}
+    <p>{{ $lead->description }}</p>
 </div>
 
