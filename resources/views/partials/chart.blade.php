@@ -3,9 +3,9 @@
 <div class="container my-4">
     <h4>Quantity Ordered Over Time</h4>
     <div class="btn-group mb-3">
-        <button class="btn btn-primary" onclick="updateChart('days')">Days</button>
+       
         <button class="btn btn-primary" onclick="updateChart('weeks')">Weeks</button>
-        <button class="btn btn-primary" onclick="updateChart('months')">Months</button>
+       
     </div>
     <div style="height:500px;width:auto;">
         <canvas id="orderChart"></canvas>
