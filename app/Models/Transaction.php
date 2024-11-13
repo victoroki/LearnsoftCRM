@@ -47,4 +47,8 @@ class Transaction extends Model
     {
         return $this->belongsTo(\App\Models\Order::class, 'order_id');
     }
+    public function getPaymentDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d');
+    }
 }

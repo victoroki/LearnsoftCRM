@@ -37,4 +37,8 @@ class ClientRepository
     {
         return Client::destroy($id);
     }
+    public function query()
+    {
+        return Client::query();
+    }
 }

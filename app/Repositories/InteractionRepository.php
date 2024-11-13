@@ -24,4 +24,8 @@ class InteractionRepository extends BaseRepository
     {
         return Interaction::class;
     }
+    public function query()
+    {
+        return Interaction::query();
+    }
 }

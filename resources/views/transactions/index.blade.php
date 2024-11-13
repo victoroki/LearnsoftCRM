@@ -1,15 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="content-header">
+<section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
+                <!-- Title centered -->
+                <div class="col-sm-12 text-center">
                     <h1>Transactions</h1>
                 </div>
+            </div>
+            <div class="row">
+                <!-- Search box on the left -->
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('transactions.create') }}">
+                    <form action="{{ route('transactions.index') }}" method="GET" class="form-inline">
+                        <input type="text" name="search" class="form-control mr-2" placeholder="Search Transactions" value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+                <!-- Add New button on the right -->
+                <div class="col-sm-6 text-right">
+                    <a class="btn btn-primary" href="{{ route('transactions.create') }}">
                         Add New
                     </a>
                 </div>

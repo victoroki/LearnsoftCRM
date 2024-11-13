@@ -26,11 +26,33 @@ class InteractionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $interactions = Interaction::with(['client', 'lead'])->paginate(10);
+        // Get the search query from the request
+        $search = $request->input('search');
+        
+        // Query interactions with related client and lead models
+        $interactions = Interaction::with(['client', 'lead'])
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery->where('type', 'like', '%' . $search . '%')
+                             ->orWhere('description', 'like', '%' . $search . '%')
+                             ->orWhere('interactions_date', 'like', '%' . $search . '%')
+                             ->orWhereHas('client', function ($query) use ($search) {
+                                 $query->where('first_name', 'like', '%' . $search . '%')
+                                       ->orWhere('last_name', 'like', '%' . $search . '%')
+                                       ->orWhere('company_name', 'like', '%' . $search . '%')
+                                       ->orWhere('email_address', 'like', '%' . $search . '%');
+                             })
+                             ->orWhereHas('lead', function ($query) use ($search) {
+                                 $query->where('full_name', 'like', '%' . $search . '%')
+                                       ->orWhere('email', 'like', '%' . $search . '%');
+                             });
+                });
+            })
+            ->paginate(10);
     
         return view('interactions.index')
             ->with('interactions', $interactions);
-    }    
+    }
 
     /**
      * Show the form for creating a new Interaction.

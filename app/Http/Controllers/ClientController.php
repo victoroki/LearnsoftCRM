@@ -30,11 +30,26 @@ class ClientController extends AppBaseController
  */
 public function index(Request $request)
 {
-    // Get paginated clients (you can adjust the number per page)
-    $clients = $this->clientRepository->paginate(10); // 10 is the number of clients per page
+    // Get search term from the request
+    $search = $request->input('search');
+    
+    // Query clients using the repository
+    $clients = $this->clientRepository->query();
+    
+    // Modify the query if there is a search term
+    if ($search) {
+        $clients = $clients->where(function($query) use ($search) {
+            $query->where('first_name', 'like', '%' . $search . '%')
+                  ->orWhere('last_name', 'like', '%' . $search . '%')
+                  ->orWhere('company_name', 'like', '%' . $search . '%')
+                  ->orWhere('email_address', 'like', '%' . $search . '%'); // Added email_address field
+        });
+    }
 
-    return view('clients.index')
-        ->with('clients', $clients);
+    // Paginate results (10 per page, adjust as needed)
+    $clients = $clients->paginate(10);
+
+    return view('clients.index', compact('clients'));
 }
  
 

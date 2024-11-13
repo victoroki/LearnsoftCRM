@@ -7,6 +7,15 @@
                 <div class="col-sm-6">
                     <h1>Products</h1>
                 </div>
+                <div class="container-fluid">
+    <div class="row mb-2">
+
+    <div class="col-sm-6 ml-auto">
+    <form action="{{ route('products.index') }}" method="GET" class="form-inline">
+        <input type="text" name="search" class="form-control mr-2" placeholder="Search Products" value="{{ request('search') }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
                 <div class="col-sm-6">
                     <a class="btn btn-primary float-right"
                        href="{{ route('products.create') }}">

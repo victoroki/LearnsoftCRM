@@ -21,4 +21,8 @@ class DepartmentRepository extends BaseRepository
     {
         return Department::class;
     }
+    public function query()
+    {
+        return Department::query();
+    }
 }

@@ -26,4 +26,8 @@ class TransactionRepository extends BaseRepository
     {
         return Transaction::class;
     }
+    public function query()
+    {
+        return Transaction::query();
+    }
 }

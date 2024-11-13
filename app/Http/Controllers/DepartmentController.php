@@ -24,10 +24,19 @@ class DepartmentController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $departments = $this->departmentRepository->paginate(10);
-
-        return view('departments.index')
-            ->with('departments', $departments);
+        $search = $request->input('search');
+        
+        // Apply the search filter if a term is provided
+        $departments = $this->departmentRepository->query();
+    
+        if ($search) {
+            $departments = $departments->where('dept_name', 'like', '%' . $search . '%')
+                                       ->orWhere('description', 'like', '%' . $search . '%');
+        }
+    
+        $departments = $departments->paginate(10);
+    
+        return view('departments.index')->with('departments', $departments);
     }
 
     /**

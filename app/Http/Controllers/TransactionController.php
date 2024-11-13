@@ -6,6 +6,7 @@ use App\Http\Requests\CreateTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\TransactionRepository;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Flash;
 
@@ -24,13 +25,33 @@ class TransactionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $transactions = $this->transactionRepository->paginate(10);
-        // Eager load 'order' and 'client' relationships
-        $transactions->load('order.client'); 
-    
-        return view('transactions.index')
-            ->with('transactions', $transactions);
+        $search = $request->input('search');
+        
+        $transactions = Transaction::query() // Start the query
+            ->when($search, function ($query) use ($search) {
+                // Search within 'order' relationship
+                $query->whereHas('order', function ($query) use ($search) {
+                    // Ensure you are correctly searching by the columns in the 'orders' table
+                    $query->where('status', 'like', '%' . $search . '%') // Search order status
+                          ->orWhere('order_date', 'like', '%' . $search . '%'); // Optionally, you can search the order date
+                })
+                // Search the transaction fields
+                ->orWhere('transaction_reference', 'like', '%' . $search . '%') // Search transaction reference
+                ->orWhere('payment_method', 'like', '%' . $search . '%') // Search payment method
+                ->orWhere('status', 'like', '%' . $search . '%') // Search transaction status
+                ->orWhere('amount_paid', 'like', '%' . $search . '%') // Search amount paid
+                ->orWhereDate('payment_date', 'like', '%' . $search . '%') // Search payment date
+                // Search within the 'client' relationship through 'order' relationship
+                ->orWhereHas('order.client', function ($query) use ($search) {
+                    $query->where('first_name', 'like', '%' . $search . '%') // Search client's first name
+                          ->orWhere('last_name', 'like', '%' . $search . '%'); // Search client's last name
+                });
+            })
+            ->paginate(10);
+        
+        return view('transactions.index')->with('transactions', $transactions);
     }
+    
     
 
     /**
