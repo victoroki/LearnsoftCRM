@@ -4,6 +4,7 @@
 
 <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
 </head>
 <div class="container-fluid">
     <h1 class="text-black">Welcome {{ Auth::user()->name }}</h1>
@@ -44,7 +45,18 @@
         </div>
     </div>
 
+    <div class="row">
+    <div class="container col-md-6">
+
     @include('partials.chart')  
+
+    </div>
+    <div class="container col-md-6">
+
+@include('partials.myChart')  
+
+</div>
+    </div>
 
 </div>
 @endsection
