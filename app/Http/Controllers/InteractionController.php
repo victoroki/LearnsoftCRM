@@ -59,7 +59,7 @@ class InteractionController extends AppBaseController
      */
     public function create()
     {
-        $clients = Client::pluck('full_name', 'id'); // Correct model usage
+        $clients = Client::all(); // Correct model usage
         return view('interactions.create', compact('clients')); 
     }
 
@@ -68,7 +68,19 @@ class InteractionController extends AppBaseController
      */
     public function store(CreateInteractionRequest $request)
     {
+        // validate the required inputs
+        $request->validate([
+            'lead_full_name' => 'required|string|max:255'
+        ]);
+        // retrieve full input from request
         $input = $request->all();
+        // check if a lead with this name already exists, otherwise create a new one
+        $lead = \App\Models\Lead::firstOrCreate([
+            'full_name' => $input['lead_full_name']
+        ]);
+
+        // Link this interaction to the correct lead
+        $input['lead_id'] = $lead->id;
 
         $interaction = $this->interactionRepository->create($input);
 

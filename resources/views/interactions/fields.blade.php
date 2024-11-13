@@ -1,13 +1,13 @@
 <!-- Client Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('client_id', 'Client Id:') !!}
-    {!! Form::select('client_id', \App\Models\Client::pluck('first_name', 'id'), null, ['class' => 'form-control']) !!}
+    {!! Form::label('client_first_name', 'Client Full Name:') !!}
+    {!! Form::text('client_first_name', null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter client name']) !!}
 </div>
 
 <!-- Lead Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('lead_id', 'Lead Id:') !!}
-    {!! Form::select('lead_id', \App\Models\Lead::pluck('full_name', 'id'), null, ['class' => 'form-control']) !!}
+    {!! Form::label('lead_full_name', 'Lead Full Name:') !!}
+    {!! Form::text('lead_full_name', null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter lead name']) !!}
 </div>
 
 <!-- Type Field -->
