@@ -45,3 +45,9 @@
     {!! Form::label('client_id', 'Client:') !!}
     {!! Form::select('client_id', $clients, null, ['class' => 'form-control']) !!}
 </div>
+<!-- Lead Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('lead_id', 'Lead:') !!}
+    {!! Form::select('lead_id', $leads, null, ['class' => 'form-control']) !!}
+</div>
+

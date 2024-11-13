@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th>Client</th>
-                <th>Lead</th>
+                <th>Name</th>
                 <th>Type</th>
                 <th>Description</th>
                 <th>Interactions Date</th>

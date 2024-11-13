@@ -33,7 +33,6 @@
                             <th>Description</th>
                             <th>Price</th>
                             <th>Quantity Available</th>
-                            <th>Lead</th> <!-- Display Lead's Full Name -->
                             <th colspan="3">Action</th>
                         </tr>
                     </thead>
@@ -44,7 +43,6 @@
                             <td>{{ $product->description }}</td>
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->quantity_available }}</td>
-                            <td>{{ $product->lead->full_name }}</td> <!-- Display Lead's Full Name -->
                             <td>
                                 <div class='btn-group'>
                                     <a href="{{ route('products.show', [$product->id]) }}" class='btn btn-default'>

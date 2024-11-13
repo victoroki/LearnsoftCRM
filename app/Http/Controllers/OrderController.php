@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends AppBaseController
 {
-    /** @var OrderRepository $orderRepository*/
+    /** @var OrderRepository $orderRepository */
     private $orderRepository;
 
     public function __construct(OrderRepository $orderRepo)
@@ -26,28 +26,23 @@ class OrderController extends AppBaseController
      */
     public function index(Request $request)
     {
-        // Eager load product and client relationships directly
-        $orders = Order::with(['product', 'client'])->paginate(10);
-        
+        // Eager load product, client, and lead relationships directly
+        $orders = Order::with(['product', 'client', 'lead'])->paginate(10);
+
         return view('orders.index')->with('orders', $orders);
     }
-    
-    
-    
 
     /**
      * Show the form for creating a new Order.
      */
     public function create()
     {
-        // Fetch all products and clients from the database
         $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-        $clients = \App\Models\Client::pluck('first_name', 'id')->toArray();
-    
-        // Pass the products and clients data to the view
-        return view('orders.create', compact('products', 'clients'));
+        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
+        $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
+
+        return view('orders.create', compact('products', 'clients', 'leads'));
     }
-    
 
     /**
      * Store a newly created Order in storage.
@@ -56,9 +51,97 @@ class OrderController extends AppBaseController
     {
         $input = $request->all();
 
-        $order = $this->orderRepository->create($input);
+        // Handle Lead or Client order creation
+        if ($request->has('lead_id') && $request->lead_id) {
+            $lead = \App\Models\Lead::find($request->lead_id);
 
-        Flash::success('Order saved successfully.');
+            if ($lead) {
+                // Promote Lead to Client
+                $client = new \App\Models\Client();
+                $client->full_name = $lead->full_name;
+                $client->email_address = $lead->email;
+                $client->save();
+
+                // Optionally mark the lead as converted or delete it
+                $lead->status = 'Converted to a client';
+                $lead->save(); 
+                // $lead->delete(); // Uncomment to delete the Lead
+
+                $input['client_id'] = $client->id;
+                $input['type'] = 'Client'; // Mark order type as 'Client'
+            }
+        } elseif ($request->has('client_id') && $request->client_id) {
+            $input['client_id'] = $request->client_id;
+            $input['type'] = 'Client'; // Mark order type as 'Client'
+        }
+
+        $this->orderRepository->create($input);
+
+        Flash::success('Order created successfully.');
+
+        return redirect(route('orders.index'));
+    }
+
+    /**
+     * Show the form for editing the specified Order.
+     */
+    public function edit($id)
+    {
+        $order = $this->orderRepository->find($id);
+
+        if (empty($order)) {
+            Flash::error('Order not found');
+            return redirect(route('orders.index'));
+        }
+
+        $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
+        $clients = \App\Models\Client::pluck('first_name', 'id')->toArray();
+        $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
+
+        return view('orders.edit', compact('order', 'products', 'clients', 'leads'));
+    }
+
+    /**
+     * Update the specified Order in storage.
+     */
+    public function update($id, UpdateOrderRequest $request)
+    {
+        $order = $this->orderRepository->find($id);
+
+        if (empty($order)) {
+            Flash::error('Order not found');
+            return redirect(route('orders.index'));
+        }
+
+        $input = $request->all();
+
+        // Handle Lead or Client order update
+        if ($request->has('lead_id') && $request->lead_id) {
+            $lead = \App\Models\Lead::find($request->lead_id);
+
+            if ($lead) {
+                // Promote Lead to Client
+                $client = new \App\Models\Client();
+                $client->full_name = $lead->full_name;
+                $client->email = $lead->email;
+                $client->save();
+
+                // Optionally mark the lead as converted or delete it
+                $lead->status = 'Converted to a client'; 
+                // $lead->delete(); // Uncomment to delete the Lead
+
+                $input['client_id'] = $client->id;
+                $input['type'] = 'Client'; // Mark order type as 'Client'
+            }
+        } elseif ($request->has('client_id') && $request->client_id) {
+            $input['client_id'] = $request->client_id;
+            $input['type'] = 'Client'; // Mark order type as 'Client'
+        }
+
+        // Update the order
+        $order = $this->orderRepository->update($input, $id);
+
+        Flash::success('Order updated successfully.');
 
         return redirect(route('orders.index'));
     }
@@ -72,7 +155,6 @@ class OrderController extends AppBaseController
 
         if (empty($order)) {
             Flash::error('Order not found');
-
             return redirect(route('orders.index'));
         }
 
@@ -80,41 +162,8 @@ class OrderController extends AppBaseController
     }
 
     /**
-     * Show the form for editing the specified Order.
+     * Get order data based on a specified interval.
      */
-    public function edit($id)
-    {
-        $order = $this->orderRepository->find($id);
-
-        if (empty($order)) {
-            Flash::error('Order not found');
-
-            return redirect(route('orders.index'));
-        }
-
-        return view('orders.edit')->with('order', $order);
-    }
-
-    /**
-     * Update the specified Order in storage.
-     */
-    public function update($id, UpdateOrderRequest $request)
-    {
-        $order = $this->orderRepository->find($id);
-
-        if (empty($order)) {
-            Flash::error('Order not found');
-
-            return redirect(route('orders.index'));
-        }
-
-        $order = $this->orderRepository->update($request->all(), $id);
-
-        Flash::success('Order updated successfully.');
-
-        return redirect(route('orders.index'));
-    }
-
     public function getOrderData(Request $request)
     {
         $interval = $request->get('interval', 'days'); // Default to daily
@@ -132,7 +181,6 @@ class OrderController extends AppBaseController
         return response()->json($data);
     }
 
-
     /**
      * Remove the specified Order from storage.
      *
@@ -144,7 +192,6 @@ class OrderController extends AppBaseController
 
         if (empty($order)) {
             Flash::error('Order not found');
-
             return redirect(route('orders.index'));
         }
 

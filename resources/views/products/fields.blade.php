@@ -12,7 +12,7 @@
 
 <!-- Price Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('price', 'Price:') !!}
+    {!! Form::label('price', 'Unit Price:') !!}
     {!! Form::number('price', null, ['class' => 'form-control']) !!}
 </div>
 
@@ -22,8 +22,3 @@
     {!! Form::number('quantity_available', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Lead Id Field: Dropdown with lead names -->
-<div class="form-group col-sm-6">
-    {!! Form::label('lead_id', 'Lead:') !!}
-    {!! Form::select('lead_id', $leads->pluck('full_name', 'id')->toArray(), null, ['class' => 'form-control']) !!}
-</div>

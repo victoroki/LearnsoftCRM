@@ -9,7 +9,8 @@
                 <th>Total Price</th>
                 <th>Order Date</th>
                 <th>Status</th>
-                <th>Client</th>
+                <th>Client</th> <!-- Separate column for Client -->
+                <th>Lead</th>   <!-- Separate column for Lead -->
                 <th colspan="3">Action</th>
             </tr>
             </thead>
@@ -22,7 +23,20 @@
                     <td>{{ $order->total_price }}</td>
                     <td>{{ $order->order_date }}</td>
                     <td>{{ $order->status }}</td>
-                    <td>{{ $order->client->first_name }} {{ $order->client->last_name }}</td> <!-- Display client full name -->
+                    <td>
+                        @if($order->client)
+                            {{ $order->client->first_name }} {{ $order->client->last_name }}
+                        @else
+                            N/A
+                        @endif
+                    </td> <!-- Display client full name or N/A -->
+                    <td>
+                        @if($order->lead)
+                            {{ $order->lead->full_name }}
+                        @else
+                            N/A
+                        @endif
+                    </td> <!-- Display lead full name or N/A -->
                     <td style="width: 120px">
                         {!! Form::open(['route' => ['orders.destroy', $order->id], 'method' => 'delete']) !!}
                         <div class='btn-group'>

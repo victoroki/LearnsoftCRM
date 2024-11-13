@@ -15,14 +15,15 @@ class Order extends Model
         'total_price',
         'order_date',
         'status',
-        'client_id'
+        'client_id',
+        'lead_id', 
     ];
 
     protected $casts = [
         'unit_price' => 'float',
         'total_price' => 'float',
         'order_date' => 'date',
-        'status' => 'string'
+        'status' => 'string',
     ];
 
     public static array $rules = [
@@ -32,7 +33,8 @@ class Order extends Model
         'total_price' => 'nullable|numeric',
         'order_date' => 'nullable',
         'status' => 'nullable|string|max:20',
-        'client_id' => 'nullable'
+        'client_id' => 'nullable',
+        'lead_id' => 'nullable',
     ];
 
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -50,8 +52,52 @@ class Order extends Model
         return $this->hasMany(\App\Models\Transaction::class, 'order_id');
     }
 
+    public function lead()
+    {
+    return $this->belongsTo(\App\Models\Lead::class, 'lead_id');
+    }
+
     public function getOrderDateAttribute($value)
     {
         return \Carbon\Carbon::parse($value)->format('Y-m-d');
+    }
+
+    // Automatically calculate total price before saving or updating
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($order) {
+            // Automatically calculate total_price if quantity_ordered and unit_price are set
+            if ($order->quantity_ordered && $order->unit_price) {
+                $order->total_price = $order->quantity_ordered * $order->unit_price;
+            }
+        });
+    }
+
+    /**
+     * Accessor to calculate total_price after creating an instance
+     *
+     * @param $value
+     * @return float
+     */
+    public function getTotalPriceAttribute($value)
+    {
+        // Return calculated value if not already set
+        if (!$value && $this->quantity_ordered && $this->unit_price) {
+            return $this->quantity_ordered * $this->unit_price;
+        }
+
+        return $value;
+    }
+
+    /**
+     * A method to explicitly calculate the total price
+     *
+     * @return float
+     */
+    public function calculateTotalPrice()
+    {
+        return $this->quantity_ordered * $this->unit_price;
     }
 }

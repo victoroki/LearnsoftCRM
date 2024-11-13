@@ -56,9 +56,10 @@
         </a>
 
         <!-- Convert to Client Button -->
-        <a href="{{ route('leads.convertToClient', $lead->id) }}" class="btn btn-success btn-xs">
+        {{-- <a href="{{ route('leads.convertToClient', $lead->id) }}" class="btn btn-success btn-xs">
             Convert to Client
-        </a>
+        </a> --}}
+        
 
         {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
     </div>

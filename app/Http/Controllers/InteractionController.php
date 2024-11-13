@@ -37,8 +37,8 @@ class InteractionController extends AppBaseController
      */
     public function create()
     {
-        $clients = Client::pluck('first_name', 'id'); // Correct model usage
-        return view('interactions.create', compact('clients')); // Make sure the view name is correct
+        $clients = Client::pluck('full_name', 'id'); // Correct model usage
+        return view('interactions.create', compact('clients')); 
     }
 
     /**

@@ -3,8 +3,7 @@
         <table class="table" id="clients-table">
             <thead>
             <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>Full Name</th>
                 <th>Company Name</th>
                 <th>Email Address</th>
                 <th>Phone Number</th>
@@ -16,8 +15,7 @@
             <tbody>
             @foreach($clients as $client)
                 <tr>
-                    <td>{{ $client->first_name }}</td>
-                    <td>{{ $client->last_name }}</td>
+                    <td>{{ $client->full_name }}</td>
                     <td>{{ $client->company_name }}</td>
                     <td>{{ $client->email_address }}</td>
                     <td>{{ $client->phone_number }}</td>
