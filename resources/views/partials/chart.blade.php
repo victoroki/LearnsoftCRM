@@ -4,8 +4,10 @@
     <h4>Quantity Ordered Over Time</h4>
     <div class="btn-group mb-3">
        
+    <button class="btn btn-primary" onclick="updateChart('days')">Days</button>
         <button class="btn btn-primary" onclick="updateChart('weeks')">Weeks</button>
-       
+        <button class="btn btn-primary" onclick="updateChart('months')">Months</button>
+      
     </div>
     <div style="height:500px;width:auto;">
         <canvas id="orderChart"></canvas>
@@ -36,7 +38,7 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Quantity Ordered',
+                label: 'Graph of Quantity/Time',
                 data: data,
                 borderColor: 'rgba(54, 162, 235, 0.8)', // Line color
                 backgroundColor: 'rgba(54, 162, 235, 0.2)', // Fill color under the line
