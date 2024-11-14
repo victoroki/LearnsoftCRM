@@ -4,11 +4,22 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
+                <!-- Title Centered -->
+                <div class="col text-center">
                     <h1>Leads</h1>
                 </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right" href="{{ route('leads.create') }}">Add New</a>
+            </div>
+            <div class="row align-items-center">
+                <!-- Search Box Left -->
+                <div class="col-md-6">
+                    <form action="{{ route('leads.index') }}" method="GET" class="form-inline">
+                        <input type="text" name="search" class="form-control mr-2" placeholder="Search Leads" value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+                <!-- Add New Button Right -->
+                <div class="col-md-6 text-right">
+                    <a class="btn btn-primary" href="{{ route('leads.create') }}">Add New</a>
                 </div>
             </div>
         </div>
@@ -46,26 +57,18 @@
                                     <td>{{ $lead->employee->first_name ?? 'No Employee' }} {{ $lead->employee->last_name ?? '' }}</td>
                                     <td>{{ $lead->description ?? 'No Description' }}</td>
                                     <td style="width: 120px">
-    {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
-    <div class='btn-group'>
-        <a href="{{ route('leads.show', [$lead->id]) }}" class='btn btn-default btn-xs'>
-            <i class="far fa-eye"></i>
-        </a>
-        <a href="{{ route('leads.edit', [$lead->id]) }}" class='btn btn-default btn-xs'>
-            <i class="far fa-edit"></i>
-        </a>
-
-        <!-- Convert to Client Button -->
-        {{-- <a href="{{ route('leads.convertToClient', $lead->id) }}" class="btn btn-success btn-xs">
-            Convert to Client
-        </a> --}}
-        
-
-        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-    </div>
-    {!! Form::close() !!}
-</td>
-
+                                        {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                                        <div class='btn-group'>
+                                            <a href="{{ route('leads.show', [$lead->id]) }}" class='btn btn-default btn-xs'>
+                                                <i class="far fa-eye"></i>
+                                            </a>
+                                            <a href="{{ route('leads.edit', [$lead->id]) }}" class='btn btn-default btn-xs'>
+                                                <i class="far fa-edit"></i>
+                                            </a>
+                                            {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+                                        </div>
+                                        {!! Form::close() !!}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

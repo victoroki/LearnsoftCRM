@@ -4,21 +4,24 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
+                <!-- Center the title -->
+                <div class="col-12 text-center">
                     <h1>Products</h1>
                 </div>
-                <div class="container-fluid">
-    <div class="row mb-2">
+            </div>
 
-    <div class="col-sm-6 ml-auto">
-    <form action="{{ route('products.index') }}" method="GET" class="form-inline">
-        <input type="text" name="search" class="form-control mr-2" placeholder="Search Products" value="{{ request('search') }}">
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-</div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('products.create') }}">
+            <div class="row mb-2 align-items-center">
+                <!-- Search box on the left -->
+                <div class="col-md-6">
+                    <form action="{{ route('products.index') }}" method="GET" class="form-inline">
+                        <input type="text" name="search" class="form-control mr-2" placeholder="Search Products" value="{{ request('search') }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+
+                <!-- Add New button on the right -->
+                <div class="col-md-6 text-right">
+                    <a class="btn btn-primary" href="{{ route('products.create') }}">
                         Add New
                     </a>
                 </div>
@@ -72,5 +75,4 @@
             </div>
         </div>
     </div>
-
 @endsection
