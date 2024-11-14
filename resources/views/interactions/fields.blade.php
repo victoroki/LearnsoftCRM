@@ -25,7 +25,7 @@
 <!-- Interactions Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('interactions_date', 'Interactions Date:') !!}
-    {!! Form::text('interactions_date', null, ['class' => 'form-control','id'=>'interactions_date']) !!}
+    {!! Form::date('interactions_date', null, ['class' => 'form-control','id'=>'interactions_date']) !!}
 </div>
 
 @push('page_scripts')
