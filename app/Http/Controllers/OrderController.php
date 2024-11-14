@@ -60,6 +60,8 @@ class OrderController extends AppBaseController
                 $client = new \App\Models\Client();
                 $client->full_name = $lead->full_name;
                 $client->email_address = $lead->email;
+                $client->phone_number = $lead->phone_number;
+
                 $client->save();
 
                 // Optionally mark the lead as converted or delete it
@@ -95,7 +97,7 @@ class OrderController extends AppBaseController
         }
 
         $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-        $clients = \App\Models\Client::pluck('first_name', 'id')->toArray();
+        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
         $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
 
         return view('orders.edit', compact('order', 'products', 'clients', 'leads'));
