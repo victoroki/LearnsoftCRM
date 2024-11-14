@@ -24,4 +24,8 @@ class EmployeeRepository extends BaseRepository
     {
         return Employee::class;
     }
+    public function query()
+    {
+        return Employee::query();
+    }
 }

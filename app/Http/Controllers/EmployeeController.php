@@ -25,10 +25,29 @@ class EmployeeController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $employees = $this->employeeRepository->paginate(10);
-
-        return view('employees.index')
-            ->with('employees', $employees);
+        // Get search term from the request
+        $search = $request->input('search');
+        
+        // Query employees using the repository
+        $employees = $this->employeeRepository->query();
+        
+        // Modify the query if there is a search term
+        if ($search) {
+            $employees = $employees->where(function ($query) use ($search) {
+                $query->where('first_name', 'like', '%' . $search . '%')
+                      ->orWhere('last_name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%')
+                      ->orWhereHas('department', function ($query) use ($search) {
+                          // Search the dept_name column in the departments table
+                          $query->where('departments.dept_name', 'like', '%' . $search . '%');
+                      });
+            });
+        }
+        
+        // Paginate results (10 per page, adjust as needed)
+        $employees = $employees->paginate(10);
+        
+        return view('employees.index', compact('employees'));
     }
 
     /**

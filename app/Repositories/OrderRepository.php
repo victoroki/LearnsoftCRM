@@ -26,4 +26,8 @@ class OrderRepository extends BaseRepository
     {
         return Order::class;
     }
+    public function query()
+    {
+        return Order::query();
+    }
 }

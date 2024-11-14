@@ -24,4 +24,8 @@ class ProductRepository extends BaseRepository
     {
         return Product::class;
     }
+    public function query()
+    {
+        return Product::query();
+    }
 }

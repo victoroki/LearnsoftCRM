@@ -26,4 +26,8 @@ class LeadRepository extends BaseRepository
     {
         return Lead::class;
     }
+    public function query()
+    {
+        return Lead::query();
+    }
 }

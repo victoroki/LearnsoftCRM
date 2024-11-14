@@ -24,12 +24,27 @@ class ProductController extends AppBaseController
      */
     public function index(Request $request)
     {
-        // Eager load the lead relationship
-        $products = $this->productRepository->paginate(10);
-        $products->load('lead'); // Eager load the lead
+        // Get search term from the request
+        $search = $request->input('search');
+        
+        // Query the products using the repository
+        $products = $this->productRepository->query();
     
-        return view('products.index')
-            ->with('products', $products);
+        // Modify the query based on the search term
+        if ($search) {
+            $products = $products->where('product_name', 'like', '%' . $search . '%')
+                                 ->orWhere('description', 'like', '%' . $search . '%')
+                                 ->orWhereHas('lead', function ($query) use ($search) {
+                                     // Search by lead attributes (e.g., full_name)
+                                     $query->where('full_name', 'like', '%' . $search . '%')
+                                           ->orWhere('email', 'like', '%' . $search . '%');
+                                 });
+        }
+    
+        // Get the products with pagination and eager loading the 'lead' relationship
+        $products = $products->with('lead')->paginate(10);
+    
+        return view('products.index', compact('products'));
     }
     
     

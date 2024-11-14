@@ -29,11 +29,28 @@ class LeadController extends AppBaseController
     /**
      * Display a listing of the Lead.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $leads = Lead::with('employee')->paginate(10);
+        // Get search query from the request
+        $search = $request->input('search');
+        
+        // Query leads with employee relationships and apply search if a term is provided
+        $leads = Lead::with('employee')
+                    ->when($search, function ($query) use ($search) {
+                        $query->where('full_name', 'like', '%' . $search . '%')
+                              ->orWhere('email', 'like', '%' . $search . '%')
+                              ->orWhere('description', 'like', '%' . $search . '%') // Added description search
+                              ->orWhereHas('employee', function ($query) use ($search) {
+                                  $query->where('first_name', 'like', '%' . $search . '%')
+                                        ->orWhere('last_name', 'like', '%' . $search . '%')
+                                        ->orWhere('email', 'like', '%' . $search . '%');
+                              });
+                    })
+                    ->paginate(10);
+        
         return view('leads.index', compact('leads'));
     }
+
 
     /**
      * Show the form for creating a new Lead.

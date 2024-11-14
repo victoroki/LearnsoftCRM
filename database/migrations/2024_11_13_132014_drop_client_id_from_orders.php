@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             //
-            $table->string('updated_at')->nullable();
+            $table->dropForeign(['client_id']);
+            $table->dropColumn('client_id');
         });
     }
 
@@ -24,7 +25,8 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             //
-            $table->dropColumn('updated_at');
+            $table->integer(['client_id']);
+            $table->foreign('client_id')->references('id')->on('clients')->onDelele('cascade');
         });
     }
 };

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('leads', function (Blueprint $table) {
+        Schema::table('clients', function (Blueprint $table) {
             //
-            $table->string('updated_at')->nullable();
+            $table->string('full_name')->nullable();
         });
     }
 
@@ -22,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('leads', function (Blueprint $table) {
+        Schema::table('clients', function (Blueprint $table) {
             //
-            $table->dropColum('updated_at');
+            $table->string('full_name');
         });
     }
 };
