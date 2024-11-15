@@ -25,7 +25,7 @@
 <!-- Order Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('order_date', 'Order Date:') !!}
-    {!! Form::text('order_date', null, ['class' => 'form-control', 'id' => 'order_date']) !!}
+    {!! Form::date('order_date', null, ['class' => 'form-control', 'id' => 'order_date']) !!}
 </div>
 
 @push('page_scripts')
