@@ -80,4 +80,9 @@ class Lead extends Model
             ]);
         });
     }
+    public function getProductNameAttribute()
+{
+    return $this->product ? $this->product->product_name : 'N/A';
+}
+
 }

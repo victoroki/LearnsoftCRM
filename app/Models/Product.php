@@ -42,4 +42,9 @@ class Product extends Model
     {
         return $this->hasMany(\App\Models\Order::class, 'product_id');
     }
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
+    }
+
 }
