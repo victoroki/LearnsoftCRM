@@ -9,12 +9,7 @@
                     <h1>Interactions</h1>
                 </div>
             </div>
-                            <!-- <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('interactions.create') }}">
-                        Add New
-                    </a>
-                </div> -->
+
             <div class="row">
                 <!-- Search box on the left -->
                 <div class="col-sm-6">
@@ -23,6 +18,7 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
+
                 <!-- Add New button on the right -->
                 <div class="col-sm-6 text-right">
                     <a class="btn btn-primary" href="{{ route('interactions.create') }}">
@@ -39,6 +35,7 @@
         <div class="clearfix"></div>
 
         <div class="card">
+            <!-- Include the table from the separate table.blade.php file -->
             @include('interactions.table')
         </div>
     </div>

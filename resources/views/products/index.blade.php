@@ -4,14 +4,12 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <!-- Center the title -->
                 <div class="col-12 text-center">
                     <h1>Products</h1>
                 </div>
             </div>
 
             <div class="row mb-2 align-items-center">
-                <!-- Search box on the left -->
                 <div class="col-md-6">
                     <form action="{{ route('products.index') }}" method="GET" class="form-inline">
                         <input type="text" name="search" class="form-control mr-2" placeholder="Search Products" value="{{ request('search') }}">
@@ -19,7 +17,6 @@
                     </form>
                 </div>
 
-                <!-- Add New button on the right -->
                 <div class="col-md-6 text-right">
                     <a class="btn btn-primary" href="{{ route('products.create') }}">
                         Add New
@@ -30,49 +27,12 @@
     </section>
 
     <div class="content px-3">
-
         @include('flash::message')
 
         <div class="clearfix"></div>
 
         <div class="card">
-            <!-- Products Table -->
-            <div class="table-responsive">
-                <table class="table table-striped" id="products-table">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Quantity Available</th>
-                            <th colspan="3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($products as $product)
-                        <tr>
-                            <td>{{ $product->product_name }}</td>
-                            <td>{{ $product->description }}</td>
-                            <td>{{ $product->price }}</td>
-                            <td>{{ $product->quantity_available }}</td>
-                            <td>
-                                <div class='btn-group'>
-                                    <a href="{{ route('products.show', [$product->id]) }}" class='btn btn-default'>
-                                        <i class="fa fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('products.edit', [$product->id]) }}" class='btn btn-primary'>
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    {!! Form::open(['route' => ['products.destroy', $product->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
-                                    {!! Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-danger', 'onclick' => 'return confirm("Are you sure?")']) !!}
-                                    {!! Form::close() !!}
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @include('products.table') <!-- Assuming this includes the products table -->
         </div>
     </div>
 @endsection

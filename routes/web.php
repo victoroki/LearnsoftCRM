@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\EmployeeController;
 use App\Models\Product;
 
 /*
@@ -45,3 +46,6 @@ Route::get('/get-product-price/{id}', function ($id) {
 });
 
 Route::get('/get-order-data', [OrderController::class, 'getOrderData']);
+
+// Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');

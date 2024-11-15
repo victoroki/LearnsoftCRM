@@ -24,31 +24,36 @@ class ProductController extends AppBaseController
      */
     public function index(Request $request)
     {
-        // Get search term from the request
+        // Get the search term from the request
         $search = $request->input('search');
         
-        // Query the products using the repository
+        // Start the query using the repository
         $products = $this->productRepository->query();
-    
+        
         // Modify the query based on the search term
         if ($search) {
-            $products = $products->where('product_name', 'like', '%' . $search . '%')
-                                 ->orWhere('description', 'like', '%' . $search . '%')
-                                 ->orWhereHas('lead', function ($query) use ($search) {
-                                     // Search by lead attributes (e.g., full_name)
-                                     $query->where('full_name', 'like', '%' . $search . '%')
-                                           ->orWhere('email', 'like', '%' . $search . '%');
-                                 });
+            $products = $products->where(function ($query) use ($search) {
+                // Apply search to product fields
+                $query->where('product_name', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%')
+                      ->orWhere('price', 'like', '%' . $search . '%')  // Added price search
+                      ->orWhere('quantity_available', 'like', '%' . $search . '%')  // Added quantity search
+                      // Search within the related lead model
+                      ->orWhereHas('lead', function ($query) use ($search) {
+                          $query->where('full_name', 'like', '%' . $search . '%')
+                                ->orWhere('email', 'like', '%' . $search . '%');
+                      });
+            });
         }
-    
-        // Get the products with pagination and eager loading the 'lead' relationship
+        
+        // Eager load the 'lead' relationship and paginate the results
         $products = $products->with('lead')->paginate(10);
     
+        // Return the view with the products
         return view('products.index', compact('products'));
     }
     
     
-
     /**
      * Show the form for creating a new Product.
      */

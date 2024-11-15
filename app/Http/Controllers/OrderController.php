@@ -28,23 +28,26 @@ class OrderController extends AppBaseController
     {
         $search = $request->input('search');
         
-        $orders = Order::with(['product', 'client'])
+        $orders = Order::with(['product', 'client', 'lead']) // Eager load product, client, and lead
                         ->when($search, function ($query) use ($search) {
-                            $query->whereHas('product', function ($query) use ($search) {
-                                $query->where('product_name', 'like', '%' . $search . '%');  // Search by product name
-                            })
-                            ->orWhere('status', 'like', '%' . $search . '%')  // Search by status
-                            ->orWhereHas('client', function ($query) use ($search) {
-                                // Search by first name or last name of the client
-                                $query->where('first_name', 'like', '%' . $search . '%')
-                                      ->orWhere('last_name', 'like', '%' . $search . '%');
-                            })
-                            ->orWhereDate('order_date', 'like', '%' . $search . '%'); // Search by order date
+                            $query->where(function ($query) use ($search) {
+                                $query->whereHas('product', function ($query) use ($search) {
+                                    $query->where('product_name', 'like', '%' . $search . '%'); // Search by product name
+                                })
+                                ->orWhere('status', 'like', '%' . $search . '%') // Search by order status
+                                ->orWhereHas('client', function ($query) use ($search) {
+                                    // Search by first name or last name of the client
+                                    $query->where('first_name', 'like', '%' . $search . '%')
+                                          ->orWhere('last_name', 'like', '%' . $search . '%');
+                                })
+                                ->orWhereDate('order_date', 'like', '%' . $search . '%'); // Search by order date
+                            });
                         })
                         ->paginate(10);
-    
+        
         return view('orders.index')->with('orders', $orders);
     }
+    
     
 
     /**
