@@ -55,8 +55,9 @@
                     <!-- Product Dropdown Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('product_id', 'Product:') !!}
-                        {!! Form::select('product_id', $products->pluck('product_name', 'id'), null, ['class' => 'form-control']) !!}
+                        {!! Form::select('product_id', ['' => 'N/A'] + $products->pluck('product_name', 'id')->toArray(), null, ['class' => 'form-control']) !!}
                     </div>
+
 
                     <!-- Employee Dropdown Field -->
                     <div class="form-group col-sm-6">

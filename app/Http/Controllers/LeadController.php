@@ -36,18 +36,19 @@ class LeadController extends AppBaseController
         $search = $request->input('search');
         
         // Query leads with employee relationships and apply search if a term is provided
-        $leads = Lead::with('employee')
-                    ->when($search, function ($query) use ($search) {
-                        $query->where('full_name', 'like', '%' . $search . '%')
-                              ->orWhere('email', 'like', '%' . $search . '%')
-                              ->orWhere('description', 'like', '%' . $search . '%') // Added description search
-                              ->orWhereHas('employee', function ($query) use ($search) {
-                                  $query->where('first_name', 'like', '%' . $search . '%')
-                                        ->orWhere('last_name', 'like', '%' . $search . '%')
-                                        ->orWhere('email', 'like', '%' . $search . '%');
-                              });
-                    })
-                    ->paginate(10);
+        $leads = Lead::with(['employee', 'product']) // Eager load product as well
+        ->when($search, function ($query) use ($search) {
+            $query->where('full_name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%') // Added description search
+                  ->orWhereHas('employee', function ($query) use ($search) {
+                      $query->where('first_name', 'like', '%' . $search . '%')
+                            ->orWhere('last_name', 'like', '%' . $search . '%')
+                            ->orWhere('email', 'like', '%' . $search . '%');
+                  });
+        })
+        ->paginate(10);
+
         
         return view('leads.index', compact('leads'));
     }
@@ -137,6 +138,7 @@ class LeadController extends AppBaseController
             ->with('employees', $employees)
             ->with('products', $products);
     }
+    
     
 
     /**

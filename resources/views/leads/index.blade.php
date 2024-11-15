@@ -55,7 +55,7 @@
                 <td>{{ $lead->email ?? 'No Email' }}</td>
                 <td>{{ $lead->phone_number ?? 'No Phone' }}</td>
                 <td>{{ $lead->status ?? 'No Status' }}</td>
-                <td>{{ $lead->product->product_name ?? 'N/A' }}</td> <!-- Display selected product -->
+                <td>{{ $lead->product_name ?? 'N/A' }}</td> <!-- Display selected product -->
                 <td>{{ $lead->employee->first_name ?? 'No Employee' }} {{ $lead->employee->last_name ?? '' }}</td> <!-- Display employee's name -->
                 <td>{{ $lead->source ?? 'No Source' }}</td> <!-- Display source -->
                 <td>{{ $lead->description ?? 'No description' }}</td>
