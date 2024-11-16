@@ -1,7 +1,7 @@
 <!-- Client Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('client_first_name', 'Client Full Name:') !!}
-    {!! Form::text('client_first_name', isset($client) ? $client->first_name . ' ' . $client->last_name : null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter client name']) !!}
+    {!! Form::text('client_first_name', isset($client) ? $client->first_name : null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter client name']) !!}
 </div>
 
 <!-- Lead Id Field -->
