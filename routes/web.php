@@ -49,3 +49,5 @@ Route::get('/get-order-data', [OrderController::class, 'getOrderData']);
 
 // Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');
+
+// Route::get('/interactions/create', [InteractionController::class, 'create'])->name('interactions.create');

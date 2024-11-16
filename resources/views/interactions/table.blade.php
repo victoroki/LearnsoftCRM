@@ -22,6 +22,11 @@
                         <td style="width: 120px">
                             {!! Form::open(['route' => ['interactions.destroy', $interaction->id], 'method' => 'delete']) !!}
                             <div class='btn-group'>
+                                @if ($interaction->lead)
+                                    <a href="{{ route('interactions.create', ['lead_id' => $interaction->lead->id]) }}" class='btn btn-default btn-xs'>
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                @endif
                                 <a href="{{ route('interactions.show', [$interaction->id]) }}" class='btn btn-default btn-xs'>
                                     <i class="far fa-eye"></i>
                                 </a>

@@ -62,10 +62,21 @@ class InteractionController extends AppBaseController
     /**
      * Show the form for creating a new Interaction.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $clients = Client::all(); // Correct model usage
-        return view('interactions.create', compact('clients')); 
+        // retrieve lead id from the query string
+        $leadId = $request->query('lead_id');
+
+        if ($leadId) {
+            $lead = \App\Models\Lead::find($leadId); // find lead with specific lead id
+            if (!$lead) {
+                Flash::error('Interaction not found');
+            }
+            Flash::success('Interaction saved successfully.'); 
+        }
+
+        $clients = Client::all();
+        return view('interactions.create', compact('lead', 'clients')); 
     }
 
     /**

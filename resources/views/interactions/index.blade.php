@@ -18,13 +18,7 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                 </div>
-
-                <!-- Add New button on the right -->
-                <div class="col-sm-6 text-right">
-                    <a class="btn btn-primary" href="{{ route('interactions.create') }}">
-                        Add New
-                    </a>
-                </div>
+                
             </div>
         </div>
     </section>
