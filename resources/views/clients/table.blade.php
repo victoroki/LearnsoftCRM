@@ -6,6 +6,7 @@
             <th>Email Address</th>
             <th>Phone Number</th>
             <th>Lead</th>
+            <th>Employee</th>
             <th>Location</th>
             <th>Action</th>
         </tr>
@@ -18,6 +19,7 @@
                 <td>{{ $client->email_address }}</td>
                 <td>{{ $client->phone_number }}</td>
                 <td>{{ $client->lead->name ?? 'No Lead' }}</td>
+                <td>{{ $client->employee ? $client->employee->full_name : 'No Employee' }}</td>
                 <td>{{ $client->location }}</td>
                 <td>
                     <div class='btn-group'>

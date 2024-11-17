@@ -34,7 +34,7 @@ public function index(Request $request)
     $search = $request->input('search');
     
     // Query clients with related data
-    $clients = $this->clientRepository->query()->with('lead'); // Include related lead data
+    $clients = $this->clientRepository->query()->with('lead', 'employee');  // Include related lead data
     
     // Apply search filters dynamically
     if ($search) {
@@ -94,7 +94,7 @@ public function index(Request $request)
         }
     
         // Eager load the 'lead' relationship after finding the client
-        $client->load('lead'); 
+        $client->load(['lead', 'employee']); 
     
         return view('clients.show')->with('client', $client);
     }
