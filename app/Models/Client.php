@@ -15,6 +15,7 @@ class Client extends Model
         'email_address',
         'phone_number',
         'lead_id',
+        'employee_id',
         'location'
     ];
 
@@ -57,4 +58,10 @@ class Client extends Model
     {
         return $this->hasMany(\App\Models\Transaction::class, 'client_id');
     }
+
+    public function employee(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Employee::class, 'employee_id');
+    }
+
 }

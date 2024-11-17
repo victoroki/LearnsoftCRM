@@ -41,4 +41,15 @@ class Employee extends Model
     {
         return $this->hasMany(\App\Models\Lead::class, 'employee_id');
     }
+
+    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
+{
+    return $this->hasMany(\App\Models\Client::class, 'employee_id');
+}
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+
 }

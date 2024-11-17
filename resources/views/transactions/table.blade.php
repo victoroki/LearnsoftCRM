@@ -1,3 +1,4 @@
+<!-- Table for displaying transactions -->
 <div class="card-body p-0">
     <div class="table-responsive">
         <table class="table" id="transactions-table">
@@ -16,7 +17,7 @@
             <tbody>
                 @foreach($transactions as $transaction)
                     <tr>
-                        <!-- Display the related Order ID (as number) -->
+                        <!-- Display the related Order ID (or other fields as required) -->
                         <td>{{ $transaction->order_id }}</td>
 
                         <td>{{ $transaction->amount_paid }}</td>

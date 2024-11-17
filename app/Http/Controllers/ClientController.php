@@ -33,25 +33,29 @@ public function index(Request $request)
     // Get search term from the request
     $search = $request->input('search');
     
-    // Query clients using the repository
-    $clients = $this->clientRepository->query();
+    // Query clients with related data
+    $clients = $this->clientRepository->query()->with('lead', 'employee');  // Include related lead data
     
-    // Modify the query if there is a search term
+    // Apply search filters dynamically
     if ($search) {
-        $clients = $clients->where(function($query) use ($search) {
+        $clients = $clients->where(function ($query) use ($search) {
             $query->where('first_name', 'like', '%' . $search . '%')
                   ->orWhere('last_name', 'like', '%' . $search . '%')
                   ->orWhere('company_name', 'like', '%' . $search . '%')
-                  ->orWhere('email_address', 'like', '%' . $search . '%'); // Added email_address field
+                  ->orWhere('email_address', 'like', '%' . $search . '%')
+                  ->orWhere('phone_number', 'like', '%' . $search . '%')
+                  ->orWhere('location', 'like', '%' . $search . '%')
+                  ->orWhereHas('lead', function ($query) use ($search) {
+                      $query->where('name', 'like', '%' . $search . '%');
+                  }); // Search the related lead's name
         });
     }
-
-    // Paginate results (10 per page, adjust as needed)
+    
+    // Paginate results (10 per page, adjustable)
     $clients = $clients->paginate(10);
-
+    
     return view('clients.index', compact('clients'));
 }
- 
 
     /**
      * Show the form for creating a new Client.
@@ -90,7 +94,7 @@ public function index(Request $request)
         }
     
         // Eager load the 'lead' relationship after finding the client
-        $client->load('lead'); 
+        $client->load(['lead', 'employee']); 
     
         return view('clients.show')->with('client', $client);
     }

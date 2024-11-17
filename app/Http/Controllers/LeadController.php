@@ -11,6 +11,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Client;
+use App\Models\Product;
 use Flash;
 
 class LeadController extends AppBaseController
@@ -35,58 +36,76 @@ class LeadController extends AppBaseController
         $search = $request->input('search');
         
         // Query leads with employee relationships and apply search if a term is provided
-        $leads = Lead::with('employee')
-                    ->when($search, function ($query) use ($search) {
-                        $query->where('full_name', 'like', '%' . $search . '%')
-                              ->orWhere('email', 'like', '%' . $search . '%')
-                              ->orWhere('description', 'like', '%' . $search . '%') // Added description search
-                              ->orWhereHas('employee', function ($query) use ($search) {
-                                  $query->where('first_name', 'like', '%' . $search . '%')
-                                        ->orWhere('last_name', 'like', '%' . $search . '%')
-                                        ->orWhere('email', 'like', '%' . $search . '%');
-                              });
-                    })
-                    ->paginate(10);
-        
+        $leads = Lead::with(['employee', 'product']) // Eager load product and employee
+            ->when($search, function ($query) use ($search) {
+                $query->where('full_name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%')
+                      ->orWhere('phone_number', 'like', '%' . $search . '%') // Added phone number search
+                      ->orWhere('source', 'like', '%' . $search . '%') // Added source search
+                      ->orWhere('status', 'like', '%' . $search . '%') // Added status search
+                      ->orWhere('description', 'like', '%' . $search . '%') // Added description search
+                      ->orWhereHas('employee', function ($query) use ($search) {
+                          // Search employee's first name, last name, and email
+                          $query->where('first_name', 'like', '%' . $search . '%')
+                                ->orWhere('last_name', 'like', '%' . $search . '%')
+                                ->orWhere('email', 'like', '%' . $search . '%');
+                      })
+                      ->orWhereHas('product', function ($query) use ($search) {
+                          // Search product related fields, if necessary
+                          $query->where('product_name', 'like', '%' . $search . '%')
+                                ->orWhere('description', 'like', '%' . $search . '%');
+                      });
+            })
+            ->paginate(10);
+    
         return view('leads.index', compact('leads'));
     }
-
-
+    
+    
     /**
      * Show the form for creating a new Lead.
      */
     public function create()
     {
         $employees = Employee::all();  // Get all employees
-        return view('leads.create', compact('employees'));  // Pass employees to the view
+        $products = Product::all();    // Get all products
+        return view('leads.create', compact('employees', 'products'));  // Pass employees and products to the view
     }
+    
 
     /**
      * Store a newly created Lead in storage.
      */
     public function store(Request $request)
     {
-        // Apply conditional validation rules
-        $rules = [
+        // Validate the incoming data
+        $validatedData = $request->validate([
             'full_name' => 'nullable|string|max:100',
-            'email' => 'required|string|max:30',
-            'phone_number' => 'nullable',
+            'email' => 'required|string|max:30|email',
+            'phone_number' => 'nullable|numeric',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
-            'employee_id' => 'required|exists:employees,id', // Make employee_id required for creating leads
+            'employee_id' => 'nullable|exists:employees,id',
             'description' => 'nullable|string|max:65535',
-            'created_at' => 'nullable'
-        ];
-
-        $validated = $request->validate($rules);
-
-        // Create the lead
-        $lead = $this->leadRepository->create($validated);
-
-        Flash::success('Lead saved successfully.');
-
-        return redirect(route('leads.index'));
+            'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
+        ]);
+        
+        // Create the lead with the validated data
+        $lead = Lead::create($validatedData);
+        
+        // If a product is selected, associate it (if the relationship exists in the Lead model)
+        if ($request->has('product_id') && $request->product_id) {
+            $lead->product_id = $request->product_id;
+        }
+        
+        // Save the lead (this is actually redundant since create already does this)
+        $lead->save();
+        
+        // Redirect or show success message
+        return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
     }
+    
+    
 
     /**
      * Display the specified Lead.
@@ -108,16 +127,27 @@ class LeadController extends AppBaseController
      */
     public function edit($id)
     {
+        // Find the lead by ID
         $lead = $this->leadRepository->find($id);
-
+    
+        // Check if the lead exists
         if (empty($lead)) {
             Flash::error('Lead not found');
             return redirect(route('leads.index'));
         }
-
+    
+        // Get all employees and products
         $employees = Employee::all();  // Get all employees
-        return view('leads.edit')->with('lead', $lead)->with('employees', $employees);
+        $products = Product::all();    // Get all products
+    
+        // Return the edit view with lead, employees, and products
+        return view('leads.edit')
+            ->with('lead', $lead)
+            ->with('employees', $employees)
+            ->with('products', $products);
     }
+    
+    
 
     /**
      * Update the specified Lead in storage.
