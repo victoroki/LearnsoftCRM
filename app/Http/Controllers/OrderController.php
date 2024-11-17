@@ -53,7 +53,7 @@ class OrderController extends AppBaseController
     public function create()
     {
         $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-        $clients = \App\Models\Client::pluck('first_name', 'last_name', 'id')->toArray();
+        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
         $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
 
         return view('orders.create', compact('products', 'clients', 'leads'));
