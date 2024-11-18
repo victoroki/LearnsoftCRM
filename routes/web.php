@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,3 +37,4 @@ Route::get('leads/{id}/convert', [LeadController::class, 'convertToClient'])->na
 Route::get('leads/{id}/convert-to-client', [LeadController::class, 'convertToClient'])->name('leads.convertToClient');
 
 Route::get('/get-order-data', [OrderController::class, 'getOrderData']);
+Route::get('/getLeadData', [LeadController::class, 'getLeadData']);

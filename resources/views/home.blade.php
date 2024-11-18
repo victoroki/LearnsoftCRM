@@ -45,8 +45,13 @@
         </div>
     </div>
 
-  
-    @include('partials.chart')  
+    <div class="container row">
+  <div class= "col-md-6"> @include('partials.chart') </div>
+
+  <div class="col-md-6"> @include('partials.myChart') </div>
+
+  </div>
+    
 
 </div>
 @endsection
