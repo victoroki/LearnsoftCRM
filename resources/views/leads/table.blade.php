@@ -9,6 +9,7 @@
                     <th>Source</th>
                     <th>Status</th>
                     <th>Employee</th>
+                    <th>Product</th> <!-- Added Product column -->
                     <th>Description</th>
                     <th>Actions</th>
                 </tr>
@@ -22,6 +23,7 @@
                         <td>{{ $lead->source ?? 'No Source' }}</td>
                         <td>{{ $lead->status ?? 'No Status' }}</td>
                         <td>{{ $lead->employee->first_name ?? 'No Employee' }} {{ $lead->employee->last_name ?? '' }}</td>
+                        <td>{{ $lead->product->product_name ?? 'No Product' }}</td> <!-- Display product name -->
                         <td>{{ $lead->description ?? 'No description' }}</td>
                         <td style="width: 120px">
                             {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
