@@ -66,51 +66,52 @@ class OrderController extends AppBaseController
      * Store a newly created Order in storage.
      */
     public function store(CreateOrderRequest $request)
-    {
-        $input = $request->all();
-    
-        // Handle Lead or Client order creation
-        if ($request->has('lead_id') && $request->lead_id) {
-            $lead = \App\Models\Lead::find($request->lead_id);
-    
-            if ($lead) {
-                // Promote Lead to Client
-                $client = new \App\Models\Client();
-                $client->full_name = $lead->full_name;
-                $client->email_address = $lead->email;
-                $client->phone_number = $lead->phone_number;
-                $client->employee = $lead->employee;
-    
-                $client->save();
-    
-                // Optionally mark the lead as converted or delete it
-                $lead->status = 'Converted to a client';
-                $lead->save();
-    
-                $input['client_id'] = $client->id;
-                $input['type'] = 'Client'; // Mark order type as 'Client'
-            }
-        } elseif ($request->has('client_id') && $request->client_id) {
-            $input['client_id'] = $request->client_id;
+{
+    $input = $request->all();
+
+    // Handle Lead or Client order creation
+    if ($request->has('lead_id') && $request->lead_id) {
+        $lead = \App\Models\Lead::find($request->lead_id);
+
+        if ($lead) {
+            // Promote Lead to Client
+            $client = new \App\Models\Client();
+            $client->full_name = $lead->full_name;
+            $client->email_address = $lead->email;
+            $client->phone_number = $lead->phone_number;
+            $client->employee_id = $lead->employee_id;
+            $client->lead_id = $lead->id; // Ensure lead_id is set
+            $client->save();
+
+            // Optionally mark the lead as converted or delete it
+            $lead->status = 'Converted to a client';
+            $lead->save();
+
+            $input['client_id'] = $client->id;
             $input['type'] = 'Client'; // Mark order type as 'Client'
         }
-    
-        // Create the order
-        $order = $this->orderRepository->create($input);
-    
-        // Log the interaction for leads
-        if ($request->has('lead_id') && $request->lead_id) {
-            \App\Models\Interaction::create([
-                'lead_id' => $request->lead_id,
-                'description' => $lead->full_name . ' made an order for ' . $order->product->product_name,
-                'interaction_date' => now(),
-            ]);
-        }
-    
-        Flash::success('Order created successfully.');
-    
-        return redirect(route('orders.index'));
+    } elseif ($request->has('client_id') && $request->client_id) {
+        $input['client_id'] = $request->client_id;
+        $input['type'] = 'Client'; // Mark order type as 'Client'
     }
+
+    // Create the order
+    $order = $this->orderRepository->create($input);
+
+    // Log the interaction for leads
+    if ($request->has('lead_id') && $request->lead_id) {
+        \App\Models\Interaction::create([
+            'lead_id' => $request->lead_id,
+            'description' => $lead->full_name . ' made an order for ' . $order->product->product_name,
+            'interaction_date' => now(),
+        ]);
+    }
+
+    Flash::success('Order created successfully.');
+
+    return redirect(route('orders.index'));
+}
+
     
 
     /**

@@ -35,7 +35,7 @@ class Client extends Model
         'phone_number' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
-        'lead_id' => 'nullable',
+        'lead_id' => 'nullable|exists:leads,id',
         'location' => 'nullable|string|max:200'
     ];
 
