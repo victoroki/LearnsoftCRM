@@ -68,25 +68,25 @@ class OrderController extends AppBaseController
     public function store(CreateOrderRequest $request)
     {
         $input = $request->all();
-
+    
         // Handle Lead or Client order creation
         if ($request->has('lead_id') && $request->lead_id) {
             $lead = \App\Models\Lead::find($request->lead_id);
-
+    
             if ($lead) {
                 // Promote Lead to Client
                 $client = new \App\Models\Client();
                 $client->full_name = $lead->full_name;
                 $client->email_address = $lead->email;
                 $client->phone_number = $lead->phone_number;
-
+                $client->employee = $lead->employee;
+    
                 $client->save();
-
+    
                 // Optionally mark the lead as converted or delete it
                 $lead->status = 'Converted to a client';
-                $lead->save(); 
-                // $lead->delete(); // Uncomment to delete the Lead
-
+                $lead->save();
+    
                 $input['client_id'] = $client->id;
                 $input['type'] = 'Client'; // Mark order type as 'Client'
             }
@@ -94,13 +94,24 @@ class OrderController extends AppBaseController
             $input['client_id'] = $request->client_id;
             $input['type'] = 'Client'; // Mark order type as 'Client'
         }
-
-        $this->orderRepository->create($input);
-
+    
+        // Create the order
+        $order = $this->orderRepository->create($input);
+    
+        // Log the interaction for leads
+        if ($request->has('lead_id') && $request->lead_id) {
+            \App\Models\Interaction::create([
+                'lead_id' => $request->lead_id,
+                'description' => $lead->full_name . ' made an order for ' . $order->product->product_name,
+                'interaction_date' => now(),
+            ]);
+        }
+    
         Flash::success('Order created successfully.');
-
+    
         return redirect(route('orders.index'));
     }
+    
 
     /**
      * Show the form for editing the specified Order.
@@ -125,46 +136,55 @@ class OrderController extends AppBaseController
      * Update the specified Order in storage.
      */
     public function update($id, UpdateOrderRequest $request)
-    {
-        $order = $this->orderRepository->find($id);
+{
+    $order = $this->orderRepository->find($id);
 
-        if (empty($order)) {
-            Flash::error('Order not found');
-            return redirect(route('orders.index'));
-        }
-
-        $input = $request->all();
-
-        // Handle Lead or Client order update
-        if ($request->has('lead_id') && $request->lead_id) {
-            $lead = \App\Models\Lead::find($request->lead_id);
-
-            if ($lead) {
-                // Promote Lead to Client
-                $client = new \App\Models\Client();
-                $client->full_name = $lead->full_name;
-                $client->email = $lead->email;
-                $client->save();
-
-                // Optionally mark the lead as converted or delete it
-                $lead->status = 'Converted to a client'; 
-                // $lead->delete(); // Uncomment to delete the Lead
-
-                $input['client_id'] = $client->id;
-                $input['type'] = 'Client'; // Mark order type as 'Client'
-            }
-        } elseif ($request->has('client_id') && $request->client_id) {
-            $input['client_id'] = $request->client_id;
-            $input['type'] = 'Client'; // Mark order type as 'Client'
-        }
-
-        // Update the order
-        $order = $this->orderRepository->update($input, $id);
-
-        Flash::success('Order updated successfully.');
-
+    if (empty($order)) {
+        Flash::error('Order not found');
         return redirect(route('orders.index'));
     }
+
+    $input = $request->all();
+
+    // Handle Lead or Client order update
+    if ($request->has('lead_id') && $request->lead_id) {
+        $lead = \App\Models\Lead::find($request->lead_id);
+
+        if ($lead) {
+            // Promote Lead to Client
+            $client = new \App\Models\Client();
+            $client->full_name = $lead->full_name;
+            $client->email_address = $lead->email_address;
+            $client->save();
+
+            // Optionally mark the lead as converted or delete it
+            $lead->status = 'Converted to a client';
+            $lead->save();
+
+            $input['client_id'] = $client->id;
+            $input['type'] = 'Client'; // Mark order type as 'Client'
+        }
+    } elseif ($request->has('client_id') && $request->client_id) {
+        $input['client_id'] = $request->client_id;
+        $input['type'] = 'Client'; // Mark order type as 'Client'
+    }
+
+    // Update the order
+    $order = $this->orderRepository->update($input, $id);
+
+    // Log the interaction for leads
+    if ($request->has('lead_id') && $request->lead_id) {
+        \App\Models\Interaction::create([
+            'lead_id' => $request->lead_id,
+            'description' => 'Lead ' . $lead->full_name . ' updated an order for product ' . $order->product->product_name,
+            'interaction_date' => now(),
+        ]);
+    }
+
+    Flash::success('Order updated successfully.');
+
+    return redirect(route('orders.index'));
+}
 
     /**
      * Display the specified Order.

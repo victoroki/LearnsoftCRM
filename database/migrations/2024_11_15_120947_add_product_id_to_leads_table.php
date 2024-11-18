@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('leads', function (Blueprint $table) {
-            $table->unsignedBigInteger('product_id')->nullable()->after('leads'); // Replace 'column_name' with the column after which this should appear.
+            $table->Integer('product_id')->nullable()->after('description'); 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('set null'); // Add a foreign key linking to the `products` table.
         });
     }
