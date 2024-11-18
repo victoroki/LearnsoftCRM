@@ -98,7 +98,7 @@
                 y: {
                     title: {
                         display: true,
-                        text: 'Quantity Ordered',
+                        text: 'Recorded leads',
                         color: '#666',
                         font: {
                             size: 16,
