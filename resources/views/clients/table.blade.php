@@ -15,7 +15,7 @@
             <tr>
                 <td>{{ $client->full_name }}</td>
                 <td>{{ $client->company_name }}</td>
-                <td>{{ $client->email_address }}</td>
+                <td id="email">{{ $client->email_address }}</td>
                 <td>{{ $client->phone_number }}</td>
                 <td>{{ $client->lead->name ?? 'No Lead' }}</td>
                 <td>{{ $client->location }}</td>
