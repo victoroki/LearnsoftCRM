@@ -33,15 +33,19 @@ class InteractionController extends AppBaseController
         $interactions = Interaction::with(['client', 'lead'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
+                    // Search in the 'interactions' table itself
                     $subQuery->where('type', 'like', '%' . $search . '%')
                              ->orWhere('description', 'like', '%' . $search . '%')
                              ->orWhere('interactions_date', 'like', '%' . $search . '%')
+                             
+                             // Search in the related 'client' table
                              ->orWhereHas('client', function ($query) use ($search) {
-                                 $query->where('first_name', 'like', '%' . $search . '%')
-                                       ->orWhere('last_name', 'like', '%' . $search . '%')
+                                 $query->where('full_name', 'like', '%' . $search . '%')
                                        ->orWhere('company_name', 'like', '%' . $search . '%')
                                        ->orWhere('email_address', 'like', '%' . $search . '%');
                              })
+                             
+                             // Search in the related 'lead' table
                              ->orWhereHas('lead', function ($query) use ($search) {
                                  $query->where('full_name', 'like', '%' . $search . '%')
                                        ->orWhere('email', 'like', '%' . $search . '%');
@@ -49,18 +53,29 @@ class InteractionController extends AppBaseController
                 });
             })
             ->paginate(10);
-    
-        return view('interactions.index')
-            ->with('interactions', $interactions);
+        
+        return view('interactions.index', compact('interactions'));
     }
+    
 
     /**
      * Show the form for creating a new Interaction.
      */
-    public function create()
+    public function create(Request $request)
     {
-        $clients = Client::all(); // Correct model usage
-        return view('interactions.create', compact('clients')); 
+        // retrieve lead id from the query string
+        $leadId = $request->query('lead_id');
+
+        if ($leadId) {
+            $lead = \App\Models\Lead::find($leadId); // find lead with specific lead id
+            if (!$lead) {
+                Flash::error('Interaction not found');
+            }
+            Flash::success('Interaction saved successfully.'); 
+        }
+
+        $clients = Client::all();
+        return view('interactions.create', compact('lead', 'clients')); 
     }
 
     /**

@@ -1,13 +1,13 @@
 <!-- Client Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('client_first_name', 'Client Full Name:') !!}
-    {!! Form::text('client_first_name', null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter client name']) !!}
+    {!! Form::text('client_first_name', isset($client) ? $client->first_name : null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter client name']) !!}
 </div>
 
 <!-- Lead Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('lead_full_name', 'Lead Full Name:') !!}
-    {!! Form::text('lead_full_name', null, ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter lead name']) !!}
+    {!! Form::text('lead_full_name', isset($lead) ? $lead->full_name : null,  ['class' => 'form-control', 'maxlength' => 255, 'placeholder' => 'Enter lead name', 'readonly' => true]) !!}
 </div>
 
 <!-- Type Field -->
@@ -25,7 +25,7 @@
 <!-- Interactions Date Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('interactions_date', 'Interactions Date:') !!}
-    {!! Form::text('interactions_date', null, ['class' => 'form-control','id'=>'interactions_date']) !!}
+    {!! Form::date('interactions_date', null, ['class' => 'form-control','id'=>'interactions_date']) !!}
 </div>
 
 @push('page_scripts')

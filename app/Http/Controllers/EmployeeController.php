@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Repositories\EmployeeRepository;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use App\Models\Employee;
 use Flash;
 
 class EmployeeController extends AppBaseController
@@ -29,17 +30,17 @@ class EmployeeController extends AppBaseController
         $search = $request->input('search');
         
         // Query employees using the repository
-        $employees = $this->employeeRepository->query();
+        $employees = $this->employeeRepository->query()->with('department');
         
-        // Modify the query if there is a search term
+        // If there is a search term, apply a filter
         if ($search) {
             $employees = $employees->where(function ($query) use ($search) {
                 $query->where('first_name', 'like', '%' . $search . '%')
                       ->orWhere('last_name', 'like', '%' . $search . '%')
                       ->orWhere('email', 'like', '%' . $search . '%')
+                      ->orWhere('phone_number', 'like', '%' . $search . '%')
                       ->orWhereHas('department', function ($query) use ($search) {
-                          // Search the dept_name column in the departments table
-                          $query->where('departments.dept_name', 'like', '%' . $search . '%');
+                          $query->where('dept_name', 'like', '%' . $search . '%');
                       });
             });
         }
@@ -49,6 +50,7 @@ class EmployeeController extends AppBaseController
         
         return view('employees.index', compact('employees'));
     }
+    
 
     /**
      * Show the form for creating a new Employee.
@@ -146,4 +148,5 @@ class EmployeeController extends AppBaseController
 
         return redirect(route('employees.index'));
     }
+
 }

@@ -61,10 +61,12 @@ class Lead extends Model
     }
 
     // Define the relationship with the Product model
-    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasMany(\App\Models\Product::class, 'lead_id');
+        return $this->belongsTo(\App\Models\Product::class, 'product_id'); // Adjust the foreign key if necessary
     }
+    
+    
     protected static function booted()
     {
         parent::boot();
@@ -80,4 +82,9 @@ class Lead extends Model
             ]);
         });
     }
+    public function getProductNameAttribute()
+{
+    return $this->product ? $this->product->product_name : 'N/A';
+}
+
 }

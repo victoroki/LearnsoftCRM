@@ -26,19 +26,24 @@ class DepartmentController extends AppBaseController
     {
         $search = $request->input('search');
         
-        // Apply the search filter if a term is provided
+        // Query the departments using the repository
         $departments = $this->departmentRepository->query();
-    
+        
         if ($search) {
-            $departments = $departments->where('dept_name', 'like', '%' . $search . '%')
-                                       ->orWhere('description', 'like', '%' . $search . '%');
+            // Search all relevant columns
+            $departments = $departments->where(function ($query) use ($search) {
+                $query->where('dept_name', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%');
+            });
         }
-    
+        
+        // Paginate results (10 per page)
         $departments = $departments->paginate(10);
-    
-        return view('departments.index')->with('departments', $departments);
+        
+        return view('departments.index', compact('departments'));
     }
-
+    
+    
     /**
      * Show the form for creating a new Department.
      */

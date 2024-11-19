@@ -28,6 +28,12 @@
     <p>{{ $client && $client->lead ? $client->lead->full_name : 'No lead assigned' }}</p>
 </div>
 
+<!-- Employee Full Name Field -->
+<div class="col-sm-12">
+    {!! Form::label('employee', 'Employee:') !!}
+    <p>{{ $client->employee ? $client->employee->full_name : 'No employee assigned' }}</p>
+</div>
+
 <!-- Location Field -->
 <div class="col-sm-12">
     {!! Form::label('location', 'Location:') !!}
