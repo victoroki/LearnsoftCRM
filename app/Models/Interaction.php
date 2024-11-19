@@ -19,7 +19,7 @@ class Interaction extends Model
     protected $casts = [
         'type' => 'string',
         'description' => 'string',
-        'interactions_date' => 'date'
+        'interactions_date' => 'datetime'
     ];
 
     public static array $rules = [
