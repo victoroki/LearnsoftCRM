@@ -1,5 +1,10 @@
-<!-- resources/views/interactions/show_fields.blade.php -->
+<!-- Client Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('client_id', 'Client Id:') !!}
+    <p>{{ $interaction->client_id }}</p>
+</div>
 
+<!-- Lead Id Field -->
 <div class="col-sm-12">
     <h4>Interactions for {{ $lead->full_name }}</h4>
 
@@ -34,3 +39,4 @@
         {{ $interactions->links() }}
     </div>
 </div>
+

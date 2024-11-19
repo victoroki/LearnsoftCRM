@@ -3,7 +3,6 @@
         <table class="table" id="interactions-table">
             <thead>
                 <tr>
-                    <th>Client</th>
                     <th>Name</th>
                     <th>Type</th>
                     <th>Description</th>
@@ -14,7 +13,6 @@
             <tbody>
                 @foreach($interactions as $interaction)
                     <tr>
-                        <td>{{ $interaction->client ? $interaction->client->first_name . ' ' . $interaction->client->last_name : 'No client' }}</td>
                         <td>{{ $interaction->lead ? $interaction->lead->full_name : 'No lead' }}</td>
                         <td>{{ $interaction->type }}</td>
                         <td>{{ $interaction->description }}</td>
