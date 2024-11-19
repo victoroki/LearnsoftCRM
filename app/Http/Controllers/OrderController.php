@@ -56,7 +56,11 @@ class OrderController extends AppBaseController
     public function create()
     {
         $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
+
+        $clients = \App\Models\Client::all()->mapWithKeys(function ($client) {
+            return [$client->id => $client->first_name . ' ' . $client->last_name];
+        })->toArray(); //concentate first name and last_name. Wasnt working when using full_name
+        
         $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
 
         return view('orders.create', compact('products', 'clients', 'leads'));

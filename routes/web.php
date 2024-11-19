@@ -53,3 +53,6 @@ Route::get('/getLeadData', [LeadController::class, 'getLeadData']);
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');
 
 // Route::get('/interactions/create', [InteractionController::class, 'create'])->name('interactions.create');
+
+// Route::get('/fetch-data-by-type', [OrderController::class, 'fetchDataByType']);
+
