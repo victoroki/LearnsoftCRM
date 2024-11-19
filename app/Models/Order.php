@@ -14,7 +14,6 @@ class Order extends Model
         'unit_price',
         'total_price',
         'order_date',
-        'status',
         'client_id',
         'lead_id', 
     ];
@@ -64,16 +63,24 @@ class Order extends Model
 
     // Automatically calculate total price before saving or updating
     public static function boot()
-    {
-        parent::boot();
+{
+    parent::boot();
 
-        static::saving(function ($order) {
-            // Automatically calculate total_price if quantity_ordered and unit_price are set
-            if ($order->quantity_ordered && $order->unit_price) {
-                $order->total_price = $order->quantity_ordered * $order->unit_price;
-            }
-        });
-    }
+    // Set default value for status when creating a new order
+    static::creating(function ($order) {
+        if (is_null($order->status)) {
+            $order->status = 'Pending';
+        }
+    });
+
+    // Automatically calculate total_price when saving
+    static::saving(function ($order) {
+        if ($order->quantity_ordered && $order->unit_price) {
+            $order->total_price = $order->quantity_ordered * $order->unit_price;
+        }
+    });
+}
+
 
     /**
      * Accessor to calculate total_price after creating an instance

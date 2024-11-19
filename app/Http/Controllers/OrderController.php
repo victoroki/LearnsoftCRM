@@ -99,13 +99,13 @@ class OrderController extends AppBaseController
     $order = $this->orderRepository->create($input);
 
     // Log the interaction for leads
-    if ($request->has('lead_id') && $request->lead_id) {
-        \App\Models\Interaction::create([
-            'lead_id' => $request->lead_id,
-            'description' => $lead->full_name . ' made an order for ' . $order->product->product_name,
-            'interaction_date' => now(),
-        ]);
-    }
+    // if ($request->has('lead_id') && $request->lead_id) {
+    //     \App\Models\Interaction::create([
+    //         'lead_id' => $request->lead_id,
+    //         'description' => $lead->full_name . ' made an order for ' . $order->product->product_name,
+    //         'interaction_date' => now(),
+    //     ]);
+    // }
 
     Flash::success('Order created successfully.');
 

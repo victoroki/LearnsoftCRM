@@ -63,46 +63,71 @@ class InteractionController extends AppBaseController
      */
     public function create(Request $request)
     {
-        // retrieve lead id from the query string
+        // Retrieve lead_id or client_id from the query string
         $leadId = $request->query('lead_id');
-
+        $clientId = $request->query('client_id');
+    
+        $lead = null;
+        $client = null;
+    
+        // If lead_id is provided, get the corresponding lead
         if ($leadId) {
-            $lead = \App\Models\Lead::find($leadId); // find lead with specific lead id
+            $lead = \App\Models\Lead::find($leadId);
             if (!$lead) {
-                Flash::error('Interaction not found');
+                Flash::error('Lead not found');
             }
-            Flash::success('Interaction saved successfully.'); 
         }
-
-        $clients = Client::all();
-        return view('interactions.create', compact('lead', 'clients')); 
+    
+        // If client_id is provided, get the corresponding client
+        if ($clientId) {
+            $client = \App\Models\Client::find($clientId);
+            if (!$client) {
+                Flash::error('Client not found');
+            }
+        }
+    
+        // Fetch all clients for potential use in the form
+        $clients = \App\Models\Client::all();
+    
+        return view('interactions.create', compact('lead', 'client', 'clients'));
     }
+    
 
     /**
      * Store a newly created Interaction in storage.
      */
     public function store(CreateInteractionRequest $request)
     {
-        // validate the required inputs
+        // Validate the required inputs
         $request->validate([
-            'lead_full_name' => 'required|string|max:255'
+            'lead_full_name' => 'required|string|max:255',
+            'type' => 'nullable|in:Lead,Client'
         ]);
-        // retrieve full input from request
+    
+        // Retrieve full input from request
         $input = $request->all();
-        // check if a lead with this name already exists, otherwise create a new one
+    
+        // Check if a lead with this name already exists, otherwise create a new one
         $lead = \App\Models\Lead::firstOrCreate([
             'full_name' => $input['lead_full_name']
         ]);
-
+    
         // Link this interaction to the correct lead
         $input['lead_id'] = $lead->id;
-
+    
+        // If 'type' is not provided in the request, determine it dynamically
+        if (!isset($input['type'])) {
+            $input['type'] = $request->has('client_id') ? 'Client' : 'Lead';
+        }
+    
+        // Create the interaction
         $interaction = $this->interactionRepository->create($input);
-
+    
         Flash::success('Interaction saved successfully.');
-
+    
         return redirect(route('interactions.index'));
     }
+    
 
     /**
      * Display the specified Interaction.
