@@ -39,11 +39,6 @@
                     </div>
 
                     <div class="col-sm-12">
-                        {!! Form::label('status', 'Status:') !!}
-                        <p>{{ $lead->status }}</p>
-                    </div>
-
-                    <div class="col-sm-12">
                         {!! Form::label('description', 'Description:') !!}
                         <p>{{ $lead->description }}</p>
                     </div>

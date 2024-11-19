@@ -67,11 +67,7 @@
     </script>
 @endpush
 
-<!-- Status Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('status', 'Status:') !!}
-    {!! Form::text('status', null, ['class' => 'form-control', 'maxlength' => 20]) !!}
-</div>
+
 
 <!-- Client Id Field -->
 <div class="form-group col-sm-6">

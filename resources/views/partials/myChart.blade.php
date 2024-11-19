@@ -1,21 +1,19 @@
-<!-- resources/views/partials/chart.blade.php -->
-
 <div class="container my-4">
-    <h4>Quantity Ordered Over Time</h4>
+    <h4>Leads Over Time</h4>
     <div class="btn-group mb-3">
        
-    <button class="btn btn-primary" onclick="updateChart('days')">Days</button>
-        <button class="btn btn-primary" onclick="updateChart('weeks')">Weeks</button>
-        <button class="btn btn-primary" onclick="updateChart('months')">Months</button>
+    <button class="btn btn-primary" onclick="myChart('days')">Days</button>
+        <button class="btn btn-primary" onclick="myChart('weeks')">Weeks</button>
+        <button class="btn btn-primary" onclick="myChart('months')">Months</button>
       
     </div>
     <div style="height:500px;width:auto;">
-        <canvas id="orderChart"></canvas>
+        <canvas id="leadChart"></canvas>
     </div>
 </div>
 
 <script>
-    let orderChart;
+    let leadChart;
 
     function extendLabelsWithExtraDays(labels, numDays) {
         const extendedLabels = [...labels];
@@ -31,14 +29,14 @@
         return extendedLabels;
     }
 
-    function createChart(labels, data) {
-    const ctx = document.getElementById('orderChart').getContext('2d');
-    orderChart = new Chart(ctx, {
-        type: 'bar',
+    function createIChart(labels, data) {
+    const ct = document.getElementById('leadChart').getContext('2d');
+    leadChart = new Chart(ct, {
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Graph of Order/Time',
+                label: 'Leads/Time',
                 data: data,
                 borderColor: 'rgba(54, 162, 235, 0.8)', // Line color
                 backgroundColor: 'rgba(54, 162, 235, 0.2)', // Fill color under the line
@@ -100,7 +98,7 @@
                 y: {
                     title: {
                         display: true,
-                        text: 'Quantity Ordered',
+                        text: 'Recorded leads',
                         color: '#666',
                         font: {
                             size: 16,
@@ -120,22 +118,24 @@
 }
 
 
-    async function updateChart(interval) {
-        const response = await fetch(`/get-order-data?interval=${interval}`);
+    async function myChart(interval) {
+        const response = await fetch(`/getLeadData?interval=${interval}`);
         const data = await response.json();
 
         let labels = data.map(item => item.date_group);
-        const quantities = data.map(item => item.total_quantity);
+        const quantities = data.map(item => item.total_leads);
 
         if (interval === 'days') {
             labels = extendLabelsWithExtraDays(labels, 5);
         }
 
-        if (orderChart) {
-            orderChart.destroy();
+        if (leadChart) {
+            leadChart.destroy();
         }
-        createChart(labels, quantities);
+        createIChart(labels, quantities);
     }
 
-    updateChart('days');
+    myChart('days');
 </script>
+
+

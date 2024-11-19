@@ -9,22 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            //
-            $table->string('full_name')->nullable();
+            $table->Integer('employee_id')->nullable(); 
+            $table->foreign('employee_id')->references('id')->on('employees'); 
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    
+    public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            //
-            $table->string('full_name');
+            $table->dropForeign(['employee_id']);
+            $table->dropColumn('employee_id');
         });
     }
+    
 };

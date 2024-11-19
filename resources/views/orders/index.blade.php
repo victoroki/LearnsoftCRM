@@ -33,7 +33,7 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            @include('orders.table') <!-- Assuming this includes your orders table -->
+            @include('orders.table') 
         </div>
     </div>
     <div class="pagination-wrapper">

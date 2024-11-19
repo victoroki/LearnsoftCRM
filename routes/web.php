@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\EmployeeController;
 use App\Models\Product;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,6 +47,7 @@ Route::get('/get-product-price/{id}', function ($id) {
 });
 
 Route::get('/get-order-data', [OrderController::class, 'getOrderData']);
+Route::get('/getLeadData', [LeadController::class, 'getLeadData']);
 
 // Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');

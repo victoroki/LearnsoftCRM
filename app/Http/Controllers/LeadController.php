@@ -11,6 +11,7 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\Lead;
 use App\Models\Client;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use Flash;
 
@@ -246,4 +247,21 @@ class LeadController extends AppBaseController
         Flash::success('Lead successfully converted to client.');
         return redirect(route('leads.index'));
     }
+    public function getLeadData(Request $request)
+    {
+        $interval = $request->get('interval', 'days'); // Default to daily
+
+        $query = DB::table('leads')
+            ->select(
+                DB::raw('COUNT(id) as total_leads'),
+                DB::raw("DATE_FORMAT(created_at, CASE WHEN '$interval' = 'days' THEN '%Y-%m-%d' WHEN '$interval' = 'weeks' THEN '%Y-%u' WHEN '$interval' = 'months' THEN '%Y-%m' END) as date_group")
+            )
+            ->groupBy('date_group')
+            ->orderBy('date_group');
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
 }
+

@@ -9,6 +9,7 @@ use App\Repositories\InteractionRepository;
 use Illuminate\Http\Request;
 use App\Models\Interaction;
 use App\Models\Client;  // Correct import at the top
+use App\Models\Lead;
 use Flash;
 
 class InteractionController extends AppBaseController
@@ -28,23 +29,15 @@ class InteractionController extends AppBaseController
     {
         // Get the search query from the request
         $search = $request->input('search');
-        
-        // Query interactions with related client and lead models
-        $interactions = Interaction::with(['client', 'lead'])
+    
+        // Query interactions grouped by lead_id with aggregated data for other columns
+        $interactions = Interaction::with(['lead'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     // Search in the 'interactions' table itself
                     $subQuery->where('type', 'like', '%' . $search . '%')
                              ->orWhere('description', 'like', '%' . $search . '%')
                              ->orWhere('interactions_date', 'like', '%' . $search . '%')
-                             
-                             // Search in the related 'client' table
-                             ->orWhereHas('client', function ($query) use ($search) {
-                                 $query->where('first_name', 'like', '%' . $search . '%')
-                                       ->orWhere('last_name', 'like', '%' . $search . '%')
-                                       ->orWhere('company_name', 'like', '%' . $search . '%')
-                                       ->orWhere('email_address', 'like', '%' . $search . '%');
-                             })
                              
                              // Search in the related 'lead' table
                              ->orWhereHas('lead', function ($query) use ($search) {
@@ -53,10 +46,15 @@ class InteractionController extends AppBaseController
                              });
                 });
             })
-            ->paginate(10);
-        
+            // Use GROUP_CONCAT to aggregate interactions for each lead
+            ->selectRaw('MAX(interactions.id) as interaction_id, lead_id, MAX(interactions.type) as type, MAX(interactions.description) as description, MAX(interactions.interactions_date) as interaction_date')
+            ->groupBy('lead_id')  // Group by lead_id
+            ->paginate(10); // Paginate the results
+    
         return view('interactions.index', compact('interactions'));
     }
+    
+    
     
 
     /**
@@ -64,62 +62,97 @@ class InteractionController extends AppBaseController
      */
     public function create(Request $request)
     {
-        // retrieve lead id from the query string
+        // Retrieve lead_id or client_id from the query string
         $leadId = $request->query('lead_id');
-
+        $clientId = $request->query('client_id');
+    
+        $lead = null;
+        $client = null;
+    
+        // If lead_id is provided, get the corresponding lead
         if ($leadId) {
-            $lead = \App\Models\Lead::find($leadId); // find lead with specific lead id
+            $lead = \App\Models\Lead::find($leadId);
             if (!$lead) {
-                Flash::error('Interaction not found');
+                Flash::error('Lead not found');
             }
-            Flash::success('Interaction saved successfully.'); 
         }
-
-        $clients = Client::all();
-        return view('interactions.create', compact('lead', 'clients')); 
+    
+        // If client_id is provided, get the corresponding client
+        if ($clientId) {
+            $client = \App\Models\Client::find($clientId);
+            if (!$client) {
+                Flash::error('Client not found');
+            }
+        }
+    
+        // Fetch all clients for potential use in the form
+        $clients = \App\Models\Client::all();
+    
+        return view('interactions.create', compact('lead', 'client', 'clients'));
     }
+    
 
     /**
      * Store a newly created Interaction in storage.
      */
     public function store(CreateInteractionRequest $request)
     {
-        // validate the required inputs
+        // Validate the required inputs
         $request->validate([
-            'lead_full_name' => 'required|string|max:255'
+            'lead_full_name' => 'required|string|max:255',
+            'type' => 'nullable|in:Lead,Client'
         ]);
-        // retrieve full input from request
+    
+        // Retrieve full input from request
         $input = $request->all();
-        // check if a lead with this name already exists, otherwise create a new one
+    
+        // Check if a lead with this name already exists, otherwise create a new one
         $lead = \App\Models\Lead::firstOrCreate([
             'full_name' => $input['lead_full_name']
         ]);
-
+    
         // Link this interaction to the correct lead
         $input['lead_id'] = $lead->id;
-
+    
+        // If 'type' is not provided in the request, determine it dynamically
+        if (!isset($input['type'])) {
+            $input['type'] = $request->has('client_id') ? 'Client' : 'Lead';
+        }
+    
+        // Create the interaction
         $interaction = $this->interactionRepository->create($input);
-
+    
         Flash::success('Interaction saved successfully.');
-
+    
         return redirect(route('interactions.index'));
     }
+    
 
     /**
      * Display the specified Interaction.
      */
-    public function show($id)
-    {
-        $interaction = $this->interactionRepository->find($id);
+    /**
+ * Display all interactions for a specific Lead.
+ */
+public function show($id)
+{
+    // Find the lead by its ID
+    $lead = Lead::findOrFail($id);
 
-        if (empty($interaction)) {
-            Flash::error('Interaction not found');
+    // Fetch the most recent interaction for this lead
+    $currentInteraction = Interaction::where('lead_id', $lead->id)
+        ->orderBy('created_at', 'desc')
+        ->first(); // This is the latest interaction
 
-            return redirect(route('interactions.index'));
-        }
+    // Fetch all interactions for the lead, ordered by creation date
+    $interactions = Interaction::where('lead_id', $lead->id)
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-        return view('interactions.show')->with('interaction', $interaction);
-    }
+    return view('interactions.show', compact('lead', 'currentInteraction', 'interactions'));
+}
+
+
 
     /**
      * Show the form for editing the specified Interaction.

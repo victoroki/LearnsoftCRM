@@ -84,7 +84,6 @@ class TransactionController extends AppBaseController
             Flash::error('Order or Client not found.');
             return redirect(route('transactions.create'));
         }
-    
         // Create the transaction
         $transaction = $this->transactionRepository->create($input);
     

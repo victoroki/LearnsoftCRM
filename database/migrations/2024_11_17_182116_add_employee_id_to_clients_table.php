@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('clients', function (Blueprint $table) {
             //
-            $table->dropForeign(['client_id']);
-            $table->dropColumn('client_id');
         });
     }
 
@@ -23,10 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('clients', function (Blueprint $table) {
             //
-            $table->integer(['client_id']);
-            $table->foreign('client_id')->references('id')->on('clients')->onDelele('cascade');
         });
     }
 };
