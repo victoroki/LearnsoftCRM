@@ -247,7 +247,6 @@ class LeadController extends AppBaseController
         Flash::success('Lead successfully converted to client.');
         return redirect(route('leads.index'));
     }
-<<<<<<< HEAD
     public function getLeadData(Request $request)
     {
         $interval = $request->get('interval', 'days'); // Default to daily
@@ -265,6 +264,4 @@ class LeadController extends AppBaseController
         return response()->json($data);
     }
 }
-=======
-}
->>>>>>> b03013b2070b39cde2fc37f17eeb0b4fe97e4139
+
