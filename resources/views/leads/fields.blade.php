@@ -22,12 +22,6 @@
     {!! Form::text('source', null, ['class' => 'form-control', 'maxlength' => 30, 'maxlength' => 30]) !!}
 </div>
 
-{{-- <!-- Status Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('status', 'Status:') !!}
-    {!! Form::text('status', null, ['class' => 'form-control', 'maxlength' => 30, 'maxlength' => 30]) !!}
-</div> --}}
-
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}

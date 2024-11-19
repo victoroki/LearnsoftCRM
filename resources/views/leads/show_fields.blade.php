@@ -22,12 +22,6 @@
     <p>{{ $lead->source }}</p>
 </div>
 
-<!-- Status Field -->
-<div class="col-sm-12">
-    {!! Form::label('status', 'Status:') !!}
-    <p>{{ $lead->status }}</p>
-</div>
-
 <!-- Employee Id Field -->
 <div class="col-sm-12">
     {!! Form::label('employee_id', 'Employee Id:') !!}
