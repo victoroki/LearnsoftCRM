@@ -33,8 +33,6 @@ class Client extends Model
         'company_name' => 'nullable|string|max:100',
         'email_address' => 'required|string|max:100',
         'phone_number' => 'nullable',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
         'lead_id' => 'nullable|exists:leads,id',
         'location' => 'nullable|string|max:200'
     ];
@@ -64,4 +62,19 @@ class Client extends Model
         return $this->belongsTo(\App\Models\Employee::class, 'employee_id');
     }
 
+    protected static function booted()
+    {
+        parent::boot();
+
+        // Automatically create an interaction for new clients
+        static::created(function ($client) {
+            Interaction::create([
+                'client_id' => $client->id,
+                'lead_id' => $client->lead_id,  // Link to the lead if provided
+                'type' => 'Client',
+                'description' => 'New order made',
+                'interactions_date' => now()->toDateString(),
+            ]);
+        });
+    }
 }
