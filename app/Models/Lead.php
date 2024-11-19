@@ -16,7 +16,6 @@ class Lead extends Model
         'email',
         'phone_number',
         'source',
-        'status',
         'employee_id',
         'description'
     ];
@@ -86,5 +85,16 @@ class Lead extends Model
 {
     return $this->product ? $this->product->product_name : 'N/A';
 }
+public static function boot()
+{
+    parent::boot();
 
+    // Set default value for status when creating a new lead
+    static::creating(function ($lead) {
+        if (is_null($lead->status)) {
+            $lead->status = 'Pending';
+        }
+    });
+
+}
 }
