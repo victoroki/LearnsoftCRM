@@ -79,7 +79,7 @@ class OrderController extends AppBaseController
             $client->full_name = $lead->full_name;
             $client->email_address = $lead->email;
             $client->phone_number = $lead->phone_number;
-            $client->employee_id = $lead->employee_id;
+           // $client->employee_id = $lead->employee_id;
             $client->lead_id = $lead->id; // Ensure lead_id is set
             $client->save();
 
