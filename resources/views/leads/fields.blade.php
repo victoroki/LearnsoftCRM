@@ -10,16 +10,18 @@
     {!! Form::email('email', null, ['class' => 'form-control', 'required', 'maxlength' => 30, 'maxlength' => 30]) !!}
 </div>
 
-<!-- Phone Number Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('phone_number', 'Phone Number:') !!}
-    {!! Form::number('phone_number', null, ['class' => 'form-control']) !!}
-</div>
+
 
 <!-- Source Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('source', 'Source:') !!}
     {!! Form::text('source', null, ['class' => 'form-control', 'maxlength' => 30, 'maxlength' => 30]) !!}
+</div>
+
+<!-- Phone Number Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('phone_number', 'Phone Number:') !!}
+    {!! Form::number('phone_number', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Description Field -->

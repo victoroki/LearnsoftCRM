@@ -61,3 +61,11 @@
         <p>Transactions</p>
     </a>
 </li>
+
+<li class="nav-item">
+    <a href="{{ route('reports.report') }}" class="nav-link {{ Request::is('reports*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-chart-bar"></i>
+        <p>Reports</p>
+    </a>
+</li>
+
