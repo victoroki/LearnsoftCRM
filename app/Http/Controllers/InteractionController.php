@@ -9,6 +9,7 @@ use App\Repositories\InteractionRepository;
 use Illuminate\Http\Request;
 use App\Models\Interaction;
 use App\Models\Client;  // Correct import at the top
+use App\Models\Lead;
 use Flash;
 
 class InteractionController extends AppBaseController
@@ -28,22 +29,15 @@ class InteractionController extends AppBaseController
     {
         // Get the search query from the request
         $search = $request->input('search');
-        
-        // Query interactions with related client and lead models
-        $interactions = Interaction::with(['client', 'lead'])
+    
+        // Query interactions grouped by lead_id with aggregated data for other columns
+        $interactions = Interaction::with(['lead'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($subQuery) use ($search) {
                     // Search in the 'interactions' table itself
                     $subQuery->where('type', 'like', '%' . $search . '%')
                              ->orWhere('description', 'like', '%' . $search . '%')
                              ->orWhere('interactions_date', 'like', '%' . $search . '%')
-                             
-                             // Search in the related 'client' table
-                             ->orWhereHas('client', function ($query) use ($search) {
-                                 $query->where('full_name', 'like', '%' . $search . '%')
-                                       ->orWhere('company_name', 'like', '%' . $search . '%')
-                                       ->orWhere('email_address', 'like', '%' . $search . '%');
-                             })
                              
                              // Search in the related 'lead' table
                              ->orWhereHas('lead', function ($query) use ($search) {
@@ -52,10 +46,15 @@ class InteractionController extends AppBaseController
                              });
                 });
             })
-            ->paginate(10);
-        
+            // Use GROUP_CONCAT to aggregate interactions for each lead
+            ->selectRaw('MAX(interactions.id) as interaction_id, lead_id, MAX(interactions.type) as type, MAX(interactions.description) as description, MAX(interactions.interactions_date) as interaction_date')
+            ->groupBy('lead_id')  // Group by lead_id
+            ->paginate(10); // Paginate the results
+    
         return view('interactions.index', compact('interactions'));
     }
+    
+    
     
 
     /**
@@ -132,18 +131,28 @@ class InteractionController extends AppBaseController
     /**
      * Display the specified Interaction.
      */
-    public function show($id)
-    {
-        $interaction = $this->interactionRepository->find($id);
+    /**
+ * Display all interactions for a specific Lead.
+ */
+public function show($id)
+{
+    // Find the lead by its ID
+    $lead = Lead::findOrFail($id);
 
-        if (empty($interaction)) {
-            Flash::error('Interaction not found');
+    // Fetch the most recent interaction for this lead
+    $currentInteraction = Interaction::where('lead_id', $lead->id)
+        ->orderBy('created_at', 'desc')
+        ->first(); // This is the latest interaction
 
-            return redirect(route('interactions.index'));
-        }
+    // Fetch all interactions for the lead, ordered by creation date
+    $interactions = Interaction::where('lead_id', $lead->id)
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-        return view('interactions.show')->with('interaction', $interaction);
-    }
+    return view('interactions.show', compact('lead', 'currentInteraction', 'interactions'));
+}
+
+
 
     /**
      * Show the form for editing the specified Interaction.
