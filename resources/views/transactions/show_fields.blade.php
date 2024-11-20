@@ -22,12 +22,6 @@
     <p>{{ $transaction->payment_method }}</p>
 </div>
 
-<!-- Status Field -->
-<div class="col-sm-12">
-    {!! Form::label('status', 'Status:') !!}
-    <p>{{ $transaction->status }}</p>
-</div>
-
 <!-- Transaction Reference Field -->
 <div class="col-sm-12">
     {!! Form::label('transaction_reference', 'Transaction Reference:') !!}

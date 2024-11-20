@@ -28,12 +28,6 @@
     {!! Form::text('payment_method', null, ['class' => 'form-control', 'maxlength' => 20, 'maxlength' => 20]) !!}
 </div>
 
-<!-- Status Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('status', 'Status:') !!}
-    {!! Form::text('status', null, ['class' => 'form-control', 'maxlength' => 20, 'maxlength' => 20]) !!}
-</div>
-
 <!-- Transaction Reference Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('transaction_reference', 'Transaction Reference:') !!}
