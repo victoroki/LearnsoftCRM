@@ -24,11 +24,33 @@ class ReportController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $reports = $this->reportRepository->paginate(10);
-
+        $query = $this->reportRepository->query();
+    
+        // Check if search terms are provided and filter accordingly
+        if ($request->has('search')) {
+            $search = $request->get('search');
+    
+            $query->where(function ($q) use ($search) {
+                $q->where('employee_name', 'like', "%$search%")
+                    ->orWhere('lead_name', 'like', "%$search%")
+                    ->orWhere('client_name', 'like', "%$search%")
+                    ->orWhere('lead_date', 'like', "%$search%")
+                    ->orWhere('client_date', 'like', "%$search%")
+                    ->orWhere('product_id', 'like', "%$search%")
+                    ->orWhere('quantity_ordered', 'like', "%$search%")
+                    ->orWhere('order_date', 'like', "%$search%")
+                    ->orWhere('order_status', 'like', "%$search%")
+                    ->orWhere('interaction_type', 'like', "%$search%");
+            });
+        }
+    
+        // Paginate the filtered results
+        $reports = $query->paginate(10);
+    
         return view('reports.index')
             ->with('reports', $reports);
     }
+    
 
     /**
      * Show the form for creating a new Report.

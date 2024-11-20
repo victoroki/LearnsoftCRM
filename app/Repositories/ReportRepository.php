@@ -32,4 +32,8 @@ class ReportRepository extends BaseRepository
     {
         return Report::class;
     }
+    public function query()
+    {
+        return Report::query(); // Return the query builder
+    }
 }
