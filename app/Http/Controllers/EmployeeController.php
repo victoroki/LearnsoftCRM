@@ -148,5 +148,10 @@ class EmployeeController extends AppBaseController
 
         return redirect(route('employees.index'));
     }
+    public function getEmployees()
+    {
+        $employees = Employee::select('id', 'first_name', 'last_name')->get();
+        return response()->json($employees);
+    }
 
 }

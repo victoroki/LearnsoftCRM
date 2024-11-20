@@ -53,12 +53,8 @@ Route::get('/getLeadData', [LeadController::class, 'getLeadData']);
 // Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');
 
-// Route to display the report generation page
-Route::get('/reports', function () {
-    return view('reports.report');
-})->name('reports.report');
+// web.php
+Route::get('/reports', [reportController::class, 'index'])->name('reports.report');
+Route::get('/reports/generate', [reportController::class, 'generateReport'])->name('reports.generate');
 
-// Route to handle the report generation logic
-Route::get('/reports/generate', [ReportController::class, 'generateReport'])->name('reports.generate');
-Route::post('/reports/render-table', [ReportController::class, 'renderTable'])->name('reports.renderTable');
-
+Route::resource('employees', EmployeeController::class);
