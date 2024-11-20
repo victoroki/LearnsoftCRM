@@ -40,7 +40,6 @@
                     <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ old('phone_number') }}" required>
                 </div>
 
-
                 <!-- Description Field -->
                 <div class="form-group">
                     <label for="description">Description</label>
@@ -56,6 +55,12 @@
                             <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>{{ $product->product_name }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                <!-- Lead Date Field -->
+                <div class="form-group">
+                    <label for="lead_date">Lead Date</label>
+                    <input type="text" name="lead_date" id="lead_date" class="form-control" value="{{ old('lead_date') }}" required>
                 </div>
 
                 <!-- Employee Dropdown -->
@@ -75,4 +80,17 @@
             </form>
         </div>
     </div>
+
 @endsection
+
+@push('page_scripts')
+    <!-- Include jQuery UI Datepicker -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#lead_date').datepicker({
+                dateFormat: 'yy-mm-dd'  // Set format as per your requirements
+            });
+        });
+    </script>
+@endpush

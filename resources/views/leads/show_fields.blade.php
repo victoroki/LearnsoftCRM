@@ -22,6 +22,12 @@
     <p>{{ $lead->source }}</p>
 </div>
 
+<!-- Lead Date Field -->
+<div class="col-sm-12">
+    {!! Form::label('lead_date', 'Lead Date:') !!}
+    <p>{{ $lead->lead_date }}</p>
+</div>
+
 <!-- Employee Id Field -->
 <div class="col-sm-12">
     {!! Form::label('employee_id', 'Employee Id:') !!}

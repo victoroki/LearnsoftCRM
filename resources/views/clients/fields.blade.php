@@ -1,7 +1,7 @@
-<!-- First Name Field -->
+<!-- full Field -->
 <div class="col-sm-12">
     {!! Form::label('full_name', 'Full Name:') !!}
-    <p>{{ $client->first_name ?? '' }}</p>
+    <p>{{ $client->full_name ?? '' }}</p>
 </div>
 
 
@@ -22,6 +22,12 @@
     {!! Form::label('phone_number', 'Phone Number:') !!}
     <p>{{ $client->phone_number ?? '' }}</p>
 </div>
+
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#client_date').datepicker()
+    </script>
+@endpush
 
 <!-- Lead Full Name Field (instead of Lead Id) -->
 <div class="col-sm-12">

@@ -8,7 +8,6 @@
                     <th>Amount Paid</th>
                     <th>Payment Date</th>
                     <th>Payment Method</th>
-                    <!-- <th>Status</th> -->
                     <th>Transaction Reference</th>
                     <th>Client</th>
                     <th colspan="3">Action</th>
@@ -18,12 +17,10 @@
                 @foreach($transactions as $transaction)
                     <tr>
                         <!-- Display the related Order ID (or other fields as required) -->
-                         <td>{{ $transaction->order_id }}</td>
-
+                        <td>{{ $transaction->order_id }}</td>
                         <td>{{ $transaction->amount_paid }}</td>
                         <td>{{ $transaction->payment_date }}</td>
                         <td>{{ $transaction->payment_method }}</td>
-                        <!-- <td>{{ $transaction->status }}</td> -->
                         <td>{{ $transaction->transaction_reference }}</td>
                         
                         <!-- Display the related Client's Full Name -->

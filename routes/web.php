@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\reportController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\InteractionController;
 use App\Models\Product;
 
 
@@ -53,14 +53,14 @@ Route::get('/getLeadData', [LeadController::class, 'getLeadData']);
 // Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');
 
-// Route to display the report generation page
-Route::get('/reports', function () {
-    return view('reports.report');
-})->name('reports.report');
+Route::delete('/interactions/{lead}/delete-all', [InteractionController::class, 'deleteAll'])->name('interactions.deleteAll');
 
-// Route to handle the report generation logic
-Route::get('/reports/generate', [ReportController::class, 'generateReport'])->name('reports.generate');
-Route::post('/reports/render-table', [ReportController::class, 'renderTable'])->name('reports.renderTable');
+Route::get('/get-lead-employee/{leadId}', [OrderController::class, 'getEmployeeForLead']);
 
 
 Route::resource('enquiries', App\Http\Controllers\EnquiryController::class);
+Route::resource('employees', EmployeeController::class);
+
+
+
+Route::resource('reports', App\Http\Controllers\ReportController::class);

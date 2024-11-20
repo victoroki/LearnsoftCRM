@@ -1,7 +1,7 @@
-<!-- First Name Field -->
+<!-- Full Name Field -->
 <div class="col-sm-12">
     {!! Form::label('full_name', 'Full Name:') !!}
-    <p>{{ $client->first_name ?? 'No first name' }}</p>
+    <p>{{ $client->full_name ?? 'No full name' }}</p>
 </div>
 
 <!-- Company Name Field -->
@@ -22,17 +22,29 @@
     <p>{{ $client->phone_number ?? 'No phone number' }}</p>
 </div>
 
+<!-- Employee Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('employee_id', 'Employee Id:') !!}
+    <p>{{ $client->employee ? $client->employee->full_name : 'No employee assigned' }}</p>
+</div>
+
 <!-- Lead Full Name Field (instead of Lead Id) -->
 <div class="col-sm-12">
     {!! Form::label('lead_id', 'Lead Full Name:') !!}
     <p>{{ $client && $client->lead ? $client->lead->full_name : 'No lead assigned' }}</p>
 </div>
 
-<!-- Employee Full Name Field -->
+<!-- Client Date Field -->
 <div class="col-sm-12">
+    {!! Form::label('client_date', 'Client Date:') !!}
+    <p>{{ $transaction->client_date }}</p>
+</div>
+
+<!-- Employee Full Name Field -->
+<!-- <div class="col-sm-12">
     {!! Form::label('employee', 'Employee:') !!}
     <p>{{ $client->employee ? $client->employee->full_name : 'No employee assigned' }}</p>
-</div>
+</div> -->
 
 <!-- Location Field -->
 <div class="col-sm-12">

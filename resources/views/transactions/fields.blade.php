@@ -10,12 +10,6 @@
     {!! Form::number('amount_paid', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Payment Date Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('payment_date', 'Payment Date:') !!}
-    {!! Form::date('payment_date', null, ['class' => 'form-control','id'=>'payment_date']) !!}
-</div>
-
 @push('page_scripts')
     <script type="text/javascript">
         $('#payment_date').datepicker()

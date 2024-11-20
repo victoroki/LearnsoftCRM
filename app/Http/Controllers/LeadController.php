@@ -13,6 +13,7 @@ use App\Models\Lead;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Carbon\Carbon;
 use Flash;
 
 class LeadController extends AppBaseController
@@ -86,26 +87,38 @@ class LeadController extends AppBaseController
             'phone_number' => 'nullable|numeric',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'nullable|exists:employees,id', // Ensure that the employee ID is valid
             'description' => 'nullable|string|max:65535',
             'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
+            'created_at' => 'nullable|date', // Validate created_at as a date
+            'lead_date' => 'nullable|date', // Validate lead_date field
         ]);
-        
-        // Create the lead with the validated data
-        $lead = Lead::create($validatedData);
-        
+    
+        // Merge the validated data to include 'lead_date' and 'created_at'
+        $leadData = $validatedData;
+    
         // If a product is selected, associate it (if the relationship exists in the Lead model)
         if ($request->has('product_id') && $request->product_id) {
-            $lead->product_id = $request->product_id;
+            $leadData['product_id'] = $request->product_id;
         }
-        
-        // Save the lead (this is actually redundant since create already does this)
-        $lead->save();
-        
+    
+        // If a created_at date is provided, update the lead's created_at field
+        if ($request->has('created_at') && $request->created_at) {
+            $leadData['created_at'] = $request->created_at;
+        }
+    
+        // Create the lead with the validated data
+        $lead = Lead::create($leadData);
+    
+        // If a lead_date is provided, update it after creation
+        if ($request->has('lead_date') && $request->lead_date) {
+            $lead->lead_date = \Carbon\Carbon::parse($request->lead_date)->timezone('UTC');
+            $lead->save();
+        }
+    
         // Redirect or show success message
         return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
     }
-    
     
 
     /**
@@ -160,7 +173,7 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Validation rules, including `product_id`
+        // Validation rules, including `product_id` and `created_at`
         $rules = [
             'full_name' => 'nullable|string|max:100',
             'email' => 'required|string|max:30',
@@ -170,13 +183,13 @@ class LeadController extends AppBaseController
             'employee_id' => 'nullable|exists:employees,id',
             'product_id' => 'nullable|exists:products,id', // Ensure product_id references an existing product
             'description' => 'nullable|string|max:65535',
-            'created_at' => 'nullable|date'
+            'created_at' => 'nullable|date' // Validate created_at as a date
         ];
     
         // Validate the input
         $validated = $request->validate($rules);
     
-        // Update the lead, including product_id
+        // Update the lead, including product_id and created_at
         $lead = $this->leadRepository->update($validated, $id);
     
         Flash::success('Lead updated successfully.');
@@ -217,7 +230,6 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Check if this lead is already a client
         $existingClient = Client::where('lead_id', $lead->id)
             ->orWhere('email_address', $lead->email)
             ->orWhere('phone_number', $lead->phone_number)
@@ -228,25 +240,18 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Assuming certain status indicates conversion
         if ($lead->status !== 'converted') {
-            $lead->status = 'converted'; // Set status to converted
+            $lead->status = 'converted';
             $lead->save();
         }
     
-        // Split full name into first and last names if needed
-        $nameParts = explode(' ', $lead->full_name);
-        $firstName = $nameParts[0];
-        $lastName = isset($nameParts[1]) ? $nameParts[1] : null;
-    
-        // Create a client from the lead data
         $client = Client::create([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
+            'full_name' => $lead->full_name,
             'email_address' => $lead->email,
             'phone_number' => $lead->phone_number,
             'lead_id' => $lead->id,
-            'location' => 'Unknown', // Adjust based on your application's needs
+            'employee_id' => $lead->employee_id,
+            'location' => 'Unknown', 
         ]);
     
         Flash::success('Lead successfully converted to client.');
