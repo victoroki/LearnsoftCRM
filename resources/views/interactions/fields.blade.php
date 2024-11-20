@@ -14,6 +14,23 @@
     </select>
 </div>
 
+<!-- Employee Field -->
+<div class="form-group">
+    <label for="employee_id">Employee</label>
+    <select name="employee_id" id="employee_id" class="form-control">
+        <option value="">Select Employee</option>
+        @foreach ($employees as $employee)
+            <option value="{{ $employee->id }}" 
+                {{ old('employee_id', isset($interaction) ? $interaction->employee_id : '') == $employee->id ? 'selected' : '' }}>
+                {{ $employee->first_name }} {{ $employee->last_name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+
+
+
 <!-- Description Field -->
 <div class="form-group col-sm-12 col-lg-12">
     {!! Form::label('description', 'Description:') !!}

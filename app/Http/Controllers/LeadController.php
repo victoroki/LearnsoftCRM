@@ -87,7 +87,7 @@ class LeadController extends AppBaseController
             'phone_number' => 'nullable|numeric',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'nullable|exists:employees,id', // Ensure that the employee ID is valid
             'description' => 'nullable|string|max:65535',
             'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
             'created_at' => 'nullable|date', // Validate created_at as a date

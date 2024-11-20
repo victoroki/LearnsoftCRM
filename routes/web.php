@@ -5,6 +5,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\InteractionController;
 use App\Models\Product;
 
 
@@ -56,5 +57,8 @@ Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name
 // web.php
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.report');
 Route::get('/reports/generate', [ReportController::class, 'generateReport'])->name('reports.generate');
+
+Route::delete('/interactions/{lead}/delete-all', [InteractionController::class, 'deleteAll'])->name('interactions.deleteAll');
+
 
 Route::resource('employees', EmployeeController::class);

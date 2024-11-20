@@ -77,6 +77,7 @@ class Lead extends Model
                 'client_id' => null,
                 'type' => 'Lead',
                 'description' => $lead->description,
+                "employee_id" => $lead->employee_id,
                 'interactions_date' => Carbon::now()->toDateString(),
             ]);
         });

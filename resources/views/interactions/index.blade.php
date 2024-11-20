@@ -20,6 +20,34 @@
         </div>
     </section>
 
+    <style>
+        /* Styling for the table */
+        .table-container {
+            margin: 20px auto;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .table th {
+            background-color: #007bff; /* Bootstrap primary color */
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table .lead-name {
+            font-weight: bold;
+        }
+
+        .btn {
+            margin: 2px; /* Add spacing between action buttons */
+        }
+    </style>
+
     <div class="content px-3">
         @include('flash::message')
 
@@ -27,41 +55,53 @@
 
         <div class="card">
             <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Lead Name</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($interactions as $interaction)
+                <div class="table-container">
+                    <table class="table table-striped table-bordered">
+                        <thead>
                             <tr>
-                                <!-- Display Lead Name -->
-                                <td>{{ $interaction->lead->full_name }}</td>
-
-                                <td>
-                                    <!-- View button (to view all interactions for a specific lead) -->
-                                    <a href="{{ route('interactions.show', $interaction->lead->id) }}" class="btn btn-info btn-sm">View Interactions</a>
-                                    
-                                    <!-- Add button (to add a new interaction for the specific lead) -->
-                                    <a href="{{ route('interactions.create', ['lead_id' => $interaction->lead->id]) }}" class="btn btn-success btn-sm">Add Interaction</a>
-                                    
-                                    {{-- <!-- Delete button (to delete a specific interaction) -->
-                                    <form action="{{ route('interactions.destroy', $interaction->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this interaction?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form> --}}
-                                    
-                                </td>
+                                <th>Lead Name</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th>Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($interactions as $interaction)
+                                <tr>
+                                    <!-- Display Lead Name -->
+                                    <td class="lead-name">{{ $interaction->lead->full_name }}</td>
+
+                                    <!-- Display Lead Email -->
+                                    <td>{{ $interaction->lead->email }}</td>
+
+                                    <!-- Display Lead Phone -->
+                                    <td>{{ $interaction->lead->phone_number }}</td>
+
+                                    <td>
+                                        <!-- View button -->
+                                        <a href="{{ route('interactions.show', $interaction->lead->id) }}" class="btn btn-info btn-sm">View Interactions</a>
+                                        
+                                        <!-- Add button -->
+                                        <a href="{{ route('interactions.create', ['lead_id' => $interaction->lead->id]) }}" class="btn btn-success btn-sm">Add Interaction</a>
+                                        
+                                        <!-- Delete All button -->
+                                        <form action="{{ route('interactions.deleteAll', $interaction->lead->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete all interactions for this lead?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete All</button>
+                                        </form>
+                                    </td>
+                                    
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- Pagination links -->
-                {{ $interactions->links() }}
+                <div class="d-flex justify-content-center">
+                    {{ $interactions->links() }}
+                </div>
             </div>
         </div>
     </div>
