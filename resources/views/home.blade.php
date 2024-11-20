@@ -12,8 +12,8 @@
     
     <div class="container my-4">
         <div class="row text-center">
-            <div class="col-md-4">
-                <div class="card shadow">
+            <div class="col-md-6">
+              
                     <div class="card-body">
                     <div class="card bg-gradient-primary">
                         <p class="h3 mb-1 text-black">{{ $totalClients }}</p>
@@ -25,10 +25,10 @@
                         </form>
                         </div>
                     </div>
-                </div>
+                
             </div>
-            <div class="col-md-4">
-                <div class="card shadow">
+            <div class="col-md-6">
+            
                     <div class="card-body">
                     <div class="card bg-gradient-success">
                         <p class="h3 mb-1 text-black">{{ $totalProducts }}</p>
@@ -40,10 +40,10 @@
                         </form>
                         </div>
                     </div>
-                </div>
+                
             </div>
-            <div class="col-md-4">
-                <div class="card shadow">
+            <div class="col-md-6">
+            
                     <div class="card-body">
                     <div class="card bg-gradient-warning">
                         <p class="h3 mb-1 text-black">{{ $totalOrders }}</p>
@@ -55,10 +55,10 @@
                         </form>
                         </div>
                     </div>
-                </div>
+               
             </div>
-            <div class="col-md-4">
-                <div class="card shadow">
+            <div class="col-md-6">
+            
                     <div class="card-body">
                     <div class="card bg-gradient-secondary">
                         <p class="h3 mb-1 text-black">{{ $totalDepartments }}</p>
@@ -70,10 +70,10 @@
                         </form>
                         </div>
                     </div>
-                </div>
+               
             </div>
-            <div class="col-md-4">
-                <div class="card shadow">
+            <div class="col-md-6">
+            
                     <div class="card-body">
                       <div class="card bg-info">
                         <p class="h3 mb-1 text-black">{{ $totalEmployees }}</p>
@@ -85,10 +85,10 @@
                         </form>
                           </div>
                         </div>
-                    </div>
+                   
             </div>
-            <div class="col-md-4">
-                <div class="card shadow">
+            <div class="col-md-6">
+            
                     <div class="card-body">
                     <div class="card bg-light">
                         <p class="h3 mb-1 text-black">{{ $totalInteractions }}</p>
@@ -99,7 +99,7 @@
                         <button type="submit" class="btn btn-dark">View interactions</button>
                         </form>
                         </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>

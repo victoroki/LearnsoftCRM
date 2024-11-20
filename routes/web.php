@@ -62,3 +62,5 @@ Route::get('/reports', function () {
 Route::get('/reports/generate', [ReportController::class, 'generateReport'])->name('reports.generate');
 Route::post('/reports/render-table', [ReportController::class, 'renderTable'])->name('reports.renderTable');
 
+
+Route::resource('enquiries', App\Http\Controllers\EnquiryController::class);

@@ -2,7 +2,7 @@
 <div class="form-group col-sm-6">
     {!! Form::label('order_id', 'Order Id:') !!}
     {!! Form::select('order_id', $orders->pluck('id', 'id'), null, ['class' => 'form-control']) !!}
-</div>
+</div> 
 
 <!-- Amount Paid Field -->
 <div class="form-group col-sm-6">
@@ -36,6 +36,6 @@
 
 <!-- Client Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('client_id', 'Client Id:') !!}
-    {!! Form::select('client_id', $clients->pluck('first_name', 'id'), null, ['class' => 'form-control', 'required']) !!}
+    {!! Form::label('client_id', 'Client id:') !!}
+    {!! Form::select('client_id', $clients->pluck('full_name', 'id'), null, ['class' => 'form-control', 'required']) !!}
 </div>
