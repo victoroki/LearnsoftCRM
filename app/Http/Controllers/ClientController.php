@@ -73,13 +73,40 @@ public function index(Request $request)
      */
     public function store(CreateClientRequest $request)
     {
-        $input = $request->all();
-        $client = $this->clientRepository->create($input);
-
+        // Validate the incoming data and add 'client_date' validation (none of the fields are required)
+        $validatedData = $request->validate([
+            'full_name' => 'nullable|string|max:100',
+            'company_name' => 'nullable|string|max:100',
+            'email_address' => 'nullable|string|max:100|email',
+            'phone_number' => 'nullable|string',
+            'location' => 'nullable|string|max:30',
+            'employee_id' => 'nullable|exists:employees,id',
+            'client_date' => 'nullable|date',
+        ]);
+    
+        // Merge the validated data to include 'client_date'
+        $clientData = $validatedData;
+    
+        // If a product is selected, associate it (if the relationship exists in the Client model)
+        if ($request->has('product_id') && $request->product_id) {
+            $clientData['product_id'] = $request->product_id;
+        }
+    
+        // Create the client with the validated data
+        $client = $this->clientRepository->create($clientData);
+    
+        // If a client_date is provided, update it after creation
+        if ($request->has('client_date') && $request->client_date) {
+            $client->client_date = \Carbon\Carbon::parse($request->client_date)->timezone('UTC');
+            $client->save();
+        }
+    
         Flash::success('Client saved successfully.');
-
+    
         return redirect(route('clients.index'));
     }
+    
+    
 
     /**
      * Display the specified Client.

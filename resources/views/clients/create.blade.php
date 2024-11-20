@@ -64,6 +64,11 @@
 
             </div>
 
+                            <!-- Client Date Field -->
+                            <div class="form-group">
+                    <label for="client_date">Client Date</label>
+                    <input type="text" name="client_date" id="client_date" class="form-control" value="{{ old('client_date') }}" required>
+                </div>
 
 
                             <!-- Employee Dropdown -->
@@ -88,3 +93,15 @@
         </div>
     </div>
 @endsection
+
+@push('page_scripts')
+    <!-- Include jQuery UI Datepicker -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#client_date').datepicker({
+                dateFormat: 'yy-mm-dd'  // Set format as per your requirements
+            });
+        });
+    </script>
+@endpush

@@ -15,6 +15,7 @@ class Client extends Model
         'phone_number',
         'lead_id',
         'employee_id',
+        'client_date',
         'location'
     ];
 
@@ -22,17 +23,20 @@ class Client extends Model
         'full_name' => 'string',
         'company_name' => 'string',
         'email_address' => 'string',
+        'lead_date' => 'date',
         'location' => 'string'
     ];
 
     public static array $rules = [
-        'full_name' => 'required|string|max:100',
+        'full_name' => 'nullable|string|max:100',
         'company_name' => 'nullable|string|max:100',
-        'email_address' => 'required|string|max:100',
-        'phone_number' => 'nullable',
+        'email_address' => 'nullable|string|max:100|email',
+        'phone_number' => 'nullable|string',
         'lead_id' => 'nullable|exists:leads,id',
-        'location' => 'nullable|string|max:200'
+        'location' => 'nullable|string|max:200',
+        'client_date' => 'nullable|date',
     ];
+    
 
     public function lead(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -73,5 +77,9 @@ class Client extends Model
                 'interactions_date' => now()->toDateString(),
             ]);
         });
+    }
+    public function getClientDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d');
     }
 }

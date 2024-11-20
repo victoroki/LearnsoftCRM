@@ -37,7 +37,7 @@ class Lead extends Model
         'source' => 'nullable|string|max:30',
         'status' => 'nullable|string|max:30',
         'employee_id' => 'nullable',
-        'lead_date' => 'nullable',
+        'lead_date' => 'nullable', 
         'description' => 'nullable|string|max:65535',
     ];
 

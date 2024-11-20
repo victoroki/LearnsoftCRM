@@ -34,6 +34,12 @@
     <p>{{ $client && $client->lead ? $client->lead->full_name : 'No lead assigned' }}</p>
 </div>
 
+<!-- Client Date Field -->
+<div class="col-sm-12">
+    {!! Form::label('client_date', 'Client Date:') !!}
+    <p>{{ $transaction->client_date }}</p>
+</div>
+
 <!-- Employee Full Name Field -->
 <div class="col-sm-12">
     {!! Form::label('employee', 'Employee:') !!}

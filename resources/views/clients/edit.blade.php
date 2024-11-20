@@ -27,6 +27,12 @@
                 </div>
             </div>
 
+                        <!-- Lead Date Field -->
+                        <div class="form-group">
+                <label for="lead_date">Lead Date</label>
+                <input type="text" name="lead_date" id="lead_date" class="form-control" value="{{ old('lead_date', $lead->lead_date) }}" required>
+            </div>
+
                                 <!-- Employee Dropdown Field -->
                                 <div class="form-group col-sm-6">
                         {!! Form::label('employee_id', 'Employee:') !!}
@@ -43,3 +49,15 @@
         </div>
     </div>
 @endsection
+
+@push('page_scripts')
+    <!-- Include jQuery UI Datepicker -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#lead_date').datepicker({
+                dateFormat: 'yy-mm-dd'  // Set format as per your requirements
+            });
+        });
+    </script>
+@endpush
