@@ -1,7 +1,7 @@
-<!-- First Name Field -->
+<!-- Full Name Field -->
 <div class="col-sm-12">
     {!! Form::label('full_name', 'Full Name:') !!}
-    <p>{{ $client->first_name ?? 'No first name' }}</p>
+    <p>{{ $client->full_name ?? 'No full name' }}</p>
 </div>
 
 <!-- Company Name Field -->

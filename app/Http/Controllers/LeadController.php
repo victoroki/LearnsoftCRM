@@ -247,15 +247,9 @@ class LeadController extends AppBaseController
             $lead->save();
         }
     
-        // Split full name into first and last names if needed
-        $nameParts = explode(' ', $lead->full_name);
-        $firstName = $nameParts[0];
-        $lastName = isset($nameParts[1]) ? $nameParts[1] : null;
-    
         // Create a client from the lead data
         $client = Client::create([
-            'first_name' => $firstName,
-            'last_name' => $lastName,
+            'full_name' => $lead->full_name,  // Use full_name instead of splitting
             'email_address' => $lead->email,
             'phone_number' => $lead->phone_number,
             'lead_id' => $lead->id,
@@ -265,6 +259,7 @@ class LeadController extends AppBaseController
         Flash::success('Lead successfully converted to client.');
         return redirect(route('leads.index'));
     }
+    
     
     public function getLeadData(Request $request)
     {
