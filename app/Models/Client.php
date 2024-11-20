@@ -73,6 +73,7 @@ class Client extends Model
                 'lead_id' => $client->lead_id,  // Link to the lead if provided
                 'type' => 'Client',
                 'description' => 'New order made',
+                'employee_id'=> $client->employee_id,
                 'interactions_date' => now()->toDateString(),
             ]);
         });

@@ -13,6 +13,7 @@ use App\Models\Lead;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use App\Models\Interaction;
 use Flash;
 
 class LeadController extends AppBaseController
@@ -86,9 +87,9 @@ class LeadController extends AppBaseController
             'phone_number' => 'nullable|numeric',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'nullable|exists:employees,id', // Ensure that the employee ID is valid
             'description' => 'nullable|string|max:65535',
-            'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
+            'product_id' => 'nullable|exists:products,id',
         ]);
         
         // Create the lead with the validated data
@@ -99,12 +100,31 @@ class LeadController extends AppBaseController
             $lead->product_id = $request->product_id;
         }
         
-        // Save the lead (this is actually redundant since create already does this)
+        // Ensure that the interaction is not already created for this lead
+$existingInteraction = Interaction::where('lead_id', $lead->id)
+                                    ->where('employee_id', $request->employee_id)
+                                    ->first();
+
+if (!$existingInteraction) {
+    // If no interaction exists, create it
+    $interactionData = [
+        'lead_id' => $lead->id,
+        'employee_id' => $request->employee_id,
+        'description' => $request->input('description', 'Initial interaction with lead'),
+        'interactions_date' => now(),
+        'type' => 'Lead',
+    ];
+
+    // Save the interaction
+    Interaction::create($interactionData);
+}
+
+        
         $lead->save();
         
-        // Redirect or show success message
         return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
     }
+    
     
     
 
