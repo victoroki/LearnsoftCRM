@@ -32,16 +32,10 @@
                     </select>
                 </div> -->
 
-                <!-- First Name Field: Input -->
+                <!-- Full Name Field: Input -->
                 <div class="form-group">
-                    {!! Form::label('first_name', 'First Name:') !!}
-                    {!! Form::text('first_name', null, ['class' => 'form-control']) !!}
-                </div>
-
-                <!-- Last Name Field: Input -->
-                <div class="form-group">
-                    {!! Form::label('last_name', 'Last Name:') !!}
-                    {!! Form::text('last_name', null, ['class' => 'form-control']) !!}
+                    {!! Form::label('full_name', 'Full Name:') !!}
+                    {!! Form::text('full_name', null, ['class' => 'form-control']) !!}
                 </div>
 
                 <!-- Company Name Field: Input -->
@@ -70,7 +64,27 @@
 
             </div>
 
-            <div class="card-footer">
+                            <!-- Client Date Field -->
+                            <div class="form-group">
+                    <label for="client_date">Client Date</label>
+                    <input type="text" name="client_date" id="client_date" class="form-control" value="{{ old('client_date') }}" required>
+                </div>
+
+
+                            <!-- Employee Dropdown -->
+                            <div class="form-group">
+                    <label for="employee_id">Employee</label>
+                    <select name="employee_id" id="employee_id" class="form-control">
+                        <option value="">Select an Employee</option>
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}">
+                                {{ $employee->first_name }} {{ $employee->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
                 <a href="{{ route('clients.index') }}" class="btn btn-default">Cancel</a>
             </div>
@@ -79,3 +93,15 @@
         </div>
     </div>
 @endsection
+
+@push('page_scripts')
+    <!-- Include jQuery UI Datepicker -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#client_date').datepicker({
+                dateFormat: 'yy-mm-dd'  // Set format as per your requirements
+            });
+        });
+    </script>
+@endpush

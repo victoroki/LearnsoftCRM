@@ -13,7 +13,7 @@ use App\Models\Lead;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
-use App\Models\Interaction;
+use Carbon\Carbon;
 use Flash;
 
 class LeadController extends AppBaseController
@@ -89,43 +89,36 @@ class LeadController extends AppBaseController
             'status' => 'nullable|string|max:30',
             'employee_id' => 'nullable|exists:employees,id', // Ensure that the employee ID is valid
             'description' => 'nullable|string|max:65535',
-            'product_id' => 'nullable|exists:products,id',
+            'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
+            'created_at' => 'nullable|date', // Validate created_at as a date
+            'lead_date' => 'nullable|date', // Validate lead_date field
         ]);
-        
-        // Create the lead with the validated data
-        $lead = Lead::create($validatedData);
-        
+    
+        // Merge the validated data to include 'lead_date' and 'created_at'
+        $leadData = $validatedData;
+    
         // If a product is selected, associate it (if the relationship exists in the Lead model)
         if ($request->has('product_id') && $request->product_id) {
-            $lead->product_id = $request->product_id;
+            $leadData['product_id'] = $request->product_id;
         }
-        
-        // Ensure that the interaction is not already created for this lead
-$existingInteraction = Interaction::where('lead_id', $lead->id)
-                                    ->where('employee_id', $request->employee_id)
-                                    ->first();
-
-if (!$existingInteraction) {
-    // If no interaction exists, create it
-    $interactionData = [
-        'lead_id' => $lead->id,
-        'employee_id' => $request->employee_id,
-        'description' => $request->input('description', 'Initial interaction with lead'),
-        'interactions_date' => now(),
-        'type' => 'Lead',
-    ];
-
-    // Save the interaction
-    Interaction::create($interactionData);
-}
-
-        
-        $lead->save();
-        
+    
+        // If a created_at date is provided, update the lead's created_at field
+        if ($request->has('created_at') && $request->created_at) {
+            $leadData['created_at'] = $request->created_at;
+        }
+    
+        // Create the lead with the validated data
+        $lead = Lead::create($leadData);
+    
+        // If a lead_date is provided, update it after creation
+        if ($request->has('lead_date') && $request->lead_date) {
+            $lead->lead_date = \Carbon\Carbon::parse($request->lead_date)->timezone('UTC');
+            $lead->save();
+        }
+    
+        // Redirect or show success message
         return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
     }
-    
-    
     
 
     /**
@@ -180,7 +173,7 @@ if (!$existingInteraction) {
             return redirect(route('leads.index'));
         }
     
-        // Validation rules, including `product_id`
+        // Validation rules, including `product_id` and `created_at`
         $rules = [
             'full_name' => 'nullable|string|max:100',
             'email' => 'required|string|max:30',
@@ -190,13 +183,13 @@ if (!$existingInteraction) {
             'employee_id' => 'nullable|exists:employees,id',
             'product_id' => 'nullable|exists:products,id', // Ensure product_id references an existing product
             'description' => 'nullable|string|max:65535',
-            'created_at' => 'nullable|date'
+            'created_at' => 'nullable|date' // Validate created_at as a date
         ];
     
         // Validate the input
         $validated = $request->validate($rules);
     
-        // Update the lead, including product_id
+        // Update the lead, including product_id and created_at
         $lead = $this->leadRepository->update($validated, $id);
     
         Flash::success('Lead updated successfully.');

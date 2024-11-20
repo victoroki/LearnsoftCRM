@@ -23,6 +23,12 @@
     <p>{{ $client->phone_number ?? '' }}</p>
 </div>
 
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#client_date').datepicker()
+    </script>
+@endpush
+
 <!-- Lead Full Name Field (instead of Lead Id) -->
 <div class="col-sm-12">
     {!! Form::label('lead_id', 'Lead Full Name:') !!}

@@ -10,12 +10,6 @@
     {!! Form::number('amount_paid', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Payment Date Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('payment_date', 'Payment Date:') !!}
-    {!! Form::date('payment_date', null, ['class' => 'form-control','id'=>'payment_date']) !!}
-</div>
-
 @push('page_scripts')
     <script type="text/javascript">
         $('#payment_date').datepicker()
@@ -26,12 +20,6 @@
 <div class="form-group col-sm-6">
     {!! Form::label('payment_method', 'Payment Method:') !!}
     {!! Form::text('payment_method', null, ['class' => 'form-control', 'maxlength' => 20, 'maxlength' => 20]) !!}
-</div>
-
-<!-- Status Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('status', 'Status:') !!}
-    {!! Form::text('status', null, ['class' => 'form-control', 'maxlength' => 20, 'maxlength' => 20]) !!}
 </div>
 
 <!-- Transaction Reference Field -->

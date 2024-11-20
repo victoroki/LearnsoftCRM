@@ -14,7 +14,8 @@ class LeadRepository extends BaseRepository
         'source',
         'status',
         'employee_id',
-        'description'
+        'description',
+        'lead_date'
     ];
 
     public function getFieldsSearchable(): array
