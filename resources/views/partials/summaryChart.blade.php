@@ -15,7 +15,7 @@
       labels: ['employees','departments'],
       datasets: [{
         label: '# of Votes',
-        data: [25, 5, 50,],
+        data: [25, 5],
         borderWidth: 1
       }]
     },
