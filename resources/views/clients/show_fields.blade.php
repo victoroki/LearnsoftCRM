@@ -22,6 +22,12 @@
     <p>{{ $client->phone_number ?? 'No phone number' }}</p>
 </div>
 
+<!-- Employee Id Field -->
+<div class="col-sm-12">
+    {!! Form::label('employee_id', 'Employee Id:') !!}
+    <p>{{ $lead->employee_id }}</p>
+</div>
+
 <!-- Lead Full Name Field (instead of Lead Id) -->
 <div class="col-sm-12">
     {!! Form::label('lead_id', 'Lead Full Name:') !!}

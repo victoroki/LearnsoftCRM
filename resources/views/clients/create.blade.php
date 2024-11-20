@@ -64,7 +64,22 @@
 
             </div>
 
-            <div class="card-footer">
+
+
+                            <!-- Employee Dropdown -->
+                            <div class="form-group">
+                    <label for="employee_id">Employee</label>
+                    <select name="employee_id" id="employee_id" class="form-control">
+                        <option value="">Select an Employee</option>
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}">
+                                {{ $employee->first_name }} {{ $employee->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
                 <a href="{{ route('clients.index') }}" class="btn btn-default">Cancel</a>
             </div>

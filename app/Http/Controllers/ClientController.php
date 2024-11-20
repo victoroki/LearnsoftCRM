@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateClientRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\ClientRepository;
 use Illuminate\Http\Request;
+use App\Models\Employee;
 use Flash;
 
 class ClientController extends AppBaseController
@@ -62,8 +63,9 @@ public function index(Request $request)
     public function create()
     {
         // Fetch all leads and pass them to the view
+        $employees = Employee::all(); 
         $leads = \App\Models\Lead::all();
-        return view('clients.create', compact('leads'));  
+        return view('clients.create', compact('employees', 'leads'));  
     }
 
     /**
