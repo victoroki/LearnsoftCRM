@@ -1,15 +1,3 @@
-<!-- Employee Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('employee_id', 'Employee Id:') !!}
-    <p>{{ $report->employee_id }}</p>
-</div>
-
-<!-- Employee Name Field -->
-<div class="col-sm-12">
-    {!! Form::label('employee_name', 'Employee Name:') !!}
-    <p>{{ $report->employee_name }}</p>
-</div>
-
 <!-- Lead Name Field -->
 <div class="col-sm-12">
     {!! Form::label('lead_name', 'Lead Name:') !!}
@@ -36,7 +24,7 @@
 
 <!-- Product Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('product_id', 'Product Id:') !!}
+    {!! Form::label('product_id', 'Product:') !!}
     <p>{{ $report->product_id }}</p>
 </div>
 
@@ -44,24 +32,6 @@
 <div class="col-sm-12">
     {!! Form::label('quantity_ordered', 'Quantity Ordered:') !!}
     <p>{{ $report->quantity_ordered }}</p>
-</div>
-
-<!-- Order Date Field -->
-<div class="col-sm-12">
-    {!! Form::label('order_date', 'Order Date:') !!}
-    <p>{{ $report->order_date }}</p>
-</div>
-
-<!-- Order Status Field -->
-<div class="col-sm-12">
-    {!! Form::label('order_status', 'Order Status:') !!}
-    <p>{{ $report->order_status }}</p>
-</div>
-
-<!-- Interaction Type Field -->
-<div class="col-sm-12">
-    {!! Form::label('interaction_type', 'Interaction Type:') !!}
-    <p>{{ $report->interaction_type }}</p>
 </div>
 
 <!-- Start Date Field -->

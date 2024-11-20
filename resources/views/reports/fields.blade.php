@@ -1,9 +1,3 @@
-<!-- Employee Name Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('employee_name', 'Employee Name:') !!}
-    {!! Form::text('employee_name', null, ['class' => 'form-control', 'required', 'maxlength' => 255, 'maxlength' => 255]) !!}
-</div>
-
 <!-- Lead Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('lead_name', 'Lead Name:') !!}
@@ -42,7 +36,7 @@
 
 <!-- Product Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('product_id', 'Product Id:') !!}
+    {!! Form::label('product_id', 'Product:') !!}
     {!! Form::number('product_id', null, ['class' => 'form-control']) !!}
 </div>
 
@@ -52,29 +46,11 @@
     {!! Form::number('quantity_ordered', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Order Date Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('order_date', 'Order Date:') !!}
-    {!! Form::text('order_date', null, ['class' => 'form-control','id'=>'order_date']) !!}
-</div>
-
 @push('page_scripts')
     <script type="text/javascript">
         $('#order_date').datepicker()
     </script>
 @endpush
-
-<!-- Order Status Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('order_status', 'Order Status:') !!}
-    {!! Form::text('order_status', null, ['class' => 'form-control', 'maxlength' => 50, 'maxlength' => 50]) !!}
-</div>
-
-<!-- Interaction Type Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('interaction_type', 'Interaction Type:') !!}
-    {!! Form::text('interaction_type', null, ['class' => 'form-control', 'required', 'maxlength' => 250, 'maxlength' => 250]) !!}
-</div>
 
 <!-- Start Date Field -->
 <div class="form-group col-sm-6">

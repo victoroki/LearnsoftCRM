@@ -93,7 +93,6 @@
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const filterButton = document.querySelector('button[type="submit"]');
         const typeDropdown = document.querySelector('#interaction_type');
 
         function filterColumns() {
@@ -104,11 +103,14 @@
             allColumns.forEach(column => column.style.display = 'none');
 
             if (type === 'Lead') {
-                document.querySelectorAll('.lead-column').forEach(column => column.style.display = '');
+                // Show only lead-specific columns
+                document.querySelectorAll('.lead-column, .shared-column').forEach(column => column.style.display = '');
             } else if (type === 'Client') {
-                document.querySelectorAll('.client-column').forEach(column => column.style.display = '');
+                // Show only client-specific columns
+                document.querySelectorAll('.client-column, .shared-column').forEach(column => column.style.display = '');
             } else {
-                document.querySelectorAll('.all-column').forEach(column => column.style.display = '');
+                // Show all columns for "All"
+                allColumns.forEach(column => column.style.display = '');
             }
         }
 
@@ -119,6 +121,8 @@
         typeDropdown.addEventListener('change', filterColumns);
     });
 </script>
+
+
 
 @endsection
 

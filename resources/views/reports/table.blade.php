@@ -3,37 +3,29 @@
         <table class="table" id="reports-table">
             <thead>
                 <tr>
-                    <th class="filterable all-column">Employee Name</th>
                     <th class="filterable lead-column">Lead Name</th>
                     <th class="filterable client-column">Client Name</th>
                     <th class="filterable lead-column">Lead Date</th>
                     <th class="filterable client-column">Client Date</th>
-                    <th class="filterable all-column">Product</th>
-                    <th class="filterable all-column">Quantity Ordered</th>
-                    <th class="filterable all-column">Order Date</th>
-                    <th class="filterable all-column">Order Status</th>
-                    <th class="filterable all-column">Interaction Type</th>
-                    <th class="filterable all-column">Start Date</th>
-                    <th class="filterable all-column">End Date</th>
-                    <th class="all-column" colspan="3">Action</th>
+                    <th class="filterable lead-column client-column">Product</th>
+                    <th class="filterable client-column">Quantity Ordered</th>
+                    <th class="filterable lead-column client-column shared-column">Start Date</th>
+                    <th class="filterable lead-column client-column shared-column">End Date</th>
+                    <th>Actions</th> <!-- Always visible -->
                 </tr>
             </thead>
             <tbody>
                 @foreach($reports as $report)
                     <tr>
-                        <td class="filterable all-column">{{ $report->employee_name }}</td>
                         <td class="filterable lead-column">{{ $report->lead_name }}</td>
                         <td class="filterable client-column">{{ $report->client_name }}</td>
                         <td class="filterable lead-column">{{ $report->lead_date }}</td>
                         <td class="filterable client-column">{{ $report->client_date }}</td>
-                        <td class="filterable all-column">{{ $report->product_id }}</td>
-                        <td class="filterable all-column">{{ $report->quantity_ordered }}</td>
-                        <td class="filterable all-column">{{ $report->order_date }}</td>
-                        <td class="filterable all-column">{{ $report->order_status }}</td>
-                        <td class="filterable all-column">{{ $report->interaction_type }}</td>
-                        <td class="filterable all-column">{{ $report->start_date }}</td>
-                        <td class="filterable all-column">{{ $report->end_date }}</td>
-                        <td style="width: 120px" class="all-column">
+                        <td class="filterable lead-column client-column">{{ $report->product_id }}</td>
+                        <td class="filterable client-column">{{ $report->quantity_ordered }}</td>
+                        <td class="filterable lead-column client-column shared-column">{{ $report->start_date }}</td>
+                        <td class="filterable lead-column client-column shared-column">{{ $report->end_date }}</td>
+                        <td style="width: 120px">
                             {!! Form::open(['route' => ['reports.destroy', $report->id], 'method' => 'delete']) !!}
                             <div class="btn-group">
                                 <a href="{{ route('reports.show', [$report->id]) }}" class="btn btn-default btn-xs">
