@@ -73,51 +73,57 @@ class OrderController extends AppBaseController
      * Store a newly created Order in storage.
      */
     public function store(CreateOrderRequest $request)
-{
-    $input = $request->all();
-
-    if ($request->has('lead_id') && $request->lead_id) {
-        $lead = \App\Models\Lead::find($request->lead_id);
-
-        if ($lead) {
-            $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
-
-            if ($existingClient) {
-                $input['client_id'] = $existingClient->id;
-            } else {
-                $client = new \App\Models\Client();
-                $client->full_name = $lead->full_name;
-                $client->email_address = $lead->email;
-                $client->phone_number = $lead->phone_number;
-                $client->lead_id = $lead->id;
-
-                // Set employee based on the lead or authenticated user
-                if ($lead->employee_id) {
-                    $client->employee_id = $lead->employee_id;  // Assign employee from lead
-                } elseif (auth()->check() && auth()->user()->employee_id) {
-                    $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
+    {
+        $input = $request->all();
+    
+        if ($request->has('lead_id') && $request->lead_id) {
+            $lead = \App\Models\Lead::find($request->lead_id);
+    
+            if ($lead) {
+                $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
+    
+                if ($existingClient) {
+                    $input['client_id'] = $existingClient->id;
+                } else {
+                    $client = new \App\Models\Client();
+                    $client->full_name = $lead->full_name;
+                    $client->email_address = $lead->email;
+                    $client->phone_number = $lead->phone_number;
+                    $client->lead_id = $lead->id;
+    
+                    // Set employee based on the lead or authenticated user
+                    if ($lead->employee_id) {
+                        $client->employee_id = $lead->employee_id;  // Assign employee from lead
+                    } elseif (auth()->check() && auth()->user()->employee_id) {
+                        $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
+                    }
+    
+                    // Set client date based on the order date
+                    if ($request->has('order_date')) {
+                        $client->client_date = $request->order_date;  // Set client date from order date
+                    }
+    
+                    $client->save();
+                    $input['client_id'] = $client->id;
+                    $lead->status = 'Converted to a client';
+                    $lead->save();
                 }
-
-                $client->save();
-                $input['client_id'] = $client->id;
-                $lead->status = 'Converted to a client';
-                $lead->save();
+    
+                $input['type'] = 'Client';
             }
-
+        } elseif ($request->has('client_id') && $request->client_id) {
+            $input['client_id'] = $request->client_id;
             $input['type'] = 'Client';
         }
-    } elseif ($request->has('client_id') && $request->client_id) {
-        $input['client_id'] = $request->client_id;
-        $input['type'] = 'Client';
+    
+        // Create the order
+        $this->orderRepository->create($input);
+    
+        Flash::success('Order created successfully.');
+    
+        return redirect(route('orders.index'));
     }
-
-    // Create the order
-    $this->orderRepository->create($input);
-
-    Flash::success('Order created successfully.');
-
-    return redirect(route('orders.index'));
-}
+    
 
 
     /**
@@ -175,6 +181,11 @@ class OrderController extends AppBaseController
                     $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
                 }
 
+                // Set client date based on the order date
+                if ($request->has('order_date')) {
+                    $client->client_date = $request->order_date;  // Set client date from order date
+                }
+
                 $client->save();
                 $input['client_id'] = $client->id;
                 $lead->status = 'Converted to a client';
@@ -195,7 +206,6 @@ class OrderController extends AppBaseController
 
     return redirect(route('orders.index'));
 }
-
 
     /**
      * Display the specified Order.
