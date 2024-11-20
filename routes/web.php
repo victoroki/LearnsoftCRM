@@ -60,5 +60,7 @@ Route::get('/reports/generate', [ReportController::class, 'generateReport'])->na
 
 Route::delete('/interactions/{lead}/delete-all', [InteractionController::class, 'deleteAll'])->name('interactions.deleteAll');
 
+Route::get('/get-lead-employee/{leadId}', [OrderController::class, 'getEmployeeForLead']);
 
 Route::resource('employees', EmployeeController::class);
+

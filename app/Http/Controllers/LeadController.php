@@ -230,7 +230,6 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Check if this lead is already a client
         $existingClient = Client::where('lead_id', $lead->id)
             ->orWhere('email_address', $lead->email)
             ->orWhere('phone_number', $lead->phone_number)
@@ -241,25 +240,23 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Assuming certain status indicates conversion
         if ($lead->status !== 'converted') {
-            $lead->status = 'converted'; // Set status to converted
+            $lead->status = 'converted';
             $lead->save();
         }
     
-        // Create a client from the lead data
         $client = Client::create([
-            'full_name' => $lead->full_name,  // Use full_name instead of splitting
+            'full_name' => $lead->full_name,
             'email_address' => $lead->email,
             'phone_number' => $lead->phone_number,
             'lead_id' => $lead->id,
-            'location' => 'Unknown', // Adjust based on your application's needs
+            'employee_id' => $lead->employee_id,
+            'location' => 'Unknown', 
         ]);
     
         Flash::success('Lead successfully converted to client.');
         return redirect(route('leads.index'));
     }
-    
     
     public function getLeadData(Request $request)
     {
