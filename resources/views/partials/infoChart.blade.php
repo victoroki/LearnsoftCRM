@@ -1,5 +1,5 @@
 <div>
-<h4>Company distributon</h4>
+<h4>System </h4>
   <canvas id="infoChart"></canvas>
   
 </div>

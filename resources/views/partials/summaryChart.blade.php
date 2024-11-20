@@ -1,5 +1,5 @@
 <div>
-<h4>Summary</h4>
+<h4>Employee Distribution</h4>
   <canvas id="sumChart"></canvas>
  
 </div>
@@ -12,7 +12,7 @@
   new Chart(cts, {
     type: 'doughnut',
     data: {
-      labels: ['employees','departments','interactions'],
+      labels: ['employees','departments'],
       datasets: [{
         label: '# of Votes',
         data: [25, 5, 50,],
