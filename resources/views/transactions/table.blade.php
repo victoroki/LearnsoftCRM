@@ -8,7 +8,7 @@
                     <th>Amount Paid</th>
                     <th>Payment Date</th>
                     <th>Payment Method</th>
-                    <th>Status</th>
+                    <!-- <th>Status</th> -->
                     <th>Transaction Reference</th>
                     <th>Client</th>
                     <th colspan="3">Action</th>
@@ -23,7 +23,7 @@
                         <td>{{ $transaction->amount_paid }}</td>
                         <td>{{ $transaction->payment_date }}</td>
                         <td>{{ $transaction->payment_method }}</td>
-                        <td>{{ $transaction->status }}</td>
+                        <!-- <td>{{ $transaction->status }}</td> -->
                         <td>{{ $transaction->transaction_reference }}</td>
                         
                         <!-- Display the related Client's Full Name -->
