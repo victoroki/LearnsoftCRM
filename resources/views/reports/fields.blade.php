@@ -1,9 +1,3 @@
-<!-- Employee Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('employee_id', 'Employee Id:') !!}
-    {!! Form::number('employee_id', null, ['class' => 'form-control', 'required']) !!}
-</div>
-
 <!-- Employee Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('employee_name', 'Employee Name:') !!}

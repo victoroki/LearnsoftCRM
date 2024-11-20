@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateReportRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\ReportRepository;
 use Illuminate\Http\Request;
+use App\Models\Employee;
 use Flash;
 
 class ReportController extends AppBaseController
@@ -24,12 +25,17 @@ class ReportController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $query = $this->reportRepository->query();
+        // Retrieve all employees
+        $employees = Employee::all(); 
     
+        // Get the base query from the report repository
+        $query = $this->reportRepository->query();
+        
         // Check if search terms are provided and filter accordingly
         if ($request->has('search')) {
             $search = $request->get('search');
-    
+            
+            // Apply search filters
             $query->where(function ($q) use ($search) {
                 $q->where('employee_name', 'like', "%$search%")
                     ->orWhere('lead_name', 'like', "%$search%")
@@ -43,13 +49,14 @@ class ReportController extends AppBaseController
                     ->orWhere('interaction_type', 'like', "%$search%");
             });
         }
-    
+        
         // Paginate the filtered results
         $reports = $query->paginate(10);
-    
-        return view('reports.index')
-            ->with('reports', $reports);
+        
+        // Return the view with the reports and employees
+        return view('reports.index', compact('employees', 'reports'));
     }
+    
     
 
     /**

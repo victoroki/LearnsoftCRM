@@ -18,7 +18,6 @@
                     <tr>
                         <!-- Display the related Order ID (or other fields as required) -->
                         <td>{{ $transaction->order_id }}</td>
-
                         <td>{{ $transaction->amount_paid }}</td>
                         <td>{{ $transaction->payment_date }}</td>
                         <td>{{ $transaction->payment_method }}</td>
