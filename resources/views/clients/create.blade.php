@@ -20,7 +20,7 @@
             <div class="card-body">
 
                 <!-- Lead Field: Dropdown -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     {!! Form::label('lead_id', 'Lead Full Name:') !!}
                     <select name="lead_id" id="lead_id" class="form-control">
                         <option value="">Select a Lead</option>
@@ -30,7 +30,7 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
+                </div> -->
 
                 <!-- First Name Field: Input -->
                 <div class="form-group">
