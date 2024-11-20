@@ -1,13 +1,13 @@
 <!-- Lead Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('lead_id', 'Lead Name:') !!}
-    {!! Form::select('lead_id', $leads, null, ['class' => 'form-control']) !!}
+    {!! Form::select('lead_id', $leads->pluck('full_name', 'id'), null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Client Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('client_id', 'Client Name:') !!}
-    {!! Form::select('client_id', $clients, null, ['class' => 'form-control']) !!}
+    {!! Form::select('client_id', $clients->pluck('full_name', 'id'), null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Lead Date Field -->

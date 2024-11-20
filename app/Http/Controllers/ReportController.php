@@ -38,10 +38,10 @@ class ReportController extends AppBaseController
             // Apply search filters
             $query->where(function ($q) use ($search) {
                 $q->orWhereHas('lead', function($q) use ($search) {
-                    $q->where('full_name', 'like', "%$search%"); // Correct field name
+                    $q->where('full_name', 'like', "%$search%");
                 })
                 ->orWhereHas('client', function($q) use ($search) {
-                    $q->where('client_name', 'like', "%$search%");
+                    $q->where('full_name', 'like', "%$search%"); // Correct the field name to 'full_name'
                 })
                 ->orWhere('lead_date', 'like', "%$search%")
                 ->orWhere('client_date', 'like', "%$search%")
@@ -51,31 +51,32 @@ class ReportController extends AppBaseController
             });
         }
     
-        // Get the reports with the necessary relationships
+        // Get the reports with the necessary relationships (lead, client, product)
         $reports = $query->with(['lead', 'client', 'product'])->paginate(10);
     
         // Fetch the employees for the dropdown
         $employees = Employee::all();
     
-        // Return the view with reports and employees
-        return view('reports.index', compact('reports', 'employees'));
+        // Fetch the clients for the dropdown
+        $clients = Client::all();
+    
+        // Return the view with reports, employees, and clients
+        return view('reports.index', compact('reports', 'employees', 'clients'));
     }
-       
 
     /**
      * Show the form for creating a new Report.
      */
     public function create()
     {
-        // Fetch all products, leads, and clients
+        // Fetch all products, leads, and clients for the dropdowns
         $products = Product::pluck('product_name', 'id');
         $leads = Lead::pluck('full_name', 'id');
-        $clients = Client::pluck('full_name', 'id');
+        $clients = Client::pluck('full_name', 'id');  // Fetch clients similarly to leads
         
         // Pass the data to the view
         return view('reports.create', compact('products', 'leads', 'clients'));
     }
-    
     
 
     /**
@@ -172,29 +173,43 @@ class ReportController extends AppBaseController
     }
     public function syncData()
 {
-    // Pull all data from leads, clients, and products
-    $leads = Lead::all();
-    $clients = Client::all();
-    $products = Product::all();
+    // Fetch only active leads and clients
+    $leads = Lead::where('status', 'active')->get();  
+    $clients = Client::where('status', 'active')->get();
 
-    // Loop through the data and create corresponding reports
+    // Loop through each lead
     foreach ($leads as $lead) {
+        // Loop through each client, but only if they have a matching lead
         foreach ($clients as $client) {
-            foreach ($products as $product) {
-                Report::create([
-                    'lead_name' => $lead->lead_name,  // or any relevant field
-                    'client_name' => $client->client_name,
-                    'lead_date' => $lead->lead_date,
-                    'client_date' => $client->client_date,
-                    'product_id' => $product->id,
-                    'quantity_ordered' => 0,  // Set default value or retrieve if applicable
-                ]);
+            // Check if the lead is associated with the client (you can customize this check)
+            if ($lead->client_id == $client->id) {
+                // Check if a report already exists for this lead-client pair
+                $existingReport = Report::where('lead_id', $lead->id)
+                    ->where('client_id', $client->id)
+                    ->first();
+
+                // Only create a new report if one doesn't exist yet
+                if (!$existingReport) {
+                    // Get the total quantity ordered from the orders table
+                    $totalQuantityOrdered = Order::where('lead_id', $lead->id)
+                        ->where('client_id', $client->id)
+                        ->sum('quantity'); // Assuming quantity is a column in orders table
+
+                    // Create the report with the quantity ordered from orders
+                    Report::create([
+                        'lead_id' => $lead->id,
+                        'client_id' => $client->id,
+                        'lead_date' => $lead->lead_date,  
+                        'client_date' => $client->client_date,  
+                        'product_id' => null,  // No product in this case, can be adjusted
+                        'quantity_ordered' => $totalQuantityOrdered, // Set the total quantity ordered
+                    ]);
+                }
             }
         }
     }
 
-    Flash::success('Data has been synchronized into reports table.');
-
+    Flash::success('Lead and Client data has been synchronized into reports table with quantities.');
     return redirect(route('reports.index'));
 }
 

@@ -9,8 +9,8 @@ class Report extends Model
     public $table = 'reports';
 
     public $fillable = [
-        'lead_id',   // Reference to the lead
-        'client_id', // Reference to the client
+        'lead_id',   // Foreign key to the lead table
+        'client_id', // Foreign key to the client table
         'lead_date',
         'client_date',
         'product_id',
@@ -22,6 +22,7 @@ class Report extends Model
         'client_date' => 'date',
     ];
 
+    // The rules for validation
     public static array $rules = [
         'lead_id' => 'nullable|exists:leads,id',  // Ensuring that the lead exists
         'client_id' => 'nullable|exists:clients,id', // Ensuring that the client exists
@@ -33,19 +34,20 @@ class Report extends Model
         'updated_at' => 'required',
     ];
 
+    // Relationships
     public function lead()
     {
-        return $this->belongsTo(\App\Models\Lead::class, 'lead_id');
+        return $this->belongsTo(Lead::class, 'lead_id');
     }
-
+    
     public function client()
     {
-        return $this->belongsTo(\App\Models\Client::class, 'client_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
-
+    
     public function product()
     {
-        return $this->belongsTo(\App\Models\Product::class, 'product_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
     public function getLeadDateAttribute($value)
     {
@@ -55,4 +57,5 @@ class Report extends Model
     {
         return \Carbon\Carbon::parse($value)->format('m-d-Y');
     }
+    
 }

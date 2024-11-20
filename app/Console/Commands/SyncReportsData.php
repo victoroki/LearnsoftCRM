@@ -24,17 +24,27 @@ class SyncReportsData extends Command
         $clients = Client::all();
         $products = Product::all();
 
+        // Loop through each lead and client pair
         foreach ($leads as $lead) {
             foreach ($clients as $client) {
-                foreach ($products as $product) {
-                    Report::create([
-                        'lead_name' => $lead->lead_name,
-                        'client_name' => $client->client_name,
-                        'lead_date' => $lead->lead_date,
-                        'client_date' => $client->client_date,
-                        'product_id' => $product->id,
-                        'quantity_ordered' => 0, // Default value or calculated
-                    ]);
+
+                $existingReport = Report::where('lead_id', $lead->id)
+                    ->where('client_id', $client->id)
+                    ->first();
+
+                // Only create a new report if one doesn't exist yet
+                if (!$existingReport) {
+                    // Create a report only if there's a product
+                    foreach ($products as $product) {
+                        Report::create([
+                            'lead_id' => $lead->id,
+                            'client_id' => $client->id,
+                            'lead_date' => $lead->lead_date,
+                            'client_date' => $client->client_date,
+                            'product_id' => $product->id,
+                            'quantity_ordered' => 0, // Default value
+                        ]);
+                    }
                 }
             }
         }
@@ -42,4 +52,3 @@ class SyncReportsData extends Command
         $this->info('Reports data synced successfully.');
     }
 }
-
