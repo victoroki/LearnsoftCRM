@@ -84,16 +84,19 @@ class TransactionController extends AppBaseController
             Flash::error('Order or Client not found.');
             return redirect(route('transactions.create'));
         }
+    
         // Create the transaction
         $transaction = $this->transactionRepository->create($input);
     
+        // Update the order status to "completed"
+        $order->update(['status' => 'completed']);
+    
         // Flash a success message
-        Flash::success('Transaction saved successfully.');
+        Flash::success('Transaction saved successfully and order marked as completed.');
     
         return redirect(route('transactions.index'));
     }
     
-
     /**
      * Display the specified Transaction.
      */
