@@ -58,7 +58,7 @@ class Order extends Model
 
     public function getOrderDateAttribute($value)
     {
-        return \Carbon\Carbon::parse($value)->format('Y-m-d');
+        return \Carbon\Carbon::parse($value)->format('m-d-Y');
     }
 
     // Automatically calculate total price before saving or updating

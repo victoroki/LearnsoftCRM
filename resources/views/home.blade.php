@@ -108,7 +108,7 @@
     <div class="container row">
     <div class= "col-md-6"> @include('partials.summaryChart') </div>
      
-  <div class= "col-md-6"> @include('partials.infochart') </div>
+  <div class= "col-md-6"> @include('partials.infoChart') </div>
 
   <div class= "col-md-6"> @include('partials.chart') </div>
 

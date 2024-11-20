@@ -131,59 +131,59 @@ class LeadController extends AppBaseController
         // Find the lead by ID
         $lead = $this->leadRepository->find($id);
     
-        // Check if the lead exists
         if (empty($lead)) {
             Flash::error('Lead not found');
             return redirect(route('leads.index'));
         }
     
         // Get all employees and products
-        $employees = Employee::all();  // Get all employees
-        $products = Product::all();    // Get all products
+        $employees = Employee::all();  // Fetch all employees
+        $products = Product::all();    // Fetch all products
     
-        // Return the edit view with lead, employees, and products
+        // Return the edit view
         return view('leads.edit')
             ->with('lead', $lead)
             ->with('employees', $employees)
             ->with('products', $products);
     }
-    
-    
 
     /**
      * Update the specified Lead in storage.
      */
     public function update(Request $request, $id)
     {
+        // Find the lead by ID
         $lead = $this->leadRepository->find($id);
-
+    
         if (empty($lead)) {
             Flash::error('Lead not found');
             return redirect(route('leads.index'));
         }
-
-        // Apply conditional validation rules
+    
+        // Validation rules, including `product_id`
         $rules = [
             'full_name' => 'nullable|string|max:100',
             'email' => 'required|string|max:30',
-            'phone_number' => 'nullable',
+            'phone_number' => 'nullable|string|max:15',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
-            'employee_id' => 'nullable|exists:employees,id', // Make employee_id optional for editing leads
+            'employee_id' => 'nullable|exists:employees,id',
+            'product_id' => 'nullable|exists:products,id', // Ensure product_id references an existing product
             'description' => 'nullable|string|max:65535',
-            'created_at' => 'nullable'
+            'created_at' => 'nullable|date'
         ];
-
+    
+        // Validate the input
         $validated = $request->validate($rules);
-
-        // Update the lead
+    
+        // Update the lead, including product_id
         $lead = $this->leadRepository->update($validated, $id);
-
+    
         Flash::success('Lead updated successfully.');
-
+    
         return redirect(route('leads.index'));
     }
-
+    
     /**
      * Remove the specified Lead from storage.
      *
@@ -211,29 +211,34 @@ class LeadController extends AppBaseController
     public function convertToClient($leadId)
     {
         $lead = Lead::find($leadId);
-
+    
         if (!$lead) {
             Flash::error('Lead not found');
             return redirect(route('leads.index'));
         }
-
+    
         // Check if this lead is already a client
-        if (Client::where('lead_id', $lead->id)->exists()) {
-            Flash::warning('This lead has already been converted to a client.');
+        $existingClient = Client::where('lead_id', $lead->id)
+            ->orWhere('email_address', $lead->email)
+            ->orWhere('phone_number', $lead->phone_number)
+            ->first();
+    
+        if ($existingClient) {
+            Flash::warning('This lead is already associated with a client.');
             return redirect(route('leads.index'));
         }
-
+    
         // Assuming certain status indicates conversion
         if ($lead->status !== 'converted') {
             $lead->status = 'converted'; // Set status to converted
             $lead->save();
         }
-
+    
         // Split full name into first and last names if needed
         $nameParts = explode(' ', $lead->full_name);
         $firstName = $nameParts[0];
         $lastName = isset($nameParts[1]) ? $nameParts[1] : null;
-
+    
         // Create a client from the lead data
         $client = Client::create([
             'first_name' => $firstName,
@@ -243,10 +248,11 @@ class LeadController extends AppBaseController
             'lead_id' => $lead->id,
             'location' => 'Unknown', // Adjust based on your application's needs
         ]);
-
+    
         Flash::success('Lead successfully converted to client.');
         return redirect(route('leads.index'));
     }
+    
     public function getLeadData(Request $request)
     {
         $interval = $request->get('interval', 'days'); // Default to daily

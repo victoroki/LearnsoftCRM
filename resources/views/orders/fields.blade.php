@@ -36,6 +36,34 @@
             const unitPriceField = document.getElementById('unit_price');
             const totalPriceField = document.getElementById('total_price');
 
+            // from here
+            const typeSelector = document.getElementById('type_selector');
+            const clientField = document.getElementById('client_id_field');
+            const leadField = document.getElementById('lead_id_field');
+
+            // Initially hide the client and lead fields
+            clientField.style.display = 'none';
+            leadField.style.display = 'none';
+
+            // Listen for change in the type selector and show the appropriate field
+            typeSelector.addEventListener('change', function() {
+                toggleFields(typeSelector.value);
+            });
+
+            function toggleFields(selectedType) {
+                // Hide both client and lead fields by default
+                clientField.style.display = 'none';
+                leadField.style.display = 'none';
+
+                // Show the relevant field based on selected type
+                if (selectedType === 'client') {
+                    clientField.style.display = 'block';
+                } else if (selectedType === 'lead') {
+                    leadField.style.display = 'block';
+                } 
+            }
+            // to here
+
             let unitPrice = 0;
 
             productDropdown.addEventListener('change', fetchProductPrice);
@@ -67,16 +95,22 @@
     </script>
 @endpush
 
-
-
-<!-- Client Id Field -->
+<!-- Type Selector Field -->
 <div class="form-group col-sm-6">
+    {!! Form::label('type', 'Type:') !!}
+    {!! Form::select('type', ['client' => 'Client', 'lead' => 'Lead'], null, ['class' => 'form-control', 'id' => 'type_selector', 'placeholder' => 'Select type']) !!}
+</div>
+
+<!-- Client Id Field (hidden by default) -->
+<div class="form-group col-sm-6" id='client_id_field'>
     {!! Form::label('client_id', 'Client:') !!}
     {!! Form::select('client_id', $clients, null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Lead Field -->
-<div class="form-group col-sm-6">
+<!-- Lead Id Field (hidden by default) -->
+<div class="form-group col-sm-6" id='lead_id_field'>
     {!! Form::label('lead_id', 'Lead:') !!}
     {!! Form::select('lead_id', $leads, null, ['class' => 'form-control']) !!}
 </div>
+
+
