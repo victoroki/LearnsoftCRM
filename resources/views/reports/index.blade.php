@@ -33,16 +33,16 @@
             <div class="row">
                 <!-- Employee Dropdown -->
                 <div class="col-sm-3">
-                    <label for="employee_id">Employee</label>
-                    <select name="employee_id" id="employee_id" class="form-control">
-                        <option value="">Select an Employee</option>
-                        @foreach($employees as $employee)
-                            <option value="{{ $employee->id }}">
-                                {{ $employee->first_name }} {{ $employee->last_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+        <label for="employee_id">Employee</label>
+        <select name="employee_id" id="employee_id" class="form-control">
+            <option value="">Select an Employee</option>
+            @foreach($employees as $employee)
+                <option value="{{ $employee->id }}" {{ request('employee_id') == $employee->id ? 'selected' : '' }}>
+                    {{ $employee->first_name }} {{ $employee->last_name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
                 <!-- Start Date Field -->
                 <div class="col-sm-3">
@@ -86,11 +86,8 @@
             @include('reports.table') <!-- Include your table partial for the reports list -->
         </div>
 
-        <!-- Pagination -->
-        <div class="d-flex justify-content-center">
-            {!! $reports->links() !!}
-        </div>
     </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const typeDropdown = document.querySelector('#interaction_type');
@@ -120,10 +117,7 @@
         // Re-filter columns on dropdown change
         typeDropdown.addEventListener('change', filterColumns);
     });
-</script>
-
-
+    </script>
 
 @endsection
-
 

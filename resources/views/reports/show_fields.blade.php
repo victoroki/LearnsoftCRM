@@ -1,13 +1,13 @@
 <!-- Lead Name Field -->
 <div class="col-sm-12">
     {!! Form::label('lead_name', 'Lead Name:') !!}
-    <p>{{ $report->lead_name }}</p>
+    <p>{{ $report->lead->full_name ?? 'N/A' }}</p>
 </div>
 
 <!-- Client Name Field -->
 <div class="col-sm-12">
     {!! Form::label('client_name', 'Client Name:') !!}
-    <p>{{ $report->client_name }}</p>
+    <p>{{ $report->client->full_name ?? 'N/A' }}</p>
 </div>
 
 <!-- Lead Date Field -->
@@ -33,16 +33,3 @@
     {!! Form::label('quantity_ordered', 'Quantity Ordered:') !!}
     <p>{{ $report->quantity_ordered }}</p>
 </div>
-
-<!-- Start Date Field -->
-<div class="col-sm-12">
-    {!! Form::label('start_date', 'Start Date:') !!}
-    <p>{{ $report->start_date }}</p>
-</div>
-
-<!-- End Date Field -->
-<div class="col-sm-12">
-    {!! Form::label('end_date', 'End Date:') !!}
-    <p>{{ $report->end_date }}</p>
-</div>
-
