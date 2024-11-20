@@ -96,6 +96,18 @@
         "inView": true
     },
     {
+        "name": "lead_date",
+        "dbType": "date",
+        "htmlType": "date",
+        "validations": "nullable|nullable",
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true,
+        "inView": true
+    },
+    {
         "name": "created_at",
         "dbType": "datetime",
         "htmlType": "date",

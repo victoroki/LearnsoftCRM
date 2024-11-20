@@ -13,6 +13,7 @@ use App\Models\Lead;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Carbon\Carbon;
 use Flash;
 
 class LeadController extends AppBaseController
@@ -89,24 +90,28 @@ class LeadController extends AppBaseController
             'employee_id' => 'nullable|exists:employees,id',
             'description' => 'nullable|string|max:65535',
             'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
+            'created_at' => 'nullable|date', // Validate created_at as a date
         ]);
-        
+    
         // Create the lead with the validated data
         $lead = Lead::create($validatedData);
-        
+    
         // If a product is selected, associate it (if the relationship exists in the Lead model)
         if ($request->has('product_id') && $request->product_id) {
             $lead->product_id = $request->product_id;
         }
-        
+    
+        // If a created_at date is provided, update the lead's created_at field
+        if ($request->has('created_at') && $request->created_at) {
+            $lead->created_at = $request->created_at;
+        }
+    
         // Save the lead (this is actually redundant since create already does this)
         $lead->save();
-        
+    
         // Redirect or show success message
         return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
     }
-    
-    
 
     /**
      * Display the specified Lead.
@@ -160,7 +165,7 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Validation rules, including `product_id`
+        // Validation rules, including `product_id` and `created_at`
         $rules = [
             'full_name' => 'nullable|string|max:100',
             'email' => 'required|string|max:30',
@@ -170,13 +175,13 @@ class LeadController extends AppBaseController
             'employee_id' => 'nullable|exists:employees,id',
             'product_id' => 'nullable|exists:products,id', // Ensure product_id references an existing product
             'description' => 'nullable|string|max:65535',
-            'created_at' => 'nullable|date'
+            'created_at' => 'nullable|date' // Validate created_at as a date
         ];
     
         // Validate the input
         $validated = $request->validate($rules);
     
-        // Update the lead, including product_id
+        // Update the lead, including product_id and created_at
         $lead = $this->leadRepository->update($validated, $id);
     
         Flash::success('Lead updated successfully.');

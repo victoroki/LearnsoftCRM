@@ -66,6 +66,11 @@
                     </div>
                 </div>
             </div>
+            <!-- Lead Date Field -->
+            <div class="form-group">
+                <label for="lead_date">Lead Date</label>
+                <input type="text" name="lead_date" id="lead_date" class="form-control" value="{{ old('lead_date', $lead->lead_date) }}" required>
+            </div>
 
 <!-- Product Dropdown -->
 <div class="form-group">
@@ -90,4 +95,5 @@
             {!! Form::close() !!}
         </div>
     </div>
+
 @endsection

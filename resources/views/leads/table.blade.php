@@ -9,8 +9,9 @@
                     <th>Source</th>
                     <th>Status</th>
                     <th>Employee</th>
-                    <th>Product</th> <!-- Added Product column -->
+                    <th>Product</th>
                     <th>Description</th>
+                    <th>Lead Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,8 +24,9 @@
                         <td>{{ $lead->source ?? 'No Source' }}</td>
                         <td>{{ $lead->status ?? 'No Status' }}</td>
                         <td>{{ $lead->employee->first_name ?? 'No Employee' }} {{ $lead->employee->last_name ?? '' }}</td>
-                        <td>{{ $lead->product->product_name ?? 'No Product' }}</td> <!-- Display product name -->
+                        <td>{{ $lead->product->product_name ?? 'No Product' }}</td>
                         <td>{{ $lead->description ?? 'No description' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($lead->lead_date)->format('Y-m-d') }}</td>
                         <td style="width: 120px">
                             {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
                             <div class='btn-group'>

@@ -1,6 +1,11 @@
 <x-laravel-ui-adminlte::adminlte-layout>
-<!-- Font Awesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- jQuery UI CSS for the datepicker -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="{{ mix('js/app.js') }}"></script>
 
     <body class="hold-transition sidebar-mini layout-fixed">
         <div class="wrapper">
@@ -64,5 +69,17 @@
                 reserved.
             </footer>
         </div>
+
+        <!-- jQuery and jQuery UI Scripts -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+        <!-- Enable jQuery UI datepicker -->
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Apply datepicker to all input fields with the id 'lead_date'
+                $('#lead_date').datepicker();
+            });
+        </script>
     </body>
 </x-laravel-ui-adminlte::adminlte-layout>

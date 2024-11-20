@@ -17,7 +17,8 @@ class Lead extends Model
         'employee_id',
         'description',
         'status',
-        'product_id'
+        'product_id',
+        'lead_date',
     ];
 
     protected $casts = [
@@ -25,6 +26,7 @@ class Lead extends Model
         'email' => 'string',
         'source' => 'string',
         'status' => 'string',
+        'lead_date' => 'date',
         'description' => 'string'
     ];
 
@@ -35,6 +37,7 @@ class Lead extends Model
         'source' => 'nullable|string|max:30',
         'status' => 'nullable|string|max:30',
         'employee_id' => 'nullable',
+        'lead_date' => 'nullable',
         'description' => 'nullable|string|max:65535',
     ];
 
@@ -83,6 +86,14 @@ class Lead extends Model
             if (is_null($lead->status)) {
                 $lead->status = 'Pending';
             }
+            if (is_null($lead->lead_date)) {
+                $lead->lead_date = Carbon::now()->toDateString();  // Set to current date if null
+            }
         });
+        
+    }
+    public function getLeadDateAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d');
     }
 }
