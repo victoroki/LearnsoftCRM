@@ -4,7 +4,7 @@
         <table class="table" id="transactions-table">
             <thead>
                 <tr>
-                    <th>Order</th>
+                  <!--  <th>Order</th>-->
                     <th>Amount Paid</th>
                     <th>Payment Date</th>
                     <th>Payment Method</th>
@@ -26,7 +26,7 @@
                         <!-- Display the related Client's Full Name -->
                         <td>
                             @if($transaction->order && $transaction->order->client)
-                                {{ $transaction->order->client->first_name . ' ' . $transaction->order->client->last_name }}
+                                {{ $transaction->order->client->full_name }}
                             @else
                                 N/A
                             @endif

@@ -57,6 +57,8 @@ Route::delete('/interactions/{lead}/delete-all', [InteractionController::class, 
 
 Route::get('/get-lead-employee/{leadId}', [OrderController::class, 'getEmployeeForLead']);
 
+
+Route::resource('enquiries', App\Http\Controllers\EnquiryController::class);
 Route::resource('employees', EmployeeController::class);
 
 Route::get('/sync-reports', [ReportController::class, 'syncData']);
