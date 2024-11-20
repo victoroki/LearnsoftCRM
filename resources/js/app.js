@@ -6,6 +6,6 @@ import 'jquery-ui/ui/widgets/datepicker';  // Import datepicker widget
 
 $(document).ready(function() {
     $('#lead_date').datepicker({
-        dateFormat: 'yy-mm-dd'
+        dateFormat: 'mm-dd-yy'
     });
 });

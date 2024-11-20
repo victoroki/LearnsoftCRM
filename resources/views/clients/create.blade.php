@@ -32,16 +32,10 @@
                     </select>
                 </div> -->
 
-                <!-- First Name Field: Input -->
+                <!-- Full Name Field: Input -->
                 <div class="form-group">
-                    {!! Form::label('first_name', 'First Name:') !!}
-                    {!! Form::text('first_name', null, ['class' => 'form-control']) !!}
-                </div>
-
-                <!-- Last Name Field: Input -->
-                <div class="form-group">
-                    {!! Form::label('last_name', 'Last Name:') !!}
-                    {!! Form::text('last_name', null, ['class' => 'form-control']) !!}
+                    {!! Form::label('full_name', 'Full Name:') !!}
+                    {!! Form::text('full_name', null, ['class' => 'form-control']) !!}
                 </div>
 
                 <!-- Company Name Field: Input -->

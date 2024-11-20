@@ -9,8 +9,7 @@ class Client extends Model
     public $table = 'clients';
 
     public $fillable = [
-        'first_name',
-        'last_name',
+        'full_name',
         'company_name',
         'email_address',
         'phone_number',
@@ -20,16 +19,14 @@ class Client extends Model
     ];
 
     protected $casts = [
-        'first_name' => 'string',
-        'last_name' => 'string',
+        'full_name' => 'string',
         'company_name' => 'string',
         'email_address' => 'string',
         'location' => 'string'
     ];
 
     public static array $rules = [
-        'first_name' => 'required|string|max:100',
-        'last_name' => 'nullable|string|max:100',
+        'full_name' => 'required|string|max:100',
         'company_name' => 'nullable|string|max:100',
         'email_address' => 'required|string|max:100',
         'phone_number' => 'nullable',

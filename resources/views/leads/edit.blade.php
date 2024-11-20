@@ -97,3 +97,15 @@
     </div>
 
 @endsection
+
+@push('page_scripts')
+    <!-- Include jQuery UI Datepicker -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#lead_date').datepicker({
+                dateFormat: 'yy-mm-dd'  // Set format as per your requirements
+            });
+        });
+    </script>
+@endpush

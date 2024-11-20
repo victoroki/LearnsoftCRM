@@ -1,23 +1,19 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Client</th>
-            <th>Lead</th>
-            <th>Interaction Type</th>
-            <th>Interaction Date</th>
+            <th>Employee</th>
+            <th>Created Date</th> <!-- Updated column name -->
         </tr>
     </thead>
     <tbody>
-        @forelse($interactions as $interaction)
+        @forelse($employees as $employee)
             <tr>
-                <td>{{ $interaction->client->full_name ?? 'N/A' }}</td>
-                <td>{{ $interaction->lead->full_name ?? 'N/A' }}</td>
-                <td>{{ $interaction->type }}</td>
-                <td>{{ $interaction->created_at->format('d-m-Y') }}</td>
+                <td>{{ $employee->full_name }}</td> <!-- Employee's name -->
+                <td>{{ $employee->created_at->format('Y-m-d') }}</td> <!-- Formatted creation date -->
             </tr>
         @empty
             <tr>
-                <td colspan="4">No interactions found for {{ $employee->full_name }} in the selected date range.</td>
+                <td colspan="2">No employees found.</td> <!-- Adjusted colspan to match the number of columns -->
             </tr>
         @endforelse
     </tbody>

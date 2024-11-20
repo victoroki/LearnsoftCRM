@@ -39,8 +39,7 @@ public function index(Request $request)
     // Apply search filters dynamically
     if ($search) {
         $clients = $clients->where(function ($query) use ($search) {
-            $query->where('first_name', 'like', '%' . $search . '%')
-                  ->orWhere('last_name', 'like', '%' . $search . '%')
+            $query->where('full_name', 'like', '%' . $search . '%')
                   ->orWhere('company_name', 'like', '%' . $search . '%')
                   ->orWhere('email_address', 'like', '%' . $search . '%')
                   ->orWhere('phone_number', 'like', '%' . $search . '%')

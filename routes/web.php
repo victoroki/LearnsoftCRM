@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\reportController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\EmployeeController;
 use App\Models\Product;
 
@@ -54,7 +54,7 @@ Route::get('/getLeadData', [LeadController::class, 'getLeadData']);
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');
 
 // web.php
-Route::get('/reports', [reportController::class, 'index'])->name('reports.report');
-Route::get('/reports/generate', [reportController::class, 'generateReport'])->name('reports.generate');
+Route::get('/reports', [ReportController::class, 'index'])->name('reports.report');
+Route::get('/reports/generate', [ReportController::class, 'generateReport'])->name('reports.generate');
 
 Route::resource('employees', EmployeeController::class);
