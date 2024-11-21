@@ -61,6 +61,6 @@ Route::get('/get-lead-employee/{leadId}', [OrderController::class, 'getEmployeeF
 Route::resource('enquiries', App\Http\Controllers\EnquiryController::class);
 Route::resource('employees', EmployeeController::class);
 
-
+Route::get('/sync-reports', [ReportController::class, 'syncData']);
 
 Route::resource('reports', App\Http\Controllers\ReportController::class);

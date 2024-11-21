@@ -72,7 +72,7 @@
 
 <li class="nav-item">
     <a href="{{ route('enquiries.index') }}" class="nav-link {{ Request::is('enquiries*') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-home"></i>
+        <i class="nav-icon fas fa-envelope"></i>
         <p>Enquiries</p>
     </a>
 </li>
