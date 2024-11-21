@@ -10,9 +10,9 @@
     <h1 class="text-black">Welcome {{ Auth::user()->name }}</h1>
     <p>{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     
-    <div class="container my-4">
+    <div class="container my-3">
         <div class="row text-center">
-            <div class="col-md-6">
+            <div class="col-md-4">
               
                     <div class="card-body">
                     <div class="card bg-gradient-primary">
@@ -27,7 +27,7 @@
                     </div>
                 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
             
                     <div class="card-body">
                     <div class="card bg-gradient-success">
@@ -42,7 +42,7 @@
                     </div>
                 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
             
                     <div class="card-body">
                     <div class="card bg-gradient-warning">
@@ -57,7 +57,7 @@
                     </div>
                
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
             
                     <div class="card-body">
                     <div class="card bg-gradient-secondary">
@@ -72,7 +72,7 @@
                     </div>
                
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
             
                     <div class="card-body">
                       <div class="card bg-info">
@@ -87,7 +87,7 @@
                         </div>
                    
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
             
                     <div class="card-body">
                     <div class="card bg-light">
@@ -106,6 +106,7 @@
     </div>
 
     <div class="container row">
+        
     <div class= "col-md-6"> @include('partials.summaryChart') </div>
      
   <div class= "col-md-6"> @include('partials.infoChart') </div>
