@@ -4,13 +4,40 @@
 
 <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+  .container-my-4 {
+  display: grid;
+  gap: 20px;                             /* Space between items */
+  width: 100%;
+  margin: 20px auto;
+  }
+  .container-row {
+  display: grid;
+  gap: 20px;                             /* Space between items */
+  width: 100%;
+  margin: 20px auto;
+}
+        .card-body {
+  width: 100%;               /* Set the width of the card */
+  margin: 15px auto;          /* Set margin (20px top & bottom, center horizontally) */
+  padding: 15px;              /* Internal spacing */
+  border: 1px solid #ccc;     /* Border for the card */
+  border-radius: 5px;         /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow effect */
+  background-color: #fff;     /* Background color */
+  text-align: center;         /* Center-align the text */
+}
+h1,p{
+    text-align: center;
+}
+    </style>
    
 </head>
 <div class="container-fluid">
     <h1 class="text-black">Welcome {{ Auth::user()->name }}</h1>
     <p>{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     
-    <div class="container my-3">
+    <div class="container-fluid">
         <div class="row text-center">
             <div class="col-md-4">
               
@@ -55,8 +82,12 @@
                         </form>
                         </div>
                     </div>
-               
-            </div>
+               </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+    <div class="row text-center">
             <div class="col-md-4">
             
                     <div class="card-body">
@@ -102,18 +133,24 @@
                    
                 </div>
             </div>
-        </div>
+    </div>
     </div>
 
-    <div class="container row">
+    <div class="container text-center ">
+
+        <div class="container-fluid row align-items-center">
         
-    <div class= "col-md-6"> @include('partials.summaryChart') </div>
+    <div class= "col-5"> @include('partials.summaryChart') </div>
      
-  <div class= "col-md-6"> @include('partials.infoChart') </div>
+  <div class= "col-5"> @include('partials.infoChart') </div>
+  </div>
+   <div class="row">
+  <div class= "col"> @include('partials.chart') </div>
 
-  <div class= "col-md-6"> @include('partials.chart') </div>
+  <div class="col"> @include('partials.myChart') </div>
+   </div>
 
-  <div class="col-md-6"> @include('partials.myChart') </div>
+  </div>
 
   </div>
     
