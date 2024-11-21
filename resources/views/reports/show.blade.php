@@ -37,6 +37,7 @@
 
                     <dt class="col-sm-3">Quantity Ordered</dt>
                     <dd class="col-sm-9">{{ $report->quantity_ordered }}</dd>
+
                 </dl>
             </div>
         </div>

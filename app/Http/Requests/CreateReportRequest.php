@@ -26,4 +26,8 @@ class CreateReportRequest extends FormRequest
     {
         return Report::$rules;
     }
+    public static $rules = [
+        'quantity_ordered' => 'nullable|integer|min:0',
+    ];
+    
 }

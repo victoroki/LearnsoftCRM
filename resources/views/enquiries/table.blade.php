@@ -1,7 +1,7 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <th>Full Names</th>
+            <th>Full Name</th>
             <th>Phone Number</th>
             <th>Email</th>
             <th>Records</th>

@@ -7,6 +7,7 @@ use App\Models\Lead;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Report;
+use App\Models\Order;
 
 class SyncReportsData extends Command
 {
@@ -23,18 +24,29 @@ class SyncReportsData extends Command
         $leads = Lead::all();
         $clients = Client::all();
         $products = Product::all();
-
+    
         // Loop through each lead and client pair
         foreach ($leads as $lead) {
             foreach ($clients as $client) {
-
+    
+                // Check if a report already exists for this lead-client pair
                 $existingReport = Report::where('lead_id', $lead->id)
                     ->where('client_id', $client->id)
                     ->first();
-
+    
                 // Only create a new report if one doesn't exist yet
                 if (!$existingReport) {
-                    // Create a report only if there's a product
+                    // Calculate the total quantity ordered from the orders table for this lead-client pair
+                    $totalQuantityOrdered = Order::where('lead_id', $lead->id)
+                        ->where('client_id', $client->id)
+                        ->sum('quantity_ordered');
+    
+                    // Skip the creation of the report if the quantity ordered is 0
+                    if ($totalQuantityOrdered == 0) {
+                        continue; // Skip this lead-client pair
+                    }
+    
+                    // Loop through each product and create the report
                     foreach ($products as $product) {
                         Report::create([
                             'lead_id' => $lead->id,
@@ -42,13 +54,14 @@ class SyncReportsData extends Command
                             'lead_date' => $lead->lead_date,
                             'client_date' => $client->client_date,
                             'product_id' => $product->id,
-                            'quantity_ordered' => 0, // Default value
+                            'quantity_ordered' => $totalQuantityOrdered, // Use the summed quantity ordered
                         ]);
                     }
                 }
             }
         }
-
+    
         $this->info('Reports data synced successfully.');
     }
+    
 }

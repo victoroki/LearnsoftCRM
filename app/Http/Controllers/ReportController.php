@@ -30,18 +30,17 @@ class ReportController extends AppBaseController
     public function index(Request $request)
     {
         $query = Report::query();
-        
+    
         // Check if search terms are provided and filter accordingly
         if ($request->has('search')) {
             $search = $request->get('search');
-        
-            // Apply search filters
+    
             $query->where(function ($q) use ($search) {
                 $q->orWhereHas('lead', function($q) use ($search) {
                     $q->where('full_name', 'like', "%$search%");
                 })
                 ->orWhereHas('client', function($q) use ($search) {
-                    $q->where('full_name', 'like', "%$search%"); // Correct the field name to 'full_name'
+                    $q->where('full_name', 'like', "%$search%");
                 })
                 ->orWhere('lead_date', 'like', "%$search%")
                 ->orWhere('client_date', 'like', "%$search%")
@@ -54,15 +53,14 @@ class ReportController extends AppBaseController
         // Get the reports with the necessary relationships (lead, client, product)
         $reports = $query->with(['lead', 'client', 'product'])->paginate(10);
     
-        // Fetch the employees for the dropdown
+        // Fetch the employees and clients for the dropdown
         $employees = Employee::all();
-    
-        // Fetch the clients for the dropdown
         $clients = Client::all();
     
         // Return the view with reports, employees, and clients
         return view('reports.index', compact('reports', 'employees', 'clients'));
     }
+    
 
     /**
      * Show the form for creating a new Report.
@@ -85,14 +83,30 @@ class ReportController extends AppBaseController
     public function store(CreateReportRequest $request)
     {
         $input = $request->all();
-
+    
+        // Ensure that quantity_ordered is passed and is valid
+        $request->validate([
+            'quantity_ordered' => 'required|integer|min:1',
+        ]);
+    
+        // Fetch the quantity ordered from orders table
+        $totalQuantityOrdered = Order::where('lead_id', $input['lead_id'])
+            ->where('client_id', $input['client_id'])
+            ->sum('quantity_ordered');
+    
+        // If quantity_ordered is not set in the request, use the sum from the orders table
+        if (!isset($input['quantity_ordered']) || $input['quantity_ordered'] === null) {
+            $input['quantity_ordered'] = $totalQuantityOrdered;
+        }
+    
         // Create the report using the validated data
-        $report = $this->reportRepository->create($input);
-
+        $report = Report::create($input);  // Assuming $input is valid
+    
         Flash::success('Report saved successfully.');
-
+    
         return redirect(route('reports.index'));
     }
+    
 
     /**
      * Display the specified Report.
@@ -135,20 +149,36 @@ class ReportController extends AppBaseController
      */
     public function update($id, UpdateReportRequest $request)
     {
-        $report = $this->reportRepository->find($id);
-
+        $report = Report::find($id);
+    
         if (empty($report)) {
             Flash::error('Report not found');
-
             return redirect(route('reports.index'));
         }
-
-        $report = $this->reportRepository->update($request->all(), $id);
-
+    
+        // Ensure quantity_ordered is valid
+        $request->validate([
+            'quantity_ordered' => 'required|integer|min:1',
+        ]);
+    
+        // Fetch the quantity ordered from orders table
+        $totalQuantityOrdered = Order::where('lead_id', $report->lead_id)
+            ->where('client_id', $report->client_id)
+            ->sum('quantity_ordered');
+    
+        // If quantity_ordered is not provided in the update, use the sum from the orders table
+        if (!isset($request['quantity_ordered']) || $request['quantity_ordered'] === null) {
+            $request->merge(['quantity_ordered' => $totalQuantityOrdered]);
+        }
+    
+        // Update the report using the validated data
+        $report->update($request->all());
+    
         Flash::success('Report updated successfully.');
-
+    
         return redirect(route('reports.index'));
     }
+    
 
     /**
      * Remove the specified Report from storage.
@@ -174,15 +204,27 @@ class ReportController extends AppBaseController
     public function syncData()
 {
     // Fetch only active leads and clients
-    $leads = Lead::where('status', 'active')->get();  
+    $leads = Lead::where('status', 'active')->get();
     $clients = Client::where('status', 'active')->get();
+
+    // Prepare a list of lead-client pairs that have already been processed
+    $processedPairs = [];
 
     // Loop through each lead
     foreach ($leads as $lead) {
         // Loop through each client, but only if they have a matching lead
         foreach ($clients as $client) {
-            // Check if the lead is associated with the client (you can customize this check)
+            // Check if the lead is associated with the client
             if ($lead->client_id == $client->id) {
+
+                // Ensure that the pair has not been processed before
+                if (in_array([$lead->id, $client->id], $processedPairs)) {
+                    continue; // Skip this combination if it's already been processed
+                }
+
+                // Mark this pair as processed to avoid duplicates
+                $processedPairs[] = [$lead->id, $client->id];
+
                 // Check if a report already exists for this lead-client pair
                 $existingReport = Report::where('lead_id', $lead->id)
                     ->where('client_id', $client->id)
@@ -193,16 +235,24 @@ class ReportController extends AppBaseController
                     // Get the total quantity ordered from the orders table
                     $totalQuantityOrdered = Order::where('lead_id', $lead->id)
                         ->where('client_id', $client->id)
-                        ->sum('quantity'); // Assuming quantity is a column in orders table
+                        ->sum('quantity_ordered');
 
-                    // Create the report with the quantity ordered from orders
+                    // Skip the report creation if the quantity ordered is 0
+                    if ($totalQuantityOrdered == 0) {
+                        continue; // Skip this lead-client pair
+                    }
+
+                    // Get the product associated with the lead (since product is linked to lead_id)
+                    $product = Product::where('lead_id', $lead->id)->first(); // Fetch product based on lead_id
+
+                    // Create the report with the quantity ordered and product info
                     Report::create([
                         'lead_id' => $lead->id,
                         'client_id' => $client->id,
-                        'lead_date' => $lead->lead_date,  
-                        'client_date' => $client->client_date,  
-                        'product_id' => null,  // No product in this case, can be adjusted
-                        'quantity_ordered' => $totalQuantityOrdered, // Set the total quantity ordered
+                        'lead_date' => $lead->lead_date,
+                        'client_date' => $client->client_date,
+                        'product_id' => $product ? $product->id : null, // Use the product's ID if found, else null
+                        'quantity_ordered' => $totalQuantityOrdered, // Total quantity ordered
                     ]);
                 }
             }

@@ -28,4 +28,8 @@ class UpdateReportRequest extends FormRequest
         
         return $rules;
     }
+    public static $rules = [
+        'quantity_ordered' => 'nullable|integer|min:0',
+    ];
+    
 }
