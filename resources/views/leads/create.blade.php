@@ -31,7 +31,7 @@
                 <!-- Source Field -->
                 <div class="form-group">
                     <label for="source">Source</label>
-                    <input type="text" name="source" id="source" class="form-control" value="{{ old('source') }}">
+                    <input type="text" placeholder="Call/Email/Referral" name="source" id="source" class="form-control" value="{{ old('source') }}">
                 </div>
 
                 <!-- Phone Number Field -->
