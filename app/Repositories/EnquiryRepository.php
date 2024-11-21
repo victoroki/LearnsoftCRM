@@ -23,4 +23,8 @@ class EnquiryRepository extends BaseRepository
     {
         return Enquiry::class;
     }
+    public function query()
+    {
+        return Enquiry::query();
+    }
 }

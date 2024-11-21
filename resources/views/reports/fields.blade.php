@@ -42,6 +42,10 @@
 
 <!-- Quantity Ordered Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('quantity_ordered', 'Quantity Ordered:') !!}
-    {!! Form::number('quantity_ordered', null, ['class' => 'form-control']) !!}
+    {!! Form::label('quantity_ordered', 'Quantity Ordered (positive only):') !!}
+    {!! Form::number('quantity_ordered', null, ['class' => 'form-control', 'min' => 1, 'placeholder' => 'Enter quantity (e.g., 10)']) !!}
+    @if ($errors->has('quantity_ordered'))
+        <span class="text-danger">{{ $errors->first('quantity_ordered') }}</span>
+    @endif
 </div>
+
