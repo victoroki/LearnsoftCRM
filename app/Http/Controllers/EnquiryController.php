@@ -24,12 +24,26 @@ class EnquiryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $enquiries = $this->enquiryRepository->paginate(10);
-
+        $query = $this->enquiryRepository->query();
+    
+        // Apply search if the search parameter is provided
+        if ($request->has('search') && $request->get('search') != '') {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('full_names', 'like', "%$search%")
+                  ->orWhere('phone_number', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('records', 'like', "%$search%");
+            });
+        }
+    
+        // Paginate the results
+        $enquiries = $query->paginate(10);
+    
         return view('enquiries.index')
             ->with('enquiries', $enquiries);
     }
-
+    
     /**
      * Show the form for creating a new Enquiry.
      */

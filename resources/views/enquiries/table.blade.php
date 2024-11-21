@@ -1,46 +1,29 @@
-<div class="card-body p-0">
-    <div class="table-responsive">
-        <table class="table" id="enquiries-table">
-            <thead>
-            <tr>
-                <th>Full Names</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Records</th>
-                <th colspan="3">Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($enquiries as $enquiry)
-                <tr>
-                    <td>{{ $enquiry->full_names }}</td>
-                    <td>{{ $enquiry->phone_number }}</td>
-                    <td>{{ $enquiry->email }}</td>
-                    <td>{{ $enquiry->records }}</td>
-                    <td  style="width: 120px">
-                        {!! Form::open(['route' => ['enquiries.destroy', $enquiry->id], 'method' => 'delete']) !!}
-                        <div class='btn-group'>
-                            <a href="{{ route('enquiries.show', [$enquiry->id]) }}"
-                               class='btn btn-default btn-xs'>
-                                <i class="far fa-eye"></i>
-                            </a>
-                            <a href="{{ route('enquiries.edit', [$enquiry->id]) }}"
-                               class='btn btn-default btn-xs'>
-                                <i class="far fa-edit"></i>
-                            </a>
-                            {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                        </div>
-                        {!! Form::close() !!}
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Full Names</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Records</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach($enquiries as $enquiry)
+        <tr>
+            <td>{{ $enquiry->full_names }}</td>
+            <td>{{ $enquiry->phone_number }}</td>
+            <td>{{ $enquiry->email }}</td>
+            <td>{{ $enquiry->records }}</td>
+            <td>
+                <a href="{{ route('enquiries.edit', $enquiry->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{{ route('enquiries.show', $enquiry->id) }}" class="btn btn-info btn-sm">View</a>
+            </td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>
 
-    <div class="card-footer clearfix">
-        <div class="float-right">
-            @include('adminlte-templates::common.paginate', ['records' => $enquiries])
-        </div>
-    </div>
+<div class="d-flex justify-content-center">
+    {{ $enquiries->appends(request()->input())->links() }}
 </div>

@@ -3,13 +3,21 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
+            <div class="row mb-2 justify-content-center">
+                <div class="col-sm-6 text-center">
                     <h1>Enquiries</h1>
                 </div>
+            </div>
+            <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('enquiries.create') }}">
+                    <form method="GET" action="{{ route('enquiries.index') }}" class="form-inline">
+                        <input type="text" name="search" class="form-control mr-2" 
+                               placeholder="Search enquiries" value="{{ request()->get('search') }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a class="btn btn-primary" href="{{ route('enquiries.create') }}">
                         Add New
                     </a>
                 </div>
@@ -27,5 +35,4 @@
             @include('enquiries.table')
         </div>
     </div>
-
 @endsection
