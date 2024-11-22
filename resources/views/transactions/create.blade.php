@@ -28,6 +28,7 @@
                 </div>
 
             </div>
+            
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
