@@ -19,12 +19,13 @@
                         <td>{{ $product->price }}</td>
                         <td>{{ $product->quantity_available }}</td>
                         <td>
-                            @if($product->lead)
-                                {{ $product->lead->full_name ?? 'N/A' }} <!-- Display full_name of the related lead -->
+                            @if($product->product_name)
+                                {{ $product->product_name }}
                             @else
                                 N/A
                             @endif
                         </td>
+
                         <td style="width: 120px">
                             {!! Form::open(['route' => ['products.destroy', $product->id], 'method' => 'delete']) !!}
                             <div class='btn-group'>

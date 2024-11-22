@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InteractionController;
 use App\Models\Product;
@@ -54,11 +53,14 @@ Route::get('/getLeadData', [LeadController::class, 'getLeadData']);
 // Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 Route::get('/employees/data', [EmployeeController::class, 'getEmployees'])->name('employees.data');
 
-// web.php
-Route::get('/reports', [ReportController::class, 'index'])->name('reports.report');
-Route::get('/reports/generate', [ReportController::class, 'generateReport'])->name('reports.generate');
-
 Route::delete('/interactions/{lead}/delete-all', [InteractionController::class, 'deleteAll'])->name('interactions.deleteAll');
 
+Route::get('/get-lead-employee/{leadId}', [OrderController::class, 'getEmployeeForLead']);
 
+
+Route::resource('enquiries', App\Http\Controllers\EnquiryController::class);
 Route::resource('employees', EmployeeController::class);
+
+Route::get('/sync-reports', [ReportController::class, 'syncData']);
+
+Route::resource('reports', App\Http\Controllers\ReportController::class);

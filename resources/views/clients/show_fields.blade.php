@@ -1,7 +1,7 @@
-<!-- First Name Field -->
+<!-- Full Name Field -->
 <div class="col-sm-12">
     {!! Form::label('full_name', 'Full Name:') !!}
-    <p>{{ $client->first_name ?? 'No first name' }}</p>
+    <p>{{ $client->full_name ?? 'No full name' }}</p>
 </div>
 
 <!-- Company Name Field -->
@@ -25,7 +25,7 @@
 <!-- Employee Id Field -->
 <div class="col-sm-12">
     {!! Form::label('employee_id', 'Employee Id:') !!}
-    <p>{{ $lead->employee_id }}</p>
+    <p>{{ $client->employee ? $client->employee->full_name : 'No employee assigned' }}</p>
 </div>
 
 <!-- Lead Full Name Field (instead of Lead Id) -->
@@ -41,10 +41,10 @@
 </div>
 
 <!-- Employee Full Name Field -->
-<div class="col-sm-12">
+<!-- <div class="col-sm-12">
     {!! Form::label('employee', 'Employee:') !!}
     <p>{{ $client->employee ? $client->employee->full_name : 'No employee assigned' }}</p>
-</div>
+</div> -->
 
 <!-- Location Field -->
 <div class="col-sm-12">

@@ -14,6 +14,7 @@
                     <form action="{{ route('interactions.index') }}" method="GET" class="form-inline">
                         <input type="text" name="search" class="form-control mr-2" placeholder="Search Interactions" value="{{ request('search') }}">
                         <button type="submit" class="btn btn-primary">Search</button>
+                        <a href="{{ route('interactions.index') }}" class="btn btn-secondary">Clear</a>
                     </form>
                 </div>
             </div>

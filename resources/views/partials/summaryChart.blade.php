@@ -16,7 +16,7 @@
       datasets: [{
         label: '# of Votes',
         data: [25, 5],
-        borderWidth: 1
+        borderWidth: 2
       }]
     },
   });

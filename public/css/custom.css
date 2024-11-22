@@ -1,0 +1,9 @@
+/* public/css/custom.css */
+.nav-link.active {
+    background-color: orange !important;
+    color: white !important;
+}
+
+.nav-icon {
+    color: green !important;
+}

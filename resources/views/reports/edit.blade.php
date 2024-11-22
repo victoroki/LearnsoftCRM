@@ -6,7 +6,7 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <h1>
-                    Create Orders
+                        Edit Report
                     </h1>
                 </div>
             </div>
@@ -19,21 +19,17 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'orders.store']) !!}
+            {!! Form::model($report, ['route' => ['reports.update', $report->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-
                 <div class="row">
-                    @include('orders.fields')
+                    @include('reports.fields')
                 </div>
-
-</div>
-
-
+            </div>
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('orders.index') }}" class="btn btn-default"> Cancel </a>
+                <a href="{{ route('reports.index') }}" class="btn btn-default"> Cancel </a>
             </div>
 
             {!! Form::close() !!}
