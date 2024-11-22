@@ -42,10 +42,10 @@
                 data: data,
                 borderColor: 'rgba(54, 162, 235, 0.8)', // Line color
                 backgroundColor: 'rgba(54, 162, 235, 0.2)', // Fill color under the line
-                borderWidth: 3, // Border width of the line
+                borderWidth: 5, // Border width of the line
                 pointBackgroundColor: 'rgba(54, 162, 235, 1)', // Point color
                 pointBorderColor: '#fff', // Point border color
-                pointBorderWidth: 2, // Point border width
+                pointBorderWidth: 5, // Point border width
                 pointRadius: 5, // Point size
                 pointHoverRadius: 7, // Hover point size
                 pointHoverBackgroundColor: 'rgba(255, 99, 132, 1)', // Hover point color
@@ -89,7 +89,7 @@
                         text: 'Date',
                         color: '#666',
                         font: {
-                            size: 16,
+                            size: 30,
                             family: 'Arial, sans-serif'
                         }
                     },

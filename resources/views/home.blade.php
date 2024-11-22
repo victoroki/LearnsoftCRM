@@ -118,7 +118,7 @@ h1,p{
 
     <div class="container-fluid text center ">
 
-        <div class="row items-align-center">
+        <div class="row item-align-center">
         <div class= "col-5">
             <div class="card-body"style="width:250px; height:250px; margin:auto;">
              @include('partials.summaryChart')
