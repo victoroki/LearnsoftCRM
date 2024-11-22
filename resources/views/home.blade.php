@@ -3,34 +3,14 @@
 @section('content')
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-  .container-my-4 {
-  display: grid;
-  gap: 20px;                             /* Space between items */
-  width: 100%;
-  margin: 20px auto;
-  }
-  .container-row {
-  display: grid;
-  gap: 20px;                             /* Space between items */
-  width: 100%;
-  margin: 20px auto;
-}
-        .card-body {
-  width: 100%;               /* Set the width of the card */
-  margin: 15px auto;          /* Set margin (20px top & bottom, center horizontally) */
-  padding: 15px;              /* Internal spacing */
-  border: 1px solid #ccc;     /* Border for the card */
-  border-radius: 5px;         /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a shadow effect */
-  background-color: #fff;     /* Background color */
-  text-align: center;         /* Center-align the text */
-}
+    
+<style>
 h1,p{
     text-align: center;
 }
     </style>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
    
 </head>
 <div class="container-fluid">
@@ -41,7 +21,7 @@ h1,p{
         <div class="row text-center">
             <div class="col-md-4">
               
-                    <div class="card-body">
+                    <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-gradient-primary">
                         <p class="h3 mb-1 text-black">{{ $totalClients }}</p>
                         <p class="text-black">Clients</p>
@@ -56,7 +36,7 @@ h1,p{
             </div>
             <div class="col-md-4">
             
-                    <div class="card-body">
+                    <div class="card-body"style="width: 425px; height:175px">
                     <div class="card bg-gradient-success">
                         <p class="h3 mb-1 text-black">{{ $totalProducts }}</p>
                         <p class="text-black">Products</p>
@@ -71,7 +51,7 @@ h1,p{
             </div>
             <div class="col-md-4">
             
-                    <div class="card-body">
+                    <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-gradient-warning">
                         <p class="h3 mb-1 text-black">{{ $totalOrders }}</p>
                         <p class="text-black">Orders</p>
@@ -90,7 +70,7 @@ h1,p{
     <div class="row text-center">
             <div class="col-md-4">
             
-                    <div class="card-body">
+                    <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-gradient-secondary">
                         <p class="h3 mb-1 text-black">{{ $totalDepartments }}</p>
                         <p class="text-black">Departments</p>
@@ -105,7 +85,7 @@ h1,p{
             </div>
             <div class="col-md-4">
             
-                    <div class="card-body">
+                    <div class="card-body" style="width: 425px; height:175px">
                       <div class="card bg-info">
                         <p class="h3 mb-1 text-black">{{ $totalEmployees }}</p>
                         <p class="text-black">Employees</p>
@@ -120,7 +100,7 @@ h1,p{
             </div>
             <div class="col-md-4">
             
-                    <div class="card-body">
+                    <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-light">
                         <p class="h3 mb-1 text-black">{{ $totalInteractions }}</p>
                         <p class="text-black">Interactions</p>
@@ -136,18 +116,30 @@ h1,p{
     </div>
     </div>
 
-    <div class="container text-center ">
+    <div class="container-fluid text center ">
 
-        <div class="container-fluid row align-items-center">
-        
-    <div class= "col-5"> @include('partials.summaryChart') </div>
+        <div class="row items-align-center">
+        <div class= "col-5">
+            <div class="card-body"style="width:250px; height:250px; margin:auto;">
+             @include('partials.summaryChart')
+             </div>
+             </div>
      
-  <div class= "col-5"> @include('partials.infoChart') </div>
+  <div class= "col-5"> 
+    <div class="card-body" style="width:275px; height:250px; margin:auto;">
+    @include('partials.infoChart') 
+    </div>
+</div>
   </div>
-   <div class="row">
-  <div class= "col"> @include('partials.chart') </div>
-
-  <div class="col"> @include('partials.myChart') </div>
+   <div class="container-fluid">
+    <div class="container row">
+    <div class="col-5">
+  <div class="card-body"style="width:400px; height:auto; margin:auto;" > @include('partials.chart') </div>
+  </div>
+ <div class="col-5" style="width:400px; height:auto; margin:auto;">
+  <div class="card-body"> @include('partials.myChart') </div>
+  </div>
+   </div>
    </div>
 
   </div>
