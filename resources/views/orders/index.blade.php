@@ -15,6 +15,7 @@
                     <form action="{{ route('orders.index') }}" method="GET" class="form-inline">
                         <input type="text" name="search" class="form-control mr-2" placeholder="Search Orders" value="{{ request('search') }}">
                         <button type="submit" class="btn btn-primary">Search</button>
+                        <a href="{{ route('orders.index') }}" class="btn btn-secondary">Clear</a>
                     </form>
                 </div>
                 <!-- Add New button on the right -->

@@ -16,6 +16,7 @@
                         <!-- Search Input -->
                         <input type="text" name="search" class="form-control mr-2" placeholder="Search reports" value="{{ request()->get('search') }}">
                         <button class="btn btn-primary" type="submit">Search</button>
+                        <a href="{{ route('reports.index') }}" class="btn btn-secondary">Clear</a>
                     </form>
                 </div>
 

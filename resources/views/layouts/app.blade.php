@@ -4,7 +4,7 @@
 
     <!-- jQuery UI CSS for the datepicker -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <script src="{{ mix('js/app.js') }}"></script>
 
     <body class="hold-transition sidebar-mini layout-fixed">
