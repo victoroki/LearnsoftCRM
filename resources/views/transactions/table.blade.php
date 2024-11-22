@@ -1,10 +1,9 @@
-<!-- Table for displaying transactions -->
 <div class="card-body p-0">
     <div class="table-responsive">
         <table class="table" id="transactions-table">
             <thead>
                 <tr>
-                  <!--  <th>Order</th>-->
+                    <th>Order Ref Number</th>
                     <th>Amount Paid</th>
                     <th>Payment Date</th>
                     <th>Payment Method</th>
@@ -16,8 +15,14 @@
             <tbody>
                 @foreach($transactions as $transaction)
                     <tr>
-                        <!-- Display the related Order ID (or other fields as required) -->
-                        <td>{{ $transaction->order_id }}</td>
+                        <!-- Display the related Order Ref Number -->
+                        <td>
+                            @if($transaction->order)
+                                {{ $transaction->order->order_ref_number }}
+                            @else
+                                N/A
+                            @endif
+                        </td>
                         <td>{{ $transaction->amount_paid }}</td>
                         <td>{{ $transaction->payment_date }}</td>
                         <td>{{ $transaction->payment_method }}</td>
