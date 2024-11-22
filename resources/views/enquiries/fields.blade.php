@@ -19,5 +19,5 @@
 <!-- Records Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('records', 'Records:') !!}
-    {!! Form::text('records', null, ['class' => 'form-control', 'required', 'maxlength' => 800, 'maxlength' => 800]) !!}
+    {!! Form::textarea('records', null, ['class' => 'form-control', 'required', 'maxlength' => 800, 'maxlength' => 70000]) !!}
 </div>
