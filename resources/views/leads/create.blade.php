@@ -77,6 +77,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save Lead</button>
+                <a href="{{ route('leads.index') }}" class="btn btn-default"> Cancel </a>
             </form>
         </div>
     </div>
