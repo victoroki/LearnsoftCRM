@@ -16,7 +16,8 @@ class Order extends Model
         'order_date',
         'client_id',
         'lead_id', 
-        'status'
+        'status',
+        'order_ref_number',
     ];
 
     protected $casts = [
