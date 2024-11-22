@@ -13,6 +13,7 @@ use App\Models\Lead;
 use App\Models\Client;
 use App\Models\Report;
 use Flash;
+use App\Models\Order;
 
 class ReportController extends AppBaseController
 {

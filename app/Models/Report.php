@@ -30,8 +30,8 @@ class Report extends Model
         'client_date' => 'nullable|date',
         'product_id' => 'nullable|exists:products,id',
         'quantity_ordered' => 'nullable|integer|min:1', // Ensure positive integers
-        'created_at' => 'required',
-        'updated_at' => 'required',
+        'created_at' => 'nullable',
+        'updated_at' => 'nullable',
     ];
 
     // Relationships
