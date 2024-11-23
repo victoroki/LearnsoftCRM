@@ -73,90 +73,7 @@ class OrderController extends AppBaseController
      * Store a newly created Order in storage.
      */
     public function store(CreateOrderRequest $request)
-    {
-        $input = $request->all();
-    
-        if ($request->has('lead_id') && $request->lead_id) {
-            $lead = \App\Models\Lead::find($request->lead_id);
-    
-            if ($lead) {
-                $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
-    
-                if ($existingClient) {
-                    $input['client_id'] = $existingClient->id;
-                } else {
-                    $client = new \App\Models\Client();
-                    $client->full_name = $lead->full_name;
-                    $client->email_address = $lead->email;
-                    $client->phone_number = $lead->phone_number;
-                    $client->lead_id = $lead->id;
-    
-                    // Set employee based on the lead or authenticated user
-                    if ($lead->employee_id) {
-                        $client->employee_id = $lead->employee_id;  // Assign employee from lead
-                    } elseif (auth()->check() && auth()->user()->employee_id) {
-                        $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
-                    }
-    
-                    // Set client date based on the order date
-                    if ($request->has('order_date')) {
-                        $client->client_date = $request->order_date;  // Set client date from order date
-                    }
-    
-                    $client->save();
-                    $input['client_id'] = $client->id;
-                    $lead->status = 'Converted to a client';
-                    $lead->save();
-                }
-    
-                $input['type'] = 'Client';
-            }
-        } elseif ($request->has('client_id') && $request->client_id) {
-            $input['client_id'] = $request->client_id;
-            $input['type'] = 'Client';
-        }
-    
-        // Create the order
-        $this->orderRepository->create($input);
-    
-        Flash::success('Order created successfully.');
-    
-        return redirect(route('orders.index'));
-    }
-    
-
-
-    /**
-     * Show the form for editing the specified Order.
-     */
-    public function edit($id)
-    {
-        $order = $this->orderRepository->find($id);
-
-        if (empty($order)) {
-            Flash::error('Order not found');
-            return redirect(route('orders.index'));
-        }
-
-        $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
-        $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
-
-        return view('orders.edit', compact('order', 'products', 'clients', 'leads'));
-    }
-
-    /**
-     * Update the specified Order in storage.
-     */
-    public function update($id, UpdateOrderRequest $request)
 {
-    $order = $this->orderRepository->find($id);
-
-    if (empty($order)) {
-        Flash::error('Order not found');
-        return redirect(route('orders.index'));
-    }
-
     $input = $request->all();
 
     if ($request->has('lead_id') && $request->lead_id) {
@@ -170,7 +87,7 @@ class OrderController extends AppBaseController
             } else {
                 $client = new \App\Models\Client();
                 $client->full_name = $lead->full_name;
-                $client->email_address = $lead->email_address;
+                $client->email_address = $lead->email;
                 $client->phone_number = $lead->phone_number;
                 $client->lead_id = $lead->id;
 
@@ -199,13 +116,102 @@ class OrderController extends AppBaseController
         $input['type'] = 'Client';
     }
 
-    // Update the order
-    $this->orderRepository->update($input, $id);
+    // Generate a unique order reference number
+    $input['order_ref_number'] = 'ORD-' . strtoupper(uniqid());
 
-    Flash::success('Order updated successfully.');
+    // Create the order
+    $order = $this->orderRepository->create($input);
+
+    Flash::success('Order created successfully. Reference Number: ' . $order->order_ref_number);
 
     return redirect(route('orders.index'));
 }
+
+
+    /**
+     * Show the form for editing the specified Order.
+     */
+    public function edit($id)
+    {
+        $order = $this->orderRepository->find($id);
+
+        if (empty($order)) {
+            Flash::error('Order not found');
+            return redirect(route('orders.index'));
+        }
+
+        $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
+        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
+        $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
+
+        return view('orders.edit', compact('order', 'products', 'clients', 'leads'));
+    }
+
+    /**
+     * Update the specified Order in storage.
+     */
+    public function update($id, UpdateOrderRequest $request)
+    {
+        $order = $this->orderRepository->find($id);
+    
+        if (empty($order)) {
+            Flash::error('Order not found');
+            return redirect(route('orders.index'));
+        }
+    
+        $input = $request->all();
+    
+        if ($request->has('lead_id') && $request->lead_id) {
+            $lead = \App\Models\Lead::find($request->lead_id);
+    
+            if ($lead) {
+                $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
+    
+                if ($existingClient) {
+                    $input['client_id'] = $existingClient->id;
+                } else {
+                    $client = new \App\Models\Client();
+                    $client->full_name = $lead->full_name;
+                    $client->email_address = $lead->email_address;
+                    $client->phone_number = $lead->phone_number;
+                    $client->lead_id = $lead->id;
+    
+                    // Set employee based on the lead or authenticated user
+                    if ($lead->employee_id) {
+                        $client->employee_id = $lead->employee_id;  // Assign employee from lead
+                    } elseif (auth()->check() && auth()->user()->employee_id) {
+                        $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
+                    }
+    
+                    // Set client date based on the order date
+                    if ($request->has('order_date')) {
+                        $client->client_date = $request->order_date;  // Set client date from order date
+                    }
+    
+                    $client->save();
+                    $input['client_id'] = $client->id;
+                    $lead->status = 'Converted to a client';
+                    $lead->save();
+                }
+    
+                $input['type'] = 'Client';
+            }
+        } elseif ($request->has('client_id') && $request->client_id) {
+            $input['client_id'] = $request->client_id;
+            $input['type'] = 'Client';
+        }
+    
+        // Preserve the existing order reference number
+        $input['order_ref_number'] = $order->order_ref_number ?? 'ORD-' . strtoupper(uniqid());
+    
+        // Update the order
+        $this->orderRepository->update($input, $id);
+    
+        Flash::success('Order updated successfully.');
+    
+        return redirect(route('orders.index'));
+    }
+    
 
     /**
      * Display the specified Order.

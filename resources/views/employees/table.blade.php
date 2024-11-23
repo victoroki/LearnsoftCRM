@@ -1,15 +1,4 @@
-@extends('layouts.app')
 
-@section('content')
-<div class="card">
-    <div class="card-header">
-        <form action="{{ route('employees.index') }}" method="GET" class="form-inline">
-            <div class="form-group mr-2">
-                <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
@@ -62,4 +51,4 @@
         {{ $employees->links() }}
     </div>
 </div>
-@endsection
+

@@ -1,8 +1,14 @@
 <!-- Order Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('order_id', 'Order Id:') !!}
-    {!! Form::select('order_id', $orders->pluck('id', 'id'), null, ['class' => 'form-control']) !!}
+    {!! Form::label('order_ref_number', 'Order Ref Number:') !!}
+    {!! Form::select('order_id', $orders->pluck('order_ref_number', 'id'), null, ['class' => 'form-control', 'required']) !!}
 </div> 
+
+<!-- Client Id Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('client_id', 'Client Name:') !!}
+    {!! Form::select('client_id', $clients->pluck('full_name', 'id'), null, ['class' => 'form-control', 'required']) !!}
+</div>
 
 <!-- Amount Paid Field -->
 <div class="form-group col-sm-6">
@@ -28,8 +34,3 @@
     {!! Form::text('transaction_reference', null, ['class' => 'form-control', 'required', 'maxlength' => 50, 'maxlength' => 50]) !!}
 </div>
 
-<!-- Client Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('client_id', 'Client id:') !!}
-    {!! Form::select('client_id', $clients->pluck('full_name', 'id'), null, ['class' => 'form-control', 'required']) !!}
-</div>
