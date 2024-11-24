@@ -10,8 +10,9 @@
                     <th>Status</th>
                     <th>Employee</th>
                     <th>Product</th>
+                    <th>Quantity</th> <!-- Added Quantity Column -->
                     <th>Description</th>
-                    <th>Price</th> <!-- Added Price Column -->
+                    <th>Total Price</th> <!-- Updated Price Column -->
                     <th>Lead Date</th>
                     <th>Actions</th>
                 </tr>
@@ -26,8 +27,15 @@
                         <td>{{ $lead->status ?? 'No Status' }}</td>
                         <td>{{ $lead->employee->first_name ?? 'No Employee' }} {{ $lead->employee->last_name ?? '' }}</td>
                         <td>{{ $lead->product->product_name ?? 'No Product' }}</td>
-                        <td>{{ $lead->description ?? 'No description' }}</td>
-                        <td>{{ $lead->product->price ?? 'No Price' }}</td> <!-- Displaying Price -->
+                        <td>{{ $lead->quantity ?? 'No Quantity' }}</td> <!-- Displaying Quantity -->
+                        <td>{{ $lead->description ?? 'No Description' }}</td>
+                        <td>
+                            @if($lead->product && $lead->quantity)
+                                {{ $lead->product->price * $lead->quantity }}
+                            @else
+                                'No Price'
+                            @endif
+                        </td> <!-- Displaying Total Price -->
                         <td>{{ \Carbon\Carbon::parse($lead->lead_date)->format('Y-m-d') }}</td>
                         <td style="width: 120px">
                             {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
