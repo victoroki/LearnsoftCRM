@@ -38,7 +38,7 @@ class LeadController extends AppBaseController
         $search = $request->input('search');
         
         // Query leads with employee relationships and apply search if a term is provided
-        $leads = Lead::with(['employee', 'product']) // Eager load product and employee
+        $leads = Lead::with(['employee', 'products']) // Eager load product and employee
             ->when($search, function ($query) use ($search) {
                 $query->where('full_name', 'like', '%' . $search . '%')
                       ->orWhere('email', 'like', '%' . $search . '%')
@@ -90,6 +90,7 @@ class LeadController extends AppBaseController
             'employee_id' => 'nullable|exists:employees,id', // Ensure that the employee ID is valid
             'description' => 'nullable|string|max:65535',
             'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
+            'quantity' => 'required|integer|min:1', // Validate quantity
             'created_at' => 'nullable|date', // Validate created_at as a date
             'lead_date' => 'nullable|date', // Validate lead_date field
         ]);
@@ -173,7 +174,7 @@ class LeadController extends AppBaseController
             return redirect(route('leads.index'));
         }
     
-        // Validation rules, including `product_id` and `created_at`
+        // Validation rules, including product_id and created_at
         $rules = [
             'full_name' => 'nullable|string|max:100',
             'email' => 'required|string|max:30',
@@ -275,4 +276,3 @@ class LeadController extends AppBaseController
         return response()->json($data);
     }
 }
-

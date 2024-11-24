@@ -18,6 +18,7 @@ class Lead extends Model
         'description',
         'status',
         'product_id',
+        'quantity',
         'lead_date',
     ];
 
@@ -56,10 +57,13 @@ class Lead extends Model
         return $this->hasMany(\App\Models\Interaction::class, 'lead_id');
     }
 
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(\App\Models\Product::class, 'product_id');
-    }
+    public function products()
+{
+    return $this->belongsToMany(Product::class, 'lead_product')
+                ->withPivot('quantity')
+                ->withTimestamps();
+}
+
 
     public function getProductNameAttribute()
     {
