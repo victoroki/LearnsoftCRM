@@ -1,3 +1,21 @@
+<!-- Type Selector Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('type', 'Type:') !!}
+    {!! Form::select('type', ['client' => 'Client', 'lead' => 'Lead'], null, ['class' => 'form-control', 'id' => 'type_selector', 'placeholder' => 'Select type']) !!}
+</div>
+
+<!-- Client Id Field (hidden by default) -->
+<div class="form-group col-sm-6" id='client_id_field'>
+    {!! Form::label('client_id', 'Client:') !!}
+    {!! Form::select('client_id', $clients, null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Lead Id Field (hidden by default) -->
+<div class="form-group col-sm-6" id='lead_id_field'>
+    {!! Form::label('lead_id', 'Lead:') !!}
+    {!! Form::select('lead_id', $leads, null, ['class' => 'form-control']) !!}
+</div>
+
 <!-- Product Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('product_id', 'Product:') !!}
@@ -95,22 +113,6 @@
     </script>
 @endpush
 
-<!-- Type Selector Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('type', 'Type:') !!}
-    {!! Form::select('type', ['client' => 'Client', 'lead' => 'Lead'], null, ['class' => 'form-control', 'id' => 'type_selector', 'placeholder' => 'Select type']) !!}
-</div>
 
-<!-- Client Id Field (hidden by default) -->
-<div class="form-group col-sm-6" id='client_id_field'>
-    {!! Form::label('client_id', 'Client:') !!}
-    {!! Form::select('client_id', $clients, null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Lead Id Field (hidden by default) -->
-<div class="form-group col-sm-6" id='lead_id_field'>
-    {!! Form::label('lead_id', 'Lead:') !!}
-    {!! Form::select('lead_id', $leads, null, ['class' => 'form-control']) !!}
-</div>
 
 
