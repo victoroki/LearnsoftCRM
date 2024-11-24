@@ -1,4 +1,4 @@
-<div>
+<div style="height:300px;width:200px;">
 <h4>Employee Distribution</h4>
   <canvas id="sumChart"></canvas>
  
@@ -16,7 +16,7 @@
       datasets: [{
         label: '# of Votes',
         data: [25, 5],
-        borderWidth: 2
+        borderWidth: 1
       }]
     },
   });

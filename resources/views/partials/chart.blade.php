@@ -9,7 +9,7 @@
         <button class="btn btn-primary" onclick="updateChart('months')">Months</button>
       
     </div>
-    <div style="height:500px;width:auto;">
+    <div style="height:450px;width:300px;">
         <canvas id="orderChart"></canvas>
     </div>
 </div>

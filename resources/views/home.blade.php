@@ -17,9 +17,9 @@ h1,p{
     <h1 class="text-black">Welcome {{ Auth::user()->name }}</h1>
     <p>{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
     
-    <div class="container-fluid">
-        <div class="row text-center">
-            <div class="col-md-4">
+    <div class="container-fluid-1">
+        <div class="row-1">
+            <div class="col">
               
                     <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-gradient-primary">
@@ -34,7 +34,7 @@ h1,p{
                     </div>
                 
             </div>
-            <div class="col-md-4">
+            <div class="col">
             
                     <div class="card-body"style="width: 425px; height:175px">
                     <div class="card bg-gradient-success">
@@ -49,7 +49,7 @@ h1,p{
                     </div>
                 
             </div>
-            <div class="col-md-4">
+            <div class="col">
             
                     <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-gradient-warning">
@@ -66,9 +66,9 @@ h1,p{
         </div>
     </div>
 
-    <div class="container-fluid">
-    <div class="row text-center">
-            <div class="col-md-4">
+    <div class="container-fluid-1">
+    <div class="row-1">
+            <div class="col">
             
                     <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-gradient-secondary">
@@ -83,7 +83,7 @@ h1,p{
                     </div>
                
             </div>
-            <div class="col-md-4">
+            <div class="col">
             
                     <div class="card-body" style="width: 425px; height:175px">
                       <div class="card bg-info">
@@ -98,7 +98,7 @@ h1,p{
                         </div>
                    
             </div>
-            <div class="col-md-4">
+            <div class="col">
             
                     <div class="card-body" style="width: 425px; height:175px">
                     <div class="card bg-light">
@@ -116,27 +116,27 @@ h1,p{
     </div>
     </div>
 
-    <div class="container-fluid text center ">
+    <div class="container-fluid-2">
 
-        <div class="row item-align-center">
-        <div class= "col-5">
+        <div class="row-1">
+        <div class= "col-1">
             <div class="card-body"style="width:250px; height:250px; margin:auto;">
              @include('partials.summaryChart')
              </div>
              </div>
      
-  <div class= "col-5"> 
-    <div class="card-body" style="width:275px; height:250px; margin:auto;">
+  <div class= "col-1"> 
+    <div class="card-body">
     @include('partials.infoChart') 
     </div>
-</div>
   </div>
-   <div class="container-fluid">
-    <div class="container row">
-    <div class="col-5">
-  <div class="card-body"style="width:400px; height:auto; margin:auto;" > @include('partials.chart') </div>
   </div>
- <div class="col-5" style="width:400px; height:auto; margin:auto;">
+   <div class="container-fluid-2">
+    <div class="row-1">
+    <div class="col-1">
+  <div class="card-body"> @include('partials.chart') </div>
+  </div>
+   <div class="col-1">
   <div class="card-body"> @include('partials.myChart') </div>
   </div>
    </div>
