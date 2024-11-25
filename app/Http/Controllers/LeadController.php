@@ -52,7 +52,7 @@ class LeadController extends AppBaseController
                                 ->orWhere('last_name', 'like', '%' . $search . '%')
                                 ->orWhere('email', 'like', '%' . $search . '%');
                       })
-                      ->orWhereHas('product', function ($query) use ($search) {
+                      ->orWhereHas('products', function ($query) use ($search) {
                           // Search product related fields, if necessary
                           $query->where('product_name', 'like', '%' . $search . '%')
                                 ->orWhere('description', 'like', '%' . $search . '%');

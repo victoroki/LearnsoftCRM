@@ -47,15 +47,15 @@
                 </div>
 
                 <!-- Product Dropdown -->
-                <div class="form-group">
-                    <label for="product_id">Product</label>
-                    <select name="product_id" id="product_id" class="form-control" required>
-                        <option value="">Select a Product</option>
-                        @foreach($products as $product)
-                            <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>{{ $product->product_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select name="product_id" id="product_id" class="form-control" required>
+                    <option value="">Select a Product</option>
+                    @foreach($products as $product)
+                        <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
+                            {{ $product->product_name }}
+                        </option>
+                    @endforeach
+                </select>
+                
 
                 <!-- Quantity Field -->
                 <div class="form-group">
