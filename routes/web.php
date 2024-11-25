@@ -64,3 +64,7 @@ Route::resource('employees', EmployeeController::class);
 Route::get('/sync-reports', [ReportController::class, 'syncData']);
 
 Route::resource('reports', App\Http\Controllers\ReportController::class);
+
+Route::get('/get-product-price/{id}', [ProductController::class, 'getProductPrice']);
+
+Route::get('/get-product-price/{id}', [OrderController::class, 'getProductPrice'])->name('getProductPrice');

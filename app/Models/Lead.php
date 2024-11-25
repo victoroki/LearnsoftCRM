@@ -63,10 +63,6 @@ class Lead extends Model
                 ->withPivot('quantity')
                 ->withTimestamps();
 }
-public function product()
-{
-    return $this->belongsTo(\App\Models\Product::class, 'product_id');
-}
 
     public function getProductNameAttribute()
     {

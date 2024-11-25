@@ -74,7 +74,7 @@
                     <label for="employee_id">Employee</label>
                     <select name="employee_id" id="employee_id" class="form-control">
                         <option value="">Select an Employee</option>
-                        @foreach($employees as $employee)
+                        @foreach($employees as $employee) 
                             <option value="{{ $employee->id }}">
                                 {{ $employee->first_name }} {{ $employee->last_name }}
                             </option>

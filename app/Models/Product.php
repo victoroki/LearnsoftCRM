@@ -13,7 +13,6 @@ class Product extends Model
         'description',
         'price',
         'quantity_available',
-        'lead_id'
     ];
 
     protected $casts = [
@@ -30,7 +29,6 @@ class Product extends Model
         'quantity_available' => 'nullable|numeric',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
-        'lead_id' => 'nullable'
     ];
  
 
@@ -50,6 +48,6 @@ class Product extends Model
                     ->withPivot('quantity')
                     ->withTimestamps();
     }
-
+    
 
 }

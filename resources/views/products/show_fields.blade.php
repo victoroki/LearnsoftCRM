@@ -22,9 +22,4 @@
     <p>{{ $product->quantity_available }}</p>
 </div>
 
-<!-- Lead Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('lead_id', 'Lead Id:') !!}
-    <p>{{ $product->lead_id }}</p>
-</div>
 

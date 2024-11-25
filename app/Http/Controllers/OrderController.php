@@ -7,6 +7,9 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\OrderRepository;
 use App\Models\Order;
+use App\Models\Lead;
+use App\Models\Product;
+use App\Models\Client;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Flash;
@@ -29,7 +32,7 @@ class OrderController extends AppBaseController
     {
         $search = $request->input('search');
         
-        $orders = Order::with(['product', 'client', 'lead']) // Eager load product, client, and lead
+        $orders = Order::with(['products', 'client', 'lead']) // Eager load product, client, and lead
                         ->when($search, function ($query) use ($search) {
                             $query->where(function ($query) use ($search) {
                                 $query->whereHas('product', function ($query) use ($search) {
@@ -56,77 +59,136 @@ class OrderController extends AppBaseController
      */
     public function create()
     {
+        // Fetch all employees
         $employees = Employee::all(); 
-
-        $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-
-        $clients = \App\Models\Client::all()->mapWithKeys(function ($client) {
+     
+        // Fetch all clients and concatenate first and last name for display
+        $clients = Client::all()->mapWithKeys(function ($client) {
             return [$client->id => $client->first_name . ' ' . $client->last_name];
-        })->toArray(); //concentate first name and last_name. Wasnt working when using full_name
-        
-        $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
-
+        })->toArray();
+         
+        // Fetch all leads using the full_name field
+        $leads = Lead::pluck('full_name', 'id')->toArray();
+         
+        // Check if a lead is already selected, then filter products based on that lead
+        $products = [];
+        if (request()->has('lead_id')) {
+            $lead = Lead::with('products')->find(request()->lead_id);  // Eager load products
+            if ($lead) {
+                $products = $lead->products->pluck('product_name', 'id')->toArray(); // Only products associated with the selected lead
+            }
+        } else {
+            $products = Product::pluck('product_name', 'id')->toArray(); // Default to all products if no lead is selected
+        }
+     
         return view('orders.create', compact('products', 'clients', 'employees', 'leads'));
     }
+    
 
     /**
      * Store a newly created Order in storage.
      */
     public function store(CreateOrderRequest $request)
-{
-    $input = $request->all();
-
-    if ($request->has('lead_id') && $request->lead_id) {
-        $lead = \App\Models\Lead::find($request->lead_id);
-
-        if ($lead) {
-            $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
-
-            if ($existingClient) {
-                $input['client_id'] = $existingClient->id;
-            } else {
-                $client = new \App\Models\Client();
-                $client->full_name = $lead->full_name;
-                $client->email_address = $lead->email;
-                $client->phone_number = $lead->phone_number;
-                $client->lead_id = $lead->id;
-
-                // Set employee based on the lead or authenticated user
-                if ($lead->employee_id) {
-                    $client->employee_id = $lead->employee_id;  // Assign employee from lead
-                } elseif (auth()->check() && auth()->user()->employee_id) {
-                    $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
+    {
+        $input = $request->all();
+    
+        // Generate a unique order number
+        $orderNumber = $this->generateOrderNumber();
+    
+        // Add the generated order number to the input
+        $input['order_ref_number'] = $orderNumber;
+    
+        // Handle lead if provided
+        if ($request->has('lead_id') && $request->lead_id) {
+            $lead = \App\Models\Lead::find($request->lead_id);
+    
+            if ($lead) {
+                // Handle client creation or assignment
+                $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
+    
+                if ($existingClient) {
+                    $input['client_id'] = $existingClient->id;
+                } else {
+                    $client = new \App\Models\Client();
+                    $client->full_name = $lead->full_name;
+                    $client->email_address = $lead->email;
+                    $client->phone_number = $lead->phone_number;
+                    $client->lead_id = $lead->id;
+    
+                    // Set employee
+                    if ($lead->employee_id) {
+                        $client->employee_id = $lead->employee_id;
+                    } elseif (auth()->check() && auth()->user()->employee_id) {
+                        $client->employee_id = auth()->user()->employee_id;
+                    }
+    
+                    // Set order date
+                    if ($request->has('order_date')) {
+                        $client->client_date = $request->order_date;
+                    }
+    
+                    $client->save();
+                    $input['client_id'] = $client->id;
+                    $lead->status = 'Converted to a client';
+                    $lead->save();
                 }
-
-                // Set client date based on the order date
-                if ($request->has('order_date')) {
-                    $client->client_date = $request->order_date;  // Set client date from order date
+    
+                // Set type as Client
+                $input['type'] = 'Client';
+    
+                // Set status to 'Pending' if not provided
+                if (!$request->has('status') || empty($request->status)) {
+                    $input['status'] = 'Pending'; // Default status
                 }
-
-                $client->save();
-                $input['client_id'] = $client->id;
-                $lead->status = 'Converted to a client';
-                $lead->save();
+    
+                // Now, sync the products, quantities, and prices
+                $productsData = [];
+                $totalPrice = 0;
+    
+                foreach ($request->input('products', []) as $productId) {
+                    $product = \App\Models\Product::find($productId);
+    
+                    if ($product) {
+                        // Get the quantity from the form
+                        $quantity = $request->input('quantities.' . $productId, 1); // Default to 1 if no quantity provided
+                        $totalPrice += $product->price * $quantity;
+    
+                        $productsData[$product->id] = [
+                            'quantity' => $quantity,
+                            'price' => $product->price,
+                            'total_price' => $product->price * $quantity,
+                        ];
+                    }
+                }
+    
+                $input['total_price'] = $totalPrice; // Set the overall total price
+                $order = $this->orderRepository->create($input);
+    
+                // Sync products to the order with pivot data
+                $order->products()->sync($productsData);
             }
-
-            $input['type'] = 'Client';
         }
-    } elseif ($request->has('client_id') && $request->client_id) {
-        $input['client_id'] = $request->client_id;
-        $input['type'] = 'Client';
+    
+        Flash::success('Order created successfully. Reference Number: ' . $order->order_ref_number);
+        return redirect(route('orders.index'));
     }
-
-    // Generate a unique order reference number
-    $input['order_ref_number'] = 'ORD-' . strtoupper(uniqid());
-
-    // Create the order
-    $order = $this->orderRepository->create($input);
-
-    Flash::success('Order created successfully. Reference Number: ' . $order->order_ref_number);
-
-    return redirect(route('orders.index'));
-}
-
+    
+    /**
+     * Generate a unique order reference number.
+     *
+     * @return string
+     */
+    protected function generateOrderNumber()
+    {
+        // Get the current date in YYYYMMDD format
+        $date = date('Ymd');
+        
+        // Generate a random 4-digit number
+        $randomNumber = rand(1000, 9999);
+        
+        // Return the unique order number
+        return 'ORD-' . $date . '-' . $randomNumber;
+    }
 
     /**
      * Show the form for editing the specified Order.
@@ -151,67 +213,86 @@ class OrderController extends AppBaseController
      * Update the specified Order in storage.
      */
     public function update($id, UpdateOrderRequest $request)
-    {
-        $order = $this->orderRepository->find($id);
+{
+    $order = $this->orderRepository->find($id);
     
-        if (empty($order)) {
-            Flash::error('Order not found');
-            return redirect(route('orders.index'));
-        }
-    
-        $input = $request->all();
-    
-        if ($request->has('lead_id') && $request->lead_id) {
-            $lead = \App\Models\Lead::find($request->lead_id);
-    
-            if ($lead) {
-                $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
-    
-                if ($existingClient) {
-                    $input['client_id'] = $existingClient->id;
-                } else {
-                    $client = new \App\Models\Client();
-                    $client->full_name = $lead->full_name;
-                    $client->email_address = $lead->email_address;
-                    $client->phone_number = $lead->phone_number;
-                    $client->lead_id = $lead->id;
-    
-                    // Set employee based on the lead or authenticated user
-                    if ($lead->employee_id) {
-                        $client->employee_id = $lead->employee_id;  // Assign employee from lead
-                    } elseif (auth()->check() && auth()->user()->employee_id) {
-                        $client->employee_id = auth()->user()->employee_id;  // Assign employee from authenticated user
-                    }
-    
-                    // Set client date based on the order date
-                    if ($request->has('order_date')) {
-                        $client->client_date = $request->order_date;  // Set client date from order date
-                    }
-    
-                    $client->save();
-                    $input['client_id'] = $client->id;
-                    $lead->status = 'Converted to a client';
-                    $lead->save();
-                }
-    
-                $input['type'] = 'Client';
-            }
-        } elseif ($request->has('client_id') && $request->client_id) {
-            $input['client_id'] = $request->client_id;
-            $input['type'] = 'Client';
-        }
-    
-        // Preserve the existing order reference number
-        $input['order_ref_number'] = $order->order_ref_number ?? 'ORD-' . strtoupper(uniqid());
-    
-        // Update the order
-        $this->orderRepository->update($input, $id);
-    
-        Flash::success('Order updated successfully.');
-    
+    if (empty($order)) {
+        Flash::error('Order not found');
         return redirect(route('orders.index'));
     }
     
+    $input = $request->all();
+
+    // Handle lead if provided
+    if ($request->has('lead_id') && $request->lead_id) {
+        $lead = \App\Models\Lead::find($request->lead_id);
+
+        if ($lead) {
+            // Handle client creation or assignment
+            $existingClient = \App\Models\Client::where('phone_number', $lead->phone_number)->first();
+
+            if ($existingClient) {
+                $input['client_id'] = $existingClient->id;
+            } else {
+                $client = new \App\Models\Client();
+                $client->full_name = $lead->full_name;
+                $client->email_address = $lead->email_address;
+                $client->phone_number = $lead->phone_number;
+                $client->lead_id = $lead->id;
+
+                // Set employee based on the lead or authenticated user
+                $client->employee_id = $lead->employee_id ?: (auth()->check() ? auth()->user()->employee_id : null);
+                
+                // Set client date based on the order date
+                if ($request->has('order_date')) {
+                    $client->client_date = $request->order_date;
+                }
+
+                $client->save();
+                $input['client_id'] = $client->id;
+                $lead->status = 'Converted to a client';
+                $lead->save();
+            }
+
+            $input['type'] = 'Client';
+        }
+    } elseif ($request->has('client_id') && $request->client_id) {
+        $input['client_id'] = $request->client_id;
+        $input['type'] = 'Client';
+    }
+
+    // Sync products, quantities, and prices
+    $productsData = [];
+    $totalPrice = 0;
+
+    foreach ($request->products as $productId) {
+        $product = Product::find($productId);
+        
+        if ($product) {
+            $quantity = isset($request->quantities[$productId]) ? $request->quantities[$productId] : 1;
+            $totalPrice += $product->price * $quantity;
+
+            // Ensure pivot table data includes 'product_id', 'quantity', 'price', and 'total_price'
+            $productsData[$product->id] = [
+                'quantity' => $quantity,
+                'price' => $product->price,
+                'total_price' => $product->price * $quantity,
+            ];
+        }
+    }
+
+    $input['total_price'] = $totalPrice; // Update the total price
+
+    // Sync product data with the order (ensure product_id and other pivot fields are correctly updated)
+    $order->products()->sync($productsData); 
+
+    // Update the order with the provided data
+    $this->orderRepository->update($input, $id);
+
+    Flash::success('Order updated successfully.');
+
+    return redirect(route('orders.index'));
+}
 
     /**
      * Display the specified Order.

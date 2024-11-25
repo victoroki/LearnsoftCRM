@@ -9,7 +9,6 @@ class Order extends Model
     public $table = 'orders';
 
     public $fillable = [
-        'product_id',
         'quantity_ordered',
         'unit_price',
         'total_price',
@@ -19,6 +18,7 @@ class Order extends Model
         'status',
         'order_ref_number',
     ];
+    
 
     protected $casts = [
         'unit_price' => 'float',
@@ -28,9 +28,7 @@ class Order extends Model
     ];
 
     public static array $rules = [
-        'product_id' => 'nullable',
         'quantity_ordered' => 'nullable',
-        'unit_price' => 'nullable|numeric',
         'total_price' => 'nullable|numeric',
         'order_date' => 'nullable',
         'status' => 'nullable|string|max:20',
@@ -42,11 +40,18 @@ class Order extends Model
     {
         return $this->belongsTo(\App\Models\Client::class, 'client_id');
     }
-
-    public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function products()
     {
-        return $this->belongsTo(\App\Models\Product::class, 'product_id');
+        return $this->belongsToMany(Product::class, 'order_product')
+                    ->withPivot('quantity', 'price', 'total_price')
+                    ->withTimestamps();
     }
+
+    public function getProductNameAttribute()
+    {
+        return $this->product ? $this->product->product_name : 'N/A';
+    }
+    
 
     public function transactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -63,50 +68,4 @@ class Order extends Model
         return \Carbon\Carbon::parse($value)->format('m-d-Y');
     }
 
-    // Automatically calculate total price before saving or updating
-    public static function boot()
-{
-    parent::boot();
-
-    // Set default value for status when creating a new order
-    static::creating(function ($order) {
-        if (is_null($order->status)) {
-            $order->status = 'Pending';
-        }
-    });
-
-    // Automatically calculate total_price when saving
-    static::saving(function ($order) {
-        if ($order->quantity_ordered && $order->unit_price) {
-            $order->total_price = $order->quantity_ordered * $order->unit_price;
-        }
-    });
-}
-
-
-    /**
-     * Accessor to calculate total_price after creating an instance
-     *
-     * @param $value
-     * @return float
-     */
-    public function getTotalPriceAttribute($value)
-    {
-        // Return calculated value if not already set
-        if (!$value && $this->quantity_ordered && $this->unit_price) {
-            return $this->quantity_ordered * $this->unit_price;
-        }
-
-        return $value;
-    }
-
-    /**
-     * A method to explicitly calculate the total price
-     *
-     * @return float
-     */
-    public function calculateTotalPrice()
-    {
-        return $this->quantity_ordered * $this->unit_price;
-    }
 }
