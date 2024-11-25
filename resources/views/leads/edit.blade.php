@@ -46,17 +46,32 @@
                         {!! Form::text('source', null, ['class' => 'form-control', 'maxlength' => 30]) !!}
                     </div>
 
-                    <!-- Product Dropdown Field -->
-                    <div class="form-group col-sm-6">
-                        {!! Form::label('product_id', 'Product:') !!}
-                        {!! Form::select('product_id', ['' => 'N/A'] + $products->pluck('product_name', 'id')->toArray(), null, ['class' => 'form-control']) !!}
-                    </div>
-
-
                     <!-- Employee Dropdown Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('employee_id', 'Employee:') !!}
                         {!! Form::select('employee_id', $employees->pluck('first_name', 'id'), null, ['class' => 'form-control']) !!}
+                    </div>
+
+                    <!-- Products and Quantities Field -->
+                    <div class="form-group col-sm-12">
+                        {!! Form::label('products', 'Products and Quantities:') !!}
+                        <div id="products-wrapper">
+                            @foreach($products as $product)
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="products[]" id="product_{{ $product->id }}" 
+                                        value="{{ $product->id }}" 
+                                        {{ in_array($product->id, old('products', $selectedProducts)) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="product_{{ $product->id }}">
+                                        {{ $product->product_name }}
+                                    </label>
+                                    <input type="number" name="quantities[{{ $product->id }}]" 
+                                           class="form-control d-inline-block ml-2" 
+                                           style="width: 80px;" 
+                                           value="{{ old('quantities.' . $product->id, $quantities[$product->id] ?? 1) }}" 
+                                           min="1">
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
 
                     <!-- Description Field -->
@@ -64,28 +79,15 @@
                         {!! Form::label('description', 'Description:') !!}
                         {!! Form::textarea('description', null, ['class' => 'form-control', 'maxlength' => 65535]) !!}
                     </div>
+
+                    <!-- Lead Date Field -->
+                    <div class="form-group col-sm-6">
+                        <label for="lead_date">Lead Date</label>
+                        <input type="text" name="lead_date" id="lead_date" class="form-control" 
+                               value="{{ old('lead_date', $lead->lead_date) }}" required>
+                    </div>
                 </div>
             </div>
-            <!-- Lead Date Field -->
-            <div class="form-group">
-                <label for="lead_date">Lead Date</label>
-                <input type="text" name="lead_date" id="lead_date" class="form-control" value="{{ old('lead_date', $lead->lead_date) }}" required>
-            </div>
-
-<!-- Product Dropdown -->
-<div class="form-group">
-    <label for="product_id">Product</label>
-    <select name="product_id" id="product_id" class="form-control">
-        <option value="">Select a Product (Optional)</option>
-        @foreach($products as $product)
-            <option value="{{ $product->id }}" 
-                {{ old('product_id', $lead->product_id) == $product->id ? 'selected' : '' }}>
-                {{ $product->product_name }}
-            </option>
-        @endforeach
-    </select>
-</div>
-
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}

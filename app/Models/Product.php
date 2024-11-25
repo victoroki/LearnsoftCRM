@@ -32,6 +32,7 @@ class Product extends Model
         'updated_at' => 'nullable',
         'lead_id' => 'nullable'
     ];
+ 
 
     public function lead(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -42,12 +43,13 @@ class Product extends Model
     {
         return $this->hasMany(\App\Models\Order::class, 'product_id');
     }
+
     public function leads()
-{
-    return $this->belongsToMany(Lead::class, 'lead_product')
-                ->withPivot('quantity')
-                ->withTimestamps();
-}
+    {
+        return $this->belongsToMany(Lead::class, 'lead_product')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
 
 
 }

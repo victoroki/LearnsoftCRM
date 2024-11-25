@@ -47,21 +47,21 @@
                 </div>
 
                 <!-- Product Dropdown -->
-                <select name="product_id" id="product_id" class="form-control" required>
+                <!-- <select name="product_id" id="product_id" class="form-control" required>
                     <option value="">Select a Product</option>
                     @foreach($products as $product)
                         <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
                             {{ $product->product_name }}
                         </option>
                     @endforeach
-                </select>
+                </select> -->
                 
 
                 <!-- Quantity Field -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="quantity">Quantity</label>
                     <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="{{ old('quantity', 1) }}" required>
-                </div>
+                </div> -->
 
                 <!-- Lead Date Field -->
                 <div class="form-group">
@@ -82,6 +82,23 @@
                     </select>
                 </div>
 
+                <!-- Multi-Select Dropdown for Products -->
+                <div class="form-group">
+                    <label for="products">Products</label>
+                    <select name="products[]" id="products" class="form-control" multiple>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+
+
+                <!-- Container for Dynamic Quantities -->
+                <div id="product-quantities" class="mt-3">
+                    <!-- Quantities for selected products will be added here dynamically -->
+                </div>
+
                 <button type="submit" class="btn btn-primary">Save Lead</button>
                 <a href="{{ route('leads.index') }}" class="btn btn-default"> Cancel </a>
             </form>
@@ -100,4 +117,29 @@
             });
         });
     </script>
+    <script>
+    $(document).ready(function() {
+        // Initialize multi-select (can use libraries like Select2 for better UI)
+        $('#products').on('change', function() {
+            const selectedProducts = $(this).val(); // Get selected product IDs
+            const container = $('#product-quantities');
+
+            // Clear the container before re-adding quantity inputs
+            container.html('');
+
+            // Loop through selected products and add quantity inputs
+            if (selectedProducts) {
+                selectedProducts.forEach(productId => {
+                    container.append(`
+                        <div class="form-group">
+                            <label for="quantity_${productId}">Quantity for Product ID ${productId}</label>
+                            <input type="number" name="quantities[${productId}]" id="quantity_${productId}" class="form-control" min="1" value="1" required>
+                        </div>
+                    `);
+                });
+            }
+        });
+    });
+</script>
+
 @endpush

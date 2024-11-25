@@ -75,51 +75,79 @@ class LeadController extends AppBaseController
     }
     
 
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'full_name' => 'required|string|max:100',
+            'email' => 'required|email',
+            'phone_number' => 'nullable|string',
+            'source' => 'nullable|string',
+            'status' => 'nullable|string',
+            'employee_id' => 'nullable|exists:employees,id',
+            'description' => 'nullable|string',
+            'lead_date' => 'nullable|date',
+            'products' => 'required|array',
+            'products.*' => 'exists:products,id',
+        ]);
+    
+        $lead = Lead::create($validatedData);
+    
+        // Attach selected products with pivot table data
+        $productQuantities = [];
+        foreach ($request->products as $productId) {
+            $productQuantities[$productId] = ['quantity' => 1]; // Default quantity; update as needed
+        }
+    
+        $lead->products()->sync($productQuantities);
+    
+        return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
+    }
+    
+
+
     /**
      * Store a newly created Lead in storage.
      */
-    public function store(Request $request)
+    public function update(Request $request, Lead $lead)
     {
-        // Validate the incoming data
+        // Validate the request
         $validatedData = $request->validate([
             'full_name' => 'nullable|string|max:100',
             'email' => 'required|string|max:30|email',
-            'phone_number' => 'nullable|numeric',
+            'phone_number' => 'nullable|string|max:15',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
-            'employee_id' => 'nullable|exists:employees,id', // Ensure that the employee ID is valid
+            'employee_id' => 'nullable|exists:employees,id',
+            'lead_date' => 'nullable|date',
             'description' => 'nullable|string|max:65535',
-            'product_id' => 'nullable|exists:products,id', // Ensure valid product selection
-            'quantity' => 'required|integer|min:1', // Validate quantity
-            'created_at' => 'nullable|date', // Validate created_at as a date
-            'lead_date' => 'nullable|date', // Validate lead_date field
+            'products' => 'required|array',
+            'products.*' => 'exists:products,id',
+            'quantities' => 'required|array',
+            'quantities.*' => 'required|integer|min:1',
         ]);
     
-        // Merge the validated data to include 'lead_date' and 'created_at'
+        // Update lead details
         $leadData = $validatedData;
+        unset($leadData['products'], $leadData['quantities']);
+        $lead->update($leadData);
     
-        // If a product is selected, associate it (if the relationship exists in the Lead model)
-        if ($request->has('product_id') && $request->product_id) {
-            $leadData['product_id'] = $request->product_id;
+        // Sync products and quantities
+        $productsData = [];
+        foreach ($request->products as $productId) {
+            // Ensure quantity exists for this product
+            if (!isset($request->quantities[$productId])) {
+                return back()->withErrors(['quantities' => "Quantity is missing for product ID: $productId"]);
+            }
+    
+            $productsData[$productId] = ['quantity' => $request->quantities[$productId]];
         }
     
-        // If a created_at date is provided, update the lead's created_at field
-        if ($request->has('created_at') && $request->created_at) {
-            $leadData['created_at'] = $request->created_at;
-        }
+        $lead->products()->sync($productsData);
     
-        // Create the lead with the validated data
-        $lead = Lead::create($leadData);
-    
-        // If a lead_date is provided, update it after creation
-        if ($request->has('lead_date') && $request->lead_date) {
-            $lead->lead_date = \Carbon\Carbon::parse($request->lead_date)->timezone('UTC');
-            $lead->save();
-        }
-    
-        // Redirect or show success message
-        return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
+        return redirect()->route('leads.index')->with('success', 'Lead updated successfully!');
     }
+    
+
     
 
     /**
@@ -142,62 +170,18 @@ class LeadController extends AppBaseController
      */
     public function edit($id)
     {
-        // Find the lead by ID
-        $lead = $this->leadRepository->find($id);
+        $lead = Lead::with('products')->findOrFail($id);
+        $products = Product::all();
+        $employees = Employee::all();
     
-        if (empty($lead)) {
-            Flash::error('Lead not found');
-            return redirect(route('leads.index'));
-        }
+        $selectedProducts = $lead->products->pluck('id')->toArray();
+        $quantities = $lead->products->pluck('pivot.quantity', 'id')->toArray();
     
-        // Get all employees and products
-        $employees = Employee::all();  // Fetch all employees
-        $products = Product::all();    // Fetch all products
-    
-        // Return the edit view
-        return view('leads.edit')
-            ->with('lead', $lead)
-            ->with('employees', $employees)
-            ->with('products', $products);
+        return view('leads.edit', compact('lead', 'products', 'employees', 'selectedProducts', 'quantities'));
     }
+    
 
-    /**
-     * Update the specified Lead in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        // Find the lead by ID
-        $lead = $this->leadRepository->find($id);
-    
-        if (empty($lead)) {
-            Flash::error('Lead not found');
-            return redirect(route('leads.index'));
-        }
-    
-        // Validation rules, including product_id and created_at
-        $rules = [
-            'full_name' => 'nullable|string|max:100',
-            'email' => 'required|string|max:30',
-            'phone_number' => 'nullable|string|max:15',
-            'source' => 'nullable|string|max:30',
-            'status' => 'nullable|string|max:30',
-            'employee_id' => 'nullable|exists:employees,id',
-            'product_id' => 'nullable|exists:products,id', // Ensure product_id references an existing product
-            'description' => 'nullable|string|max:65535',
-            'created_at' => 'nullable|date' // Validate created_at as a date
-        ];
-    
-        // Validate the input
-        $validated = $request->validate($rules);
-    
-        // Update the lead, including product_id and created_at
-        $lead = $this->leadRepository->update($validated, $id);
-    
-        Flash::success('Lead updated successfully.');
-    
-        return redirect(route('leads.index'));
-    }
-    
+
     /**
      * Remove the specified Lead from storage.
      *
