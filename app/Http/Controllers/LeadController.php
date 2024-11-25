@@ -88,14 +88,17 @@ class LeadController extends AppBaseController
             'lead_date' => 'nullable|date',
             'products' => 'required|array',
             'products.*' => 'exists:products,id',
+            'quantities' => 'required|array',
         ]);
     
         $lead = Lead::create($validatedData);
     
-        // Attach selected products with pivot table data
+        // Attach selected products with quantities
         $productQuantities = [];
         foreach ($request->products as $productId) {
-            $productQuantities[$productId] = ['quantity' => 1]; // Default quantity; update as needed
+            $productQuantities[$productId] = [
+                'quantity' => $request->quantities[$productId] ?? 1, // Use quantity from input
+            ];
         }
     
         $lead->products()->sync($productQuantities);
@@ -103,48 +106,47 @@ class LeadController extends AppBaseController
         return redirect()->route('leads.index')->with('success', 'Lead created successfully!');
     }
     
+    
 
 
     /**
      * Store a newly created Lead in storage.
      */
-    public function update(Request $request, Lead $lead)
+    public function update(Request $request, $id)
     {
-        // Validate the request
-        $validatedData = $request->validate([
+        $lead = Lead::findOrFail($id);
+    
+        // Validate input data
+        $data = $request->validate([
             'full_name' => 'nullable|string|max:100',
-            'email' => 'required|string|max:30|email',
-            'phone_number' => 'nullable|string|max:15',
+            'email' => 'required|string|max:30',
+            'phone_number' => 'nullable',
             'source' => 'nullable|string|max:30',
             'status' => 'nullable|string|max:30',
             'employee_id' => 'nullable|exists:employees,id',
-            'lead_date' => 'nullable|date',
             'description' => 'nullable|string|max:65535',
-            'products' => 'required|array',
+            'lead_date' => 'nullable|date',
+            'products' => 'array',
             'products.*' => 'exists:products,id',
-            'quantities' => 'required|array',
-            'quantities.*' => 'required|integer|min:1',
+            'quantities' => 'array',
+            'quantities.*' => 'integer|min:1',
         ]);
     
-        // Update lead details
-        $leadData = $validatedData;
-        unset($leadData['products'], $leadData['quantities']);
-        $lead->update($leadData);
+        // Update the lead's basic details
+        $lead->update($data);
     
-        // Sync products and quantities
-        $productsData = [];
-        foreach ($request->products as $productId) {
-            // Ensure quantity exists for this product
-            if (!isset($request->quantities[$productId])) {
-                return back()->withErrors(['quantities' => "Quantity is missing for product ID: $productId"]);
-            }
+        // Sync the products with quantities in the pivot table
+        $products = $request->input('products', []);
+        $quantities = $request->input('quantities', []);
     
-            $productsData[$productId] = ['quantity' => $request->quantities[$productId]];
+        $productData = [];
+        foreach ($products as $productId) {
+            $productData[$productId] = ['quantity' => $quantities[$productId] ?? 1]; // Default to 1 if no quantity provided
         }
     
-        $lead->products()->sync($productsData);
+        $lead->products()->sync($productData);
     
-        return redirect()->route('leads.index')->with('success', 'Lead updated successfully!');
+        return redirect()->route('leads.index')->with('success', 'Lead updated successfully.');
     }
     
 

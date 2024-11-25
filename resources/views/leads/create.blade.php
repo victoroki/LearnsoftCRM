@@ -118,9 +118,9 @@
         });
     </script>
     <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Initialize multi-select (can use libraries like Select2 for better UI)
-        $('#products').on('change', function() {
+        $('#products').on('change', function () {
             const selectedProducts = $(this).val(); // Get selected product IDs
             const container = $('#product-quantities');
 
@@ -130,9 +130,10 @@
             // Loop through selected products and add quantity inputs
             if (selectedProducts) {
                 selectedProducts.forEach(productId => {
+                    const productName = $('#products option[value="' + productId + '"]').text(); // Get product name
                     container.append(`
                         <div class="form-group">
-                            <label for="quantity_${productId}">Quantity for Product ID ${productId}</label>
+                            <label for="quantity_${productId}">Quantity for ${productName}</label>
                             <input type="number" name="quantities[${productId}]" id="quantity_${productId}" class="form-control" min="1" value="1" required>
                         </div>
                     `);
@@ -141,5 +142,6 @@
         });
     });
 </script>
+
 
 @endpush
