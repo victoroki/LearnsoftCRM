@@ -1,5 +1,8 @@
-h1,p{
+h1,p,button{
     text-align: center;
+}
+h4{
+    color:black;
 }
 .container-fluid-1{
     display: grid; /* Enables grid layout */
@@ -62,3 +65,72 @@ h1,p{
     border-radius: 5px;
     width: 300px;
 }
+.card-body-1{
+
+    display:grid;
+    align-items: center;
+    text-align: center;
+    margin: 2px;
+    padding:5px;
+    width: 400px;
+    background-color:rgb(38, 38, 138);
+    border-radius:15px;
+}
+.card-body-2{
+
+    display:grid;
+    align-items: center;
+    text-align: center;
+    margin: 2px;
+    padding:5px;
+    width: 400px;
+    background-color:rgb(68, 81, 68);
+    border-radius:15px;
+}
+
+.card-body-3{
+
+    display:grid;
+    align-items: center;
+    text-align: center;
+    margin: 2px;
+    padding:5px;
+    width: 400px;
+    background-color: rgb(78, 80, 73);
+    border-radius:15px;
+}
+
+.card-body-4{
+
+    display:grid;
+    align-items: center;
+    text-align: center;
+    margin: 2px;
+    padding:5px;
+    width: 400px;
+    background-color: rgb(151, 85, 195);
+    border-radius:15px;
+}
+.card-body-5{
+
+    display:grid;
+    align-items: center;
+    text-align: center;
+    margin: 2px;
+    padding:5px;
+    width: 400px;
+    background-color: rgba(70, 70, 211, 0.832);
+    border-radius:15px;
+}
+.card-body-6{
+
+    display:grid;
+    align-items: center;
+    text-align: center;
+    margin: 2px;
+    padding:5px;
+    width: 400px;
+    background-color: rgb(197, 153, 153);
+    border-radius:15px;
+}
+

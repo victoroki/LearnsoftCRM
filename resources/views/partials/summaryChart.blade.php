@@ -1,4 +1,4 @@
-<div style="height:300px;width:200px;">
+<div style="height:350px;width:250px;">
 <h4>Employee Distribution</h4>
   <canvas id="sumChart"></canvas>
  
