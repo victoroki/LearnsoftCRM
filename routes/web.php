@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DailyReportController;
 use App\Http\Controllers\InteractionController;
 use App\Models\Product;
 use App\Models\Client;
@@ -91,5 +92,9 @@ Route::get('/api/{type}/{id}/products', function ($type, $id) {
     }
     return response()->json([], 404);
 });
+
+Route::get('/daily-reports/create', [DailyReportController::class, 'create'])->name('daily_reports.create');
+Route::post('/daily-reports', [DailyReportController::class, 'store'])->name('daily_reports.store');
+
 
 

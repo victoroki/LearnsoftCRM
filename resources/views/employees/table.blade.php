@@ -9,6 +9,7 @@
                         <th>Email</th>
                         <th>Phone Number</th>
                         <th>Department</th>
+                        <th>Report</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -20,6 +21,9 @@
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->phone_number }}</td>
                             <td>{{ $employee->department->dept_name ?? 'No Department' }}</td>
+                            <td>
+                                <a href="{{ route('daily_reports.create', ['employee_id' => $employee->id]) }}" class="btn btn-primary btn-xs">Create Report</a>
+                            </td>
                             <td>
                                 <div class='btn-group'>
                                     <a href="{{ route('employees.show', $employee->id) }}" class='btn btn-default btn-xs'>
