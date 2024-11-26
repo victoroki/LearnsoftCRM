@@ -126,8 +126,9 @@ class TransactionController extends AppBaseController
             return redirect(route('transactions.index'));
         }
 
-        return view('transactions.edit')->with('transaction', $transaction);
-    }
+
+        return view('transactions.edit')->with('transaction',$transaction);  
+     }
 
     /**
      * Update the specified Transaction in storage.

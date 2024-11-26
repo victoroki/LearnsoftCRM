@@ -1,4 +1,4 @@
-<div style="height:400px;width:250px;">
+<div style="height:200px;width:150px;">
 <h4>System </h4>
   <canvas id="infoChart"></canvas>
   

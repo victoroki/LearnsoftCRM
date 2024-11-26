@@ -1,17 +1,8 @@
-<div class="container my-4">
+
     
-<h4>Leads Over Time</h4>
-    <div class="btn-group mb-3">
-       
-    <button class="btn btn-primary" onclick="myChart('days')">Days</button>
-        <button class="btn btn-primary" onclick="myChart('weeks')">Weeks</button>
-        <button class="btn btn-primary" onclick="myChart('months')">Months</button>
-      
-    </div>
-    <div style="height:450px;width:300px;">
+    <div style="height:200px;width:450px;">
         <canvas id="leadChart"></canvas>
     </div>
-</div>
 
 <script>
     let leadChart;

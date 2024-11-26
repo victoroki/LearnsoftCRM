@@ -1,18 +1,8 @@
 <!-- resources/views/partials/chart.blade.php -->
 
-<div class="container my-4">
-    <h4>Quantity Ordered Over Time</h4>
-    <div class="btn-group mb-3">
-       
-    <button class="btn btn-primary" onclick="updateChart('days')">Days</button>
-        <button class="btn btn-primary" onclick="updateChart('weeks')">Weeks</button>
-        <button class="btn btn-primary" onclick="updateChart('months')">Months</button>
-      
-    </div>
-    <div style="height:450px;width:300px;">
+    <div style="height:300px;width:450px;">
         <canvas id="orderChart"></canvas>
     </div>
-</div>
 
 <script>
     let orderChart;
