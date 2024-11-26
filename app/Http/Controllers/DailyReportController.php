@@ -19,7 +19,6 @@ class DailyReportController extends Controller
     {
         // Validate the request
         $request->validate([
-            'employee_id' => 'required|exists:employees,id',
             'monday_report' => 'required|string',
             'tuesday_report' => 'required|string',
             'wednesday_report' => 'required|string',
@@ -29,7 +28,6 @@ class DailyReportController extends Controller
 
         // Create the daily report
         DailyReport::create([
-            'employee_id' => $request->employee_id,
             'monday_report' => $request->monday_report,
             'tuesday_report' => $request->tuesday_report,
             'wednesday_report' => $request->wednesday_report,
