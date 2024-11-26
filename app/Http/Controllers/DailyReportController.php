@@ -8,33 +8,49 @@ use Illuminate\Http\Request;
 
 class DailyReportController extends Controller
 {
-    public function create()
+    public function create($employeeId, $dayIndex = 0)
     {
         // Pass all employees to the view
         $employees = Employee::all();
-        return view('daily_reports.create', compact('employees'));
+        $employee = Employee::findOrFail($employeeId);
+        $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        $currentDay = $days[$dayIndex] ?? 'monday'; // Default to Monday if dayIndex is not provided
+    
+        return view('daily_reports.create', compact('employee', 'employees', 'dayIndex', 'currentDay'));
     }
+    
+    
 
     public function store(Request $request)
-    {
-        // Validate the request
-        $request->validate([
-            'monday_report' => 'required|string',
-            'tuesday_report' => 'required|string',
-            'wednesday_report' => 'required|string',
-            'thursday_report' => 'required|string',
-            'friday_report' => 'required|string',
-        ]);
+{
+    // Validate the request based on the day
+    $request->validate([
+        'employee_id' => 'required|exists:employees,id', // Ensure the employee exists
+        'monday_report' => 'nullable|string',
+        'tuesday_report' => 'nullable|string',
+        'wednesday_report' => 'nullable|string',
+        'thursday_report' => 'nullable|string',
+        'friday_report' => 'nullable|string',
+    ]);
 
-        // Create the daily report
-        DailyReport::create([
-            'monday_report' => $request->monday_report,
-            'tuesday_report' => $request->tuesday_report,
-            'wednesday_report' => $request->wednesday_report,
-            'thursday_report' => $request->thursday_report,
-            'friday_report' => $request->friday_report,
-        ]);
+    // Create the daily report
+    DailyReport::create([
+        'employee_id' => $request->employee_id, // Save the employee_id
+        'monday_report' => $request->monday_report,
+        'tuesday_report' => $request->tuesday_report,
+        'wednesday_report' => $request->wednesday_report,
+        'thursday_report' => $request->thursday_report,
+        'friday_report' => $request->friday_report,
+    ]);
 
+    // Determine which day to redirect to next
+    $nextDayIndex = $request->dayIndex + 1;
+    if ($nextDayIndex > 4) {
         return redirect()->route('employees.index')->with('success', 'Report saved successfully.');
     }
+
+    return redirect()->route('daily_reports.create', ['employeeId' => $request->employee_id, 'dayIndex' => $nextDayIndex])
+        ->with('success', 'Report saved successfully.');
+}
+
 }

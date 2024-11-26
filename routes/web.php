@@ -95,6 +95,8 @@ Route::get('/api/{type}/{id}/products', function ($type, $id) {
 
 Route::get('/daily-reports/create', [DailyReportController::class, 'create'])->name('daily_reports.create');
 Route::post('/daily-reports', [DailyReportController::class, 'store'])->name('daily_reports.store');
+Route::get('/daily-reports/create/{employeeId}/{dayIndex?}', [DailyReportController::class, 'create'])->name('daily_reports.create');
+
 
 
 

@@ -20,36 +20,25 @@
 
             <div class="card-body">
 
-                <div class="form-group">
-                    {!! Form::label('monday_report', 'Monday Report:') !!}
-                    {!! Form::textarea('monday_report', null, ['class' => 'form-control']) !!}
-                </div>
+                <!-- Employee ID (hidden) -->
+                {!! Form::hidden('employee_id', $employee->id) !!}
+
+                <!-- Dynamically display the form for the current day -->
+                @php
+                    $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+                    $currentDay = $days[$dayIndex] ?? 'monday'; // Default to Monday if dayIndex is not provided
+                @endphp
 
                 <div class="form-group">
-                    {!! Form::label('tuesday_report', 'Tuesday Report:') !!}
-                    {!! Form::textarea('tuesday_report', null, ['class' => 'form-control']) !!}
-                </div>
-
-                <div class="form-group">
-                    {!! Form::label('wednesday_report', 'Wednesday Report:') !!}
-                    {!! Form::textarea('wednesday_report', null, ['class' => 'form-control']) !!}
-                </div>
-
-                <div class="form-group">
-                    {!! Form::label('thursday_report', 'Thursday Report:') !!}
-                    {!! Form::textarea('thursday_report', null, ['class' => 'form-control']) !!}
-                </div>
-
-                <div class="form-group">
-                    {!! Form::label('friday_report', 'Friday Report:') !!}
-                    {!! Form::textarea('friday_report', null, ['class' => 'form-control']) !!}
+                    {!! Form::label("{$currentDay}_report", ucfirst($currentDay) . " Report:") !!}
+                    {!! Form::textarea("{$currentDay}_report", null, ['class' => 'form-control']) !!}
                 </div>
 
             </div>
 
             <div class="card-footer">
                 {!! Form::submit('Save Report', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('employees.index') }}" class="btn btn-default"> Cancel </a>
+                <a href="{{ route('employees.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}
