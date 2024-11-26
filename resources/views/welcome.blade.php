@@ -34,7 +34,7 @@
             </div>
         @endif
     </div>
-    <div class="quote"><p>“Customer service is not a transaction; its about building relationships.”  Anon.</p></div>
+    <div class="quote"><p>“Customer service is not a transaction; its about building relationships.” ~ Muchiri.</p></div>
     
 </body>
 </html>
