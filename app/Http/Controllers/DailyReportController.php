@@ -43,14 +43,24 @@ class DailyReportController extends Controller
         'friday_report' => $request->friday_report,
     ]);
 
-    // Determine which day to redirect to next
-    $nextDayIndex = $request->dayIndex + 1;
-    if ($nextDayIndex > 4) {
-        return redirect()->route('employees.index')->with('success', 'Report saved successfully.');
-    }
-
-    return redirect()->route('daily_reports.create', ['employeeId' => $request->employee_id, 'dayIndex' => $nextDayIndex])
-        ->with('success', 'Report saved successfully.');
+    // Redirect to the employee index after saving the report
+    return redirect()->route('employees.index')->with('success', 'Report saved successfully.');
 }
+
+public function viewReport($employeeId, $dayIndex)
+{
+    // Retrieve the employee and the daily report for the specified day
+    $employee = Employee::findOrFail($employeeId);
+    $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+    $currentDay = $days[$dayIndex];
+    
+    // Get the report for the specific employee and day
+    $report = DailyReport::where('employee_id', $employeeId)
+                         ->first();  // You can adjust this to retrieve reports from any day
+
+    // Pass the data to the view
+    return view('daily_reports.view', compact('employee', 'report', 'currentDay'));
+}
+
 
 }

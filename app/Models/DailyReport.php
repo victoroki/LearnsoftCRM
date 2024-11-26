@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class DailyReport extends Model
 {
@@ -23,6 +24,10 @@ class DailyReport extends Model
         'wednesday_report', 
         'thursday_report', 
         'friday_report',
+    ];
+
+    protected $casts = [
+        'report_date' => 'datetime', // Automatically cast to Carbon instance
     ];
 
     // Define the relationship with the Employee model

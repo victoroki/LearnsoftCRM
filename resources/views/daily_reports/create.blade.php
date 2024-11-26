@@ -34,6 +34,12 @@
                     {!! Form::textarea("{$currentDay}_report", null, ['class' => 'form-control']) !!}
                 </div>
 
+                <!-- Report Date Field -->
+                <div class="form-group col-sm-6">
+                    {!! Form::label('report_date', 'Report Date:') !!}
+                    {!! Form::date('report_date', null, ['class' => 'form-control', 'id' => 'report_date']) !!}
+                </div>
+
             </div>
 
             <div class="card-footer">

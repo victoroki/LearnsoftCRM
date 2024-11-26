@@ -97,6 +97,10 @@ Route::get('/daily-reports/create', [DailyReportController::class, 'create'])->n
 Route::post('/daily-reports', [DailyReportController::class, 'store'])->name('daily_reports.store');
 Route::get('/daily-reports/create/{employeeId}/{dayIndex?}', [DailyReportController::class, 'create'])->name('daily_reports.create');
 
+// View the report for a specific day
+Route::get('/daily-reports/view/{employeeId}/{dayIndex}', [DailyReportController::class, 'viewReport'])->name('daily_reports.view');
+
+
 
 
 
