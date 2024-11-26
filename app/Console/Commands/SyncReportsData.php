@@ -36,10 +36,12 @@ class SyncReportsData extends Command
     
                 // Only create a new report if one doesn't exist yet
                 if (!$existingReport) {
-                    // Calculate the total quantity ordered from the orders table for this lead-client pair
-                    $totalQuantityOrdered = Order::where('lead_id', $lead->id)
-                        ->where('client_id', $client->id)
-                        ->sum('quantity_ordered');
+                    // Calculate the total quantity ordered from the order_product table for this lead-client pair
+                    $totalQuantityOrdered = \DB::table('order_product as op')
+                        ->join('orders as o', 'op.order_id', '=', 'o.id')
+                        ->where('o.lead_id', $lead->id)
+                        ->where('o.client_id', $client->id)
+                        ->sum('op.quantity');
     
                     // Skip the creation of the report if the quantity ordered is 0
                     if ($totalQuantityOrdered == 0) {
@@ -63,5 +65,6 @@ class SyncReportsData extends Command
     
         $this->info('Reports data synced successfully.');
     }
+    
     
 }

@@ -19,43 +19,57 @@
             </thead>
             <tbody>
                 @foreach($leads as $lead)
-                        @foreach($lead->products as $product)
-                            <tr>
-                                <td>{{ $loop->first ? $lead->full_name ?? 'No Lead' : '' }}</td>
-                                <td>{{ $loop->first ? $lead->email ?? 'No Email' : '' }}</td>
-                                <td>{{ $loop->first ? $lead->phone_number ?? 'No Phone' : '' }}</td>
-                                <td>{{ $loop->first ? $lead->source ?? 'No Source' : '' }}</td>
-                                <td>{{ $loop->first ? $lead->status ?? 'No Status' : '' }}</td>
-                                <td>
-                                    {{ $loop->first ? $lead->employee->first_name ?? 'No Employee' : '' }}
-                                    {{ $loop->first ? $lead->employee->last_name ?? '' : '' }}
-                                </td>
-                                <td>{{ $product->product_name ?? 'No Product' }}</td>
-                                <td>{{ $product->pivot->quantity ?? 'No Quantity' }}</td>
-                                <td>{{ $loop->first ? $lead->description ?? 'No Description' : '' }}</td>
-                                <td>
-                                    {{ $product->price && $product->pivot->quantity ? $product->price * $product->pivot->quantity : 'No Price' }}
-                                </td>
-                                <td>{{ $loop->first ? \Carbon\Carbon::parse($lead->lead_date)->format('Y-m-d') : '' }}</td>
-                                <td style="width: 120px">
-                                    @if($loop->first)
-                                        {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
-                                        <div class='btn-group'>
-                                            <a href="{{ route('leads.show', [$lead->id]) }}" class='btn btn-default btn-xs'>
-                                                <i class="far fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('leads.edit', [$lead->id]) }}" class='btn btn-default btn-xs'>
-                                                <i class="far fa-edit"></i>
-                                            </a>
-                                            {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
-                                        </div>
-                                        {!! Form::close() !!}
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                    <tr>
+                        <td>{{ $lead->full_name ?? 'No Lead' }}</td>
+                        <td>{{ $lead->email ?? 'No Email' }}</td>
+                        <td>{{ $lead->phone_number ?? 'No Phone' }}</td>
+                        <td>{{ $lead->source ?? 'No Source' }}</td>
+                        <td>{{ $lead->status ?? 'No Status' }}</td>
+                        <td>
+                            {{ $lead->employee->first_name ?? 'No Employee' }}
+                            {{ $lead->employee->last_name ?? '' }}
+                        </td>
+                        <!-- Product Column -->
+                        <td>
+                            @foreach($lead->products as $product)
+                                {{ $product->product_name }}<br>
+                            @endforeach
+                        </td>
+                        <!-- Quantity Column -->
+                        <td>
+                            @foreach($lead->products as $product)
+                                {{ $product->pivot->quantity }}<br>
+                            @endforeach
+                        </td>
+                        <!-- Total Price Column -->
+                        <td>
+                            @foreach($lead->products as $product)
+                                {{ $product->price && $product->pivot->quantity ? $product->price * $product->pivot->quantity : 'No Price' }}<br>
+                            @endforeach
+                        </td>
+                        <td>{{ $lead->description ?? 'No Description' }}</td>
+                        <!-- Grand Total Price Column -->
+                        <td>
+                            {{ $lead->products->sum(fn($product) => $product->price * $product->pivot->quantity) ?? 'No Price' }}
+                        </td>
+                        <td>{{ \Carbon\Carbon::parse($lead->lead_date)->format('Y-m-d') }}</td>
+                        <td style="width: 120px">
+                            {!! Form::open(['route' => ['leads.destroy', $lead->id], 'method' => 'delete', 'style' => 'display:inline']) !!}
+                            <div class='btn-group'>
+                                <a href="{{ route('leads.show', [$lead->id]) }}" class='btn btn-default btn-xs'>
+                                    <i class="far fa-eye"></i>
+                                </a>
+                                <a href="{{ route('leads.edit', [$lead->id]) }}" class='btn btn-default btn-xs'>
+                                    <i class="far fa-edit"></i>
+                                </a>
+                                {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+                            </div>
+                            {!! Form::close() !!}
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
+
         </table>
     </div>
 

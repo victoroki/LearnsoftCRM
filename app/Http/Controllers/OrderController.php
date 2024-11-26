@@ -57,11 +57,11 @@ class OrderController extends AppBaseController
     /**
      * Show the form for creating a new Order.
      */
-    public function create()
+    public function create(Request $request)
     {
         // Fetch all employees
         $employees = Employee::all(); 
-     
+    
         // Fetch all clients and concatenate first and last name for display
         $clients = Client::all()->mapWithKeys(function ($client) {
             return [$client->id => $client->first_name . ' ' . $client->last_name];
@@ -70,10 +70,10 @@ class OrderController extends AppBaseController
         // Fetch all leads using the full_name field
         $leads = Lead::pluck('full_name', 'id')->toArray();
          
-        // Check if a lead is already selected, then filter products based on that lead
+        // Filter products based on the selected lead
         $products = [];
-        if (request()->has('lead_id')) {
-            $lead = Lead::with('products')->find(request()->lead_id);  // Eager load products
+        if ($request->has('lead_id')) {
+            $lead = Lead::with('products')->find($request->lead_id); // Eager load products
             if ($lead) {
                 $products = $lead->products->pluck('product_name', 'id')->toArray(); // Only products associated with the selected lead
             }
@@ -83,6 +83,7 @@ class OrderController extends AppBaseController
      
         return view('orders.create', compact('products', 'clients', 'employees', 'leads'));
     }
+    
     
 
     /**
@@ -193,21 +194,35 @@ class OrderController extends AppBaseController
     /**
      * Show the form for editing the specified Order.
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         $order = $this->orderRepository->find($id);
-
+    
         if (empty($order)) {
             Flash::error('Order not found');
             return redirect(route('orders.index'));
         }
-
-        $products = \App\Models\Product::pluck('product_name', 'id')->toArray();
-        $clients = \App\Models\Client::pluck('full_name', 'id')->toArray();
-        $leads = \App\Models\Lead::pluck('full_name', 'id')->toArray(); // Fetch all leads
-
+    
+        // Fetch all clients
+        $clients = Client::pluck('full_name', 'id')->toArray();
+    
+        // Fetch all leads
+        $leads = Lead::pluck('full_name', 'id')->toArray();
+    
+        // Fetch products associated with the lead, or all products if no lead is selected
+        $products = [];
+        if ($request->has('lead_id')) {
+            $lead = Lead::with('products')->find($request->lead_id); // Eager load products
+            if ($lead) {
+                $products = $lead->products->pluck('product_name', 'id')->toArray();
+            }
+        } else {
+            $products = Product::pluck('product_name', 'id')->toArray();
+        }
+    
         return view('orders.edit', compact('order', 'products', 'clients', 'leads'));
     }
+    
 
     /**
      * Update the specified Order in storage.
