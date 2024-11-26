@@ -1,0 +1,57 @@
+/* public/css/style.css */
+.nav-link.active {
+    background-color: orange !important;
+    color: white !important;
+}
+
+.nav-icon {
+    color: green !important;
+}
+
+body{
+    background-color: rgb(147, 147, 197);
+}
+
+.home-link {
+    position: absolute; 
+    top: 20px; 
+    right: 20px; 
+    font-size: 40px;
+    text-decoration: none; 
+    color: blue; 
+}
+.login-link {
+    position: absolute; 
+    font-size: 40px;
+    margin-left: 900px;
+    text-decoration: none; 
+    color: green; 
+}
+.register-link {
+    position: absolute; 
+    font-size: 40px;
+    margin-left: 750px;
+    text-decoration: none; 
+    color: green; 
+}
+
+/* custom.css */
+.image-container {
+    margin-top: 300px;
+    margin-left: 700px;
+    height: 200px;
+    width: 100%;
+}
+
+.image-container img {
+    max-width: 100%; 
+    height: auto; 
+    max-height: 200px; 
+}
+
+.quote{
+    margin-left: 400px;
+    margin-top: 70px;
+    font-size: 30px;
+    color: brown;
+}
