@@ -1,7 +1,8 @@
-h1,p,button,i{
+h1,i{
     text-align: center;
     color:black;
 }
+center
 h4{
     color:black;
 }
@@ -36,7 +37,6 @@ h4{
     max-height:400px;
     display: grid; /* Enables grid layout */
     grid-template-columns:2fr 1fr;
-    grid-template-rows:repeat(2, 1fr);
     gap: 5px; /* Space between grid items */
     padding: 5px;
     background-color:white;
@@ -160,8 +160,5 @@ h4{
     padding:5px;
     margin:5px;
     align-items:center;
-    justify-content:center;
-    max-width:fit-content;
-    
+    justify-content:center;   
   }
-  
