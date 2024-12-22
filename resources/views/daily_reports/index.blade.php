@@ -8,7 +8,7 @@
 <div class="content px-3">
 
     <!-- Add New Report Button -->
-    <a href="{{ route('daily_reports.create', ['employee_id' => Auth::id()]) }}" class="btn btn-primary mb-3">Add New Report</a>
+    <a href="{{ route('daily_reports.create') }}" class="btn btn-primary mb-3">Add New Report</a>
 
 
     @if($reports->isNotEmpty())

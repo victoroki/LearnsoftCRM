@@ -10,17 +10,26 @@ use Illuminate\Support\Facades\Auth;
 
 class DailyReportController extends Controller
 {
-    public function create($employee_id)
+    public function create()
     {
-        // Pass the employee_id to the view or perform other operations
+        $employee_id = Auth::id(); // Get the ID of the logged-in user
         return view('daily_reports.create', compact('employee_id'));
-    }
+    }    
     
 
     public function store(Request $request)
     {
+        // Get the logged-in user's ID
+        $userId = Auth::id();
+    
+        // Fetch the employee ID for the logged-in user
+        $employee = \App\Models\Employee::where('user_id', $userId)->first();
+    
+        if (!$employee) {
+            return redirect()->back()->withErrors(['error' => 'You are not authorized to create a report.']);
+        }
+    
         $request->validate([
-            'employee_id' => 'required|exists:employees,id',  // Validate employee_id
             'report' => 'required|string',
         ]);
     
@@ -28,7 +37,7 @@ class DailyReportController extends Controller
         $currentDay = strtolower(now()->format('l'));
         $currentDate = now()->format('Y-m-d');
     
-        $existingReport = DailyReport::where('employee_id', $request->employee_id)
+        $existingReport = DailyReport::where('employee_id', $employee->id)
             ->where('day', $currentDay)
             ->where('report_date', $currentDate)
             ->first();
@@ -38,16 +47,18 @@ class DailyReportController extends Controller
             $existingReport->save();
         } else {
             DailyReport::create([
-                'employee_id' => $request->employee_id,
+                'employee_id' => $employee->id,
                 'report_date' => $currentDate,
                 'day' => $currentDay,
                 'report' => $sanitizedReport,
-                'report_id' => $this->getOrCreateReport($request->employee_id, $currentDate),
+                'report_id' => $this->getOrCreateReport($employee->id, $currentDate),
             ]);
         }
     
         return redirect()->route('daily_reports.index')->with('success', 'Report added successfully.');
     }
+    
+    
     
 
     private function getOrCreateReport($employeeId, $reportDate)

@@ -23,7 +23,7 @@
 
             <div class="card-body">
                 <!-- Employee ID (hidden) -->
-                {!! Form::hidden('employee_id', $employee->id) !!}
+                
 
                 <!-- Display Current Day (Non-editable) -->
                 <div class="form-group">
